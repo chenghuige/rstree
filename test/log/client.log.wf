@@ -1,0 +1,582 @@
+WARNING: 06-13 15:58:57:  client * 17683 --------------------------------------------------------------- open log.wf ------------
+WARNING: 06-13 15:58:57:  client * 17684 --------------------------------------------------------------- open log_r.1105578336.wf ------------
+WARNING: 06-13 15:58:57:  client * 17685 --------------------------------------------------------------- open log_r.1085651296.wf ------------
+WARNING: 06-13 15:58:57:  client * 17686 --------------------------------------------------------------- open log_r.1116068192.wf ------------
+WARNING: 06-13 15:58:57:  client * 17683 [  logid:  ][  reqip:  ][ucm_monitor.cpp:69]not set UbMonitor
+WARNING: 06-13 15:58:57:  client * 17687 --------------------------------------------------------------- open log_r.1126558048.wf ------------
+WARNING: 06-13 15:58:57:  client * 17688 --------------------------------------------------------------- open log_r.1137047904.wf ------------
+WARNING: 06-13 15:58:57:  client * 17690 --------------------------------------------------------------- open log_r.1158027616.wf ------------
+WARNING: 06-13 15:58:57:  client * 17689 --------------------------------------------------------------- open log_r.1147537760.wf ------------
+WARNING: 06-13 15:58:57:  client * 17695 --------------------------------------------------------------- open log_r.1210476896.wf ------------
+WARNING: 06-13 15:58:57:  client * 17697 --------------------------------------------------------------- open log_r.1231456608.wf ------------
+WARNING: 06-13 15:58:57:  client * 17693 --------------------------------------------------------------- open log_r.1189497184.wf ------------
+WARNING: 06-13 15:58:57:  client * 17694 --------------------------------------------------------------- open log_r.1199987040.wf ------------
+WARNING: 06-13 15:58:57:  client * 17691 --------------------------------------------------------------- open log_r.1168517472.wf ------------
+WARNING: 06-13 15:58:57:  client * 17696 --------------------------------------------------------------- open log_r.1220966752.wf ------------
+WARNING: 06-13 15:58:57:  client * 17692 --------------------------------------------------------------- open log_r.1179007328.wf ------------
+WARNING: 06-13 15:58:57:  client * 17706 --------------------------------------------------------------- open log_r.1325865312.wf ------------
+WARNING: 06-13 15:58:57:  client * 17708 --------------------------------------------------------------- open log_r.1346845024.wf ------------
+WARNING: 06-13 15:58:57:  client * 17700 --------------------------------------------------------------- open log_r.1262926176.wf ------------
+WARNING: 06-13 15:58:57:  client * 17701 --------------------------------------------------------------- open log_r.1273416032.wf ------------
+WARNING: 06-13 15:58:57:  client * 17702 --------------------------------------------------------------- open log_r.1283905888.wf ------------
+WARNING: 06-13 15:58:57:  client * 17703 --------------------------------------------------------------- open log_r.1294395744.wf ------------
+WARNING: 06-13 15:58:57:  client * 17704 --------------------------------------------------------------- open log_r.1304885600.wf ------------
+WARNING: 06-13 15:58:57:  client * 17705 --------------------------------------------------------------- open log_r.1315375456.wf ------------
+WARNING: 06-13 15:58:57:  client * 17698 --------------------------------------------------------------- open log_r.1241946464.wf ------------
+WARNING: 06-13 15:58:57:  client * 17707 --------------------------------------------------------------- open log_r.1336355168.wf ------------
+WARNING: 06-13 15:58:57:  client * 17709 --------------------------------------------------------------- open log_r.1357334880.wf ------------
+WARNING: 06-13 15:58:57:  client * 17699 --------------------------------------------------------------- open log_r.1252436320.wf ------------
+WARNING: 06-13 15:58:57:  client * 17696 <838360081> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 15:58:57:  client * 17706 <792152569> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 15:58:57:  client * 17708 <1208651448> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 15:58:57:  client * 17696 [logid:838360081] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 15:58:57:  client * 17700 <136397250> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 15:58:57:  client * 17701 <1469471039> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 15:58:57:  client * 17702 <1603520400> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 15:58:57:  client * 17708 [logid:1208651448] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 15:58:57:  client * 17700 [logid:136397250] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 15:58:57:  client * 17696 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 15:58:57:  client * 17703 <174228433> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 15:58:57:  client * 17708 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 15:58:57:  client * 17703 [logid:174228433] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 15:58:57:  client * 17707 <2069816709> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 15:58:57:  client * 17703 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 15:58:57:  client * 17704 <1407413416> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 15:58:57:  client * 17702 [logid:1603520400] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 15:58:57:  client * 17696 [  logid:  ][  reqip:  ][client.cpp:70]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 15:58:57:  client * 17701 [logid:1469471039] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 15:58:57:  client * 17707 [logid:2069816709] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 15:58:57:  client * 17703 [  logid:  ][  reqip:  ][client.cpp:70]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 15:58:57:  client * 17699 <345212962> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 15:58:57:  client * 17704 [logid:1407413416] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 15:58:57:  client * 17705 <691285338> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 15:58:57:  client * 17704 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 15:58:57:  client * 17703 --------------------------------------------------------------- close log_r.1294395744.wf ------------
+WARNING: 06-13 15:58:57:  client * 17705 [logid:691285338] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 15:58:57:  client * 17705 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 15:58:57:  client * 17704 [  logid:  ][  reqip:  ][client.cpp:70]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 15:58:57:  client * 17705 [  logid:  ][  reqip:  ][client.cpp:70]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 15:58:57:  client * 17704 --------------------------------------------------------------- close log_r.1304885600.wf ------------
+WARNING: 06-13 15:58:57:  client * 17701 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 15:58:57:  client * 17709 <910019007> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 15:58:57:  client * 17695 [logid:1136196096] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-7(NSHEAD_RET_PEARCLOSE)]
+WARNING: 06-13 15:58:57:  client * 17695 [connection.cpp:333]freeConnection connection err[-125], ip[127.0.0.1] port[22112]
+WARNING: 06-13 15:58:57:  client * 17697 [logid:1464808285] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-7(NSHEAD_RET_PEARCLOSE)]
+WARNING: 06-13 15:58:57:  client * 17706 [logid:792152569] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 15:58:57:  client * 17701 [  logid:  ][  reqip:  ][client.cpp:70]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 15:58:57:  client * 17696 --------------------------------------------------------------- close log_r.1220966752.wf ------------
+WARNING: 06-13 15:58:57:  client * 17706 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 15:58:57:  client * 17695 [  logid:  ][  reqip:  ][client.cpp:70]nshead_simple_singletalk failed; err:Peer closed connection
+WARNING: 06-13 15:58:57:  client * 17701 --------------------------------------------------------------- close log_r.1273416032.wf ------------
+WARNING: 06-13 15:58:57:  client * 17702 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 15:58:57:  client * 17706 [  logid:  ][  reqip:  ][client.cpp:70]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 15:58:57:  client * 17697 [connection.cpp:333]freeConnection connection err[-125], ip[127.0.0.1] port[22112]
+WARNING: 06-13 15:58:57:  client * 17705 --------------------------------------------------------------- close log_r.1315375456.wf ------------
+WARNING: 06-13 15:58:57:  client * 17708 [  logid:  ][  reqip:  ][client.cpp:70]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 15:58:57:  client * 17707 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 15:58:57:  client * 17706 --------------------------------------------------------------- close log_r.1325865312.wf ------------
+WARNING: 06-13 15:58:57:  client * 17698 <117687986> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 15:58:57:  client * 17702 [  logid:  ][  reqip:  ][client.cpp:70]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 15:58:57:  client * 17700 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 15:58:57:  client * 17695 --------------------------------------------------------------- close log_r.1210476896.wf ------------
+WARNING: 06-13 15:58:57:  client * 17697 [  logid:  ][  reqip:  ][client.cpp:70]nshead_simple_singletalk failed; err:Peer closed connection
+WARNING: 06-13 15:58:57:  client * 17709 [logid:910019007] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 15:58:57:  client * 17708 --------------------------------------------------------------- close log_r.1346845024.wf ------------
+WARNING: 06-13 15:58:57:  client * 17698 [logid:117687986] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 15:58:57:  client * 17707 [  logid:  ][  reqip:  ][client.cpp:70]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 15:58:57:  client * 17697 --------------------------------------------------------------- close log_r.1231456608.wf ------------
+WARNING: 06-13 15:58:57:  client * 17709 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 15:58:57:  client * 17700 [  logid:  ][  reqip:  ][client.cpp:70]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 15:58:57:  client * 17707 --------------------------------------------------------------- close log_r.1336355168.wf ------------
+WARNING: 06-13 15:58:57:  client * 17702 --------------------------------------------------------------- close log_r.1283905888.wf ------------
+WARNING: 06-13 15:58:57:  client * 17699 [logid:345212962] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 15:58:57:  client * 17698 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 15:58:57:  client * 17709 [  logid:  ][  reqip:  ][client.cpp:70]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 15:58:57:  client * 17709 --------------------------------------------------------------- close log_r.1357334880.wf ------------
+WARNING: 06-13 15:58:57:  client * 17700 --------------------------------------------------------------- close log_r.1262926176.wf ------------
+WARNING: 06-13 15:58:57:  client * 17698 [  logid:  ][  reqip:  ][client.cpp:70]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 15:58:57:  client * 17699 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 15:58:57:  client * 17698 --------------------------------------------------------------- close log_r.1241946464.wf ------------
+WARNING: 06-13 15:58:57:  client * 17699 [  logid:  ][  reqip:  ][client.cpp:70]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 15:58:57:  client * 17699 --------------------------------------------------------------- close log_r.1252436320.wf ------------
+WARNING: 06-13 15:58:57:  client * 17711 --------------------------------------------------------------- open log_r.1346845024.wf ------------
+WARNING: 06-13 15:58:57:  client * 17712 --------------------------------------------------------------- open log_r.1336355168.wf ------------
+WARNING: 06-13 15:58:57:  client * 17711 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17711 [  logid:  ][  reqip:  ][client.cpp:132]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 15:58:57:  client * 17711 --------------------------------------------------------------- close log_r.1346845024.wf ------------
+WARNING: 06-13 15:58:57:  client * 17712 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17712 [  logid:  ][  reqip:  ][client.cpp:132]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 15:58:57:  client * 17712 --------------------------------------------------------------- close log_r.1336355168.wf ------------
+WARNING: 06-13 15:58:57:  client * 17710 --------------------------------------------------------------- open log_r.1357334880.wf ------------
+WARNING: 06-13 15:58:57:  client * 17710 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17710 [  logid:  ][  reqip:  ][client.cpp:132]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 15:58:57:  client * 17713 --------------------------------------------------------------- open log_r.1210476896.wf ------------
+WARNING: 06-13 15:58:57:  client * 17710 --------------------------------------------------------------- close log_r.1357334880.wf ------------
+WARNING: 06-13 15:58:57:  client * 17713 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17714 --------------------------------------------------------------- open log_r.1220966752.wf ------------
+WARNING: 06-13 15:58:57:  client * 17713 [  logid:  ][  reqip:  ][client.cpp:132]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 15:58:57:  client * 17713 --------------------------------------------------------------- close log_r.1210476896.wf ------------
+WARNING: 06-13 15:58:57:  client * 17714 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17714 [  logid:  ][  reqip:  ][client.cpp:132]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 15:58:57:  client * 17714 --------------------------------------------------------------- close log_r.1220966752.wf ------------
+WARNING: 06-13 15:58:57:  client * 17715 --------------------------------------------------------------- open log_r.1231456608.wf ------------
+WARNING: 06-13 15:58:57:  client * 17715 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17716 --------------------------------------------------------------- open log_r.1241946464.wf ------------
+WARNING: 06-13 15:58:57:  client * 17715 [  logid:  ][  reqip:  ][client.cpp:132]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 15:58:57:  client * 17715 --------------------------------------------------------------- close log_r.1231456608.wf ------------
+WARNING: 06-13 15:58:57:  client * 17716 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17716 [  logid:  ][  reqip:  ][client.cpp:132]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 15:58:57:  client * 17716 --------------------------------------------------------------- close log_r.1241946464.wf ------------
+WARNING: 06-13 15:58:57:  client * 17723 --------------------------------------------------------------- open log_r.1283905888.wf ------------
+WARNING: 06-13 15:58:57:  client * 17723 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17723 [  logid:  ][  reqip:  ][client.cpp:132]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 15:58:57:  client * 17723 --------------------------------------------------------------- close log_r.1283905888.wf ------------
+WARNING: 06-13 15:58:57:  client * 17719 --------------------------------------------------------------- open log_r.1262926176.wf ------------
+WARNING: 06-13 15:58:57:  client * 17719 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17719 [  logid:  ][  reqip:  ][client.cpp:132]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 15:58:57:  client * 17720 --------------------------------------------------------------- open log_r.1273416032.wf ------------
+WARNING: 06-13 15:58:57:  client * 17719 --------------------------------------------------------------- close log_r.1262926176.wf ------------
+WARNING: 06-13 15:58:57:  client * 17720 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17726 --------------------------------------------------------------- open log_r.1315375456.wf ------------
+WARNING: 06-13 15:58:57:  client * 17720 [  logid:  ][  reqip:  ][client.cpp:132]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 15:58:57:  client * 17720 --------------------------------------------------------------- close log_r.1273416032.wf ------------
+WARNING: 06-13 15:58:57:  client * 17726 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17726 [  logid:  ][  reqip:  ][client.cpp:132]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 15:58:57:  client * 17724 --------------------------------------------------------------- open log_r.1294395744.wf ------------
+WARNING: 06-13 15:58:57:  client * 17726 --------------------------------------------------------------- close log_r.1315375456.wf ------------
+WARNING: 06-13 15:58:57:  client * 17724 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17724 [  logid:  ][  reqip:  ][client.cpp:132]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 15:58:57:  client * 17725 --------------------------------------------------------------- open log_r.1304885600.wf ------------
+WARNING: 06-13 15:58:57:  client * 17724 --------------------------------------------------------------- close log_r.1294395744.wf ------------
+WARNING: 06-13 15:58:57:  client * 17725 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17725 [  logid:  ][  reqip:  ][client.cpp:132]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 15:58:57:  client * 17718 --------------------------------------------------------------- open log_r.1252436320.wf ------------
+WARNING: 06-13 15:58:57:  client * 17725 --------------------------------------------------------------- close log_r.1304885600.wf ------------
+WARNING: 06-13 15:58:57:  client * 17718 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17718 [  logid:  ][  reqip:  ][client.cpp:132]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 15:58:57:  client * 17727 --------------------------------------------------------------- open log_r.1325865312.wf ------------
+WARNING: 06-13 15:58:57:  client * 17718 --------------------------------------------------------------- close log_r.1252436320.wf ------------
+WARNING: 06-13 15:58:57:  client * 17727 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17727 [  logid:  ][  reqip:  ][client.cpp:132]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 15:58:57:  client * 17727 --------------------------------------------------------------- close log_r.1325865312.wf ------------
+WARNING: 06-13 15:58:57:  client * 17728 --------------------------------------------------------------- open log_r.1325865312.wf ------------
+WARNING: 06-13 15:58:57:  client * 17728 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17729 --------------------------------------------------------------- open log_r.1315375456.wf ------------
+WARNING: 06-13 15:58:57:  client * 17728 [  logid:  ][  reqip:  ][client.cpp:200]nshead_singletalk failed; err:param_error
+WARNING: 06-13 15:58:57:  client * 17728 --------------------------------------------------------------- close log_r.1325865312.wf ------------
+WARNING: 06-13 15:58:57:  client * 17729 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17729 [  logid:  ][  reqip:  ][client.cpp:200]nshead_singletalk failed; err:param_error
+WARNING: 06-13 15:58:57:  client * 17730 --------------------------------------------------------------- open log_r.1304885600.wf ------------
+WARNING: 06-13 15:58:57:  client * 17729 --------------------------------------------------------------- close log_r.1315375456.wf ------------
+WARNING: 06-13 15:58:57:  client * 17730 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17730 [  logid:  ][  reqip:  ][client.cpp:200]nshead_singletalk failed; err:param_error
+WARNING: 06-13 15:58:57:  client * 17730 --------------------------------------------------------------- close log_r.1304885600.wf ------------
+WARNING: 06-13 15:58:57:  client * 17731 --------------------------------------------------------------- open log_r.1210476896.wf ------------
+WARNING: 06-13 15:58:57:  client * 17731 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17731 [  logid:  ][  reqip:  ][client.cpp:200]nshead_singletalk failed; err:param_error
+WARNING: 06-13 15:58:57:  client * 17731 --------------------------------------------------------------- close log_r.1210476896.wf ------------
+WARNING: 06-13 15:58:57:  client * 17732 --------------------------------------------------------------- open log_r.1220966752.wf ------------
+WARNING: 06-13 15:58:57:  client * 17732 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17733 --------------------------------------------------------------- open log_r.1231456608.wf ------------
+WARNING: 06-13 15:58:57:  client * 17732 [  logid:  ][  reqip:  ][client.cpp:200]nshead_singletalk failed; err:param_error
+WARNING: 06-13 15:58:57:  client * 17732 --------------------------------------------------------------- close log_r.1220966752.wf ------------
+WARNING: 06-13 15:58:57:  client * 17733 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17733 [  logid:  ][  reqip:  ][client.cpp:200]nshead_singletalk failed; err:param_error
+WARNING: 06-13 15:58:57:  client * 17733 --------------------------------------------------------------- close log_r.1231456608.wf ------------
+WARNING: 06-13 15:58:57:  client * 17734 --------------------------------------------------------------- open log_r.1241946464.wf ------------
+WARNING: 06-13 15:58:57:  client * 17734 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17734 [  logid:  ][  reqip:  ][client.cpp:200]nshead_singletalk failed; err:param_error
+WARNING: 06-13 15:58:57:  client * 17734 --------------------------------------------------------------- close log_r.1241946464.wf ------------
+WARNING: 06-13 15:58:57:  client * 17738 --------------------------------------------------------------- open log_r.1283905888.wf ------------
+WARNING: 06-13 15:58:57:  client * 17738 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17738 [  logid:  ][  reqip:  ][client.cpp:200]nshead_singletalk failed; err:param_error
+WARNING: 06-13 15:58:57:  client * 17736 --------------------------------------------------------------- open log_r.1262926176.wf ------------
+WARNING: 06-13 15:58:57:  client * 17738 --------------------------------------------------------------- close log_r.1283905888.wf ------------
+WARNING: 06-13 15:58:57:  client * 17736 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17736 [  logid:  ][  reqip:  ][client.cpp:200]nshead_singletalk failed; err:param_error
+WARNING: 06-13 15:58:57:  client * 17736 --------------------------------------------------------------- close log_r.1262926176.wf ------------
+WARNING: 06-13 15:58:57:  client * 17737 --------------------------------------------------------------- open log_r.1273416032.wf ------------
+WARNING: 06-13 15:58:57:  client * 17737 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17737 [  logid:  ][  reqip:  ][client.cpp:200]nshead_singletalk failed; err:param_error
+WARNING: 06-13 15:58:57:  client * 17737 --------------------------------------------------------------- close log_r.1273416032.wf ------------
+WARNING: 06-13 15:58:57:  client * 17735 --------------------------------------------------------------- open log_r.1252436320.wf ------------
+WARNING: 06-13 15:58:57:  client * 17735 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17735 [  logid:  ][  reqip:  ][client.cpp:200]nshead_singletalk failed; err:param_error
+WARNING: 06-13 15:58:57:  client * 17735 --------------------------------------------------------------- close log_r.1252436320.wf ------------
+WARNING: 06-13 15:58:57:  client * 17739 --------------------------------------------------------------- open log_r.1294395744.wf ------------
+WARNING: 06-13 15:58:57:  client * 17739 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17739 [  logid:  ][  reqip:  ][client.cpp:200]nshead_singletalk failed; err:param_error
+WARNING: 06-13 15:58:57:  client * 17740 --------------------------------------------------------------- open log_r.1336355168.wf ------------
+WARNING: 06-13 15:58:57:  client * 17739 --------------------------------------------------------------- close log_r.1294395744.wf ------------
+WARNING: 06-13 15:58:57:  client * 17740 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17740 [  logid:  ][  reqip:  ][client.cpp:200]nshead_singletalk failed; err:param_error
+WARNING: 06-13 15:58:57:  client * 17741 --------------------------------------------------------------- open log_r.1346845024.wf ------------
+WARNING: 06-13 15:58:57:  client * 17740 --------------------------------------------------------------- close log_r.1336355168.wf ------------
+WARNING: 06-13 15:58:57:  client * 17741 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17741 [  logid:  ][  reqip:  ][client.cpp:200]nshead_singletalk failed; err:param_error
+WARNING: 06-13 15:58:57:  client * 17742 --------------------------------------------------------------- open log_r.1357334880.wf ------------
+WARNING: 06-13 15:58:57:  client * 17741 --------------------------------------------------------------- close log_r.1346845024.wf ------------
+WARNING: 06-13 15:58:57:  client * 17742 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17742 [  logid:  ][  reqip:  ][client.cpp:200]nshead_singletalk failed; err:param_error
+WARNING: 06-13 15:58:57:  client * 17742 --------------------------------------------------------------- close log_r.1357334880.wf ------------
+WARNING: 06-13 15:58:57:  client * 17743 --------------------------------------------------------------- open log_r.1357334880.wf ------------
+WARNING: 06-13 15:58:57:  client * 17743 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17744 --------------------------------------------------------------- open log_r.1346845024.wf ------------
+WARNING: 06-13 15:58:57:  client * 17743 --------------------------------------------------------------- close log_r.1357334880.wf ------------
+WARNING: 06-13 15:58:57:  client * 17744 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17745 --------------------------------------------------------------- open log_r.1336355168.wf ------------
+WARNING: 06-13 15:58:57:  client * 17745 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17744 --------------------------------------------------------------- close log_r.1346845024.wf ------------
+WARNING: 06-13 15:58:57:  client * 17746 --------------------------------------------------------------- open log_r.1210476896.wf ------------
+WARNING: 06-13 15:58:57:  client * 17745 --------------------------------------------------------------- close log_r.1336355168.wf ------------
+WARNING: 06-13 15:58:57:  client * 17746 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17747 --------------------------------------------------------------- open log_r.1220966752.wf ------------
+WARNING: 06-13 15:58:57:  client * 17746 --------------------------------------------------------------- close log_r.1210476896.wf ------------
+WARNING: 06-13 15:58:57:  client * 17747 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17747 --------------------------------------------------------------- close log_r.1220966752.wf ------------
+WARNING: 06-13 15:58:57:  client * 17748 --------------------------------------------------------------- open log_r.1231456608.wf ------------
+WARNING: 06-13 15:58:57:  client * 17748 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17749 --------------------------------------------------------------- open log_r.1241946464.wf ------------
+WARNING: 06-13 15:58:57:  client * 17748 --------------------------------------------------------------- close log_r.1231456608.wf ------------
+WARNING: 06-13 15:58:57:  client * 17749 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17750 --------------------------------------------------------------- open log_r.1252436320.wf ------------
+WARNING: 06-13 15:58:57:  client * 17749 --------------------------------------------------------------- close log_r.1241946464.wf ------------
+WARNING: 06-13 15:58:57:  client * 17750 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17750 --------------------------------------------------------------- close log_r.1252436320.wf ------------
+WARNING: 06-13 15:58:57:  client * 17751 --------------------------------------------------------------- open log_r.1262926176.wf ------------
+WARNING: 06-13 15:58:57:  client * 17751 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17752 --------------------------------------------------------------- open log_r.1273416032.wf ------------
+WARNING: 06-13 15:58:57:  client * 17751 --------------------------------------------------------------- close log_r.1262926176.wf ------------
+WARNING: 06-13 15:58:57:  client * 17752 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17754 --------------------------------------------------------------- open log_r.1294395744.wf ------------
+WARNING: 06-13 15:58:57:  client * 17752 --------------------------------------------------------------- close log_r.1273416032.wf ------------
+WARNING: 06-13 15:58:57:  client * 17754 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17755 --------------------------------------------------------------- open log_r.1304885600.wf ------------
+WARNING: 06-13 15:58:57:  client * 17754 --------------------------------------------------------------- close log_r.1294395744.wf ------------
+WARNING: 06-13 15:58:57:  client * 17755 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17755 --------------------------------------------------------------- close log_r.1304885600.wf ------------
+WARNING: 06-13 15:58:57:  client * 17753 --------------------------------------------------------------- open log_r.1283905888.wf ------------
+WARNING: 06-13 15:58:57:  client * 17753 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17753 --------------------------------------------------------------- close log_r.1283905888.wf ------------
+WARNING: 06-13 15:58:57:  client * 17756 --------------------------------------------------------------- open log_r.1315375456.wf ------------
+WARNING: 06-13 15:58:57:  client * 17756 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17756 --------------------------------------------------------------- close log_r.1315375456.wf ------------
+WARNING: 06-13 15:58:57:  client * 17758 --------------------------------------------------------------- open log_r.1325865312.wf ------------
+WARNING: 06-13 15:58:57:  client * 17758 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 15:58:57:  client * 17758 --------------------------------------------------------------- close log_r.1325865312.wf ------------
+WARNING: 06-13 15:59:02:  client * 17694 --------------------------------------------------------------- close log_r.1199987040.wf ------------
+WARNING: 06-13 15:59:02:  client * 17692 --------------------------------------------------------------- close log_r.1179007328.wf ------------
+WARNING: 06-13 15:59:02:  client * 17685 --------------------------------------------------------------- close log_r.1085651296.wf ------------
+WARNING: 06-13 15:59:02:  client * 17684 --------------------------------------------------------------- close log_r.1105578336.wf ------------
+WARNING: 06-13 15:59:02:  client * 17687 --------------------------------------------------------------- close log_r.1126558048.wf ------------
+WARNING: 06-13 15:59:02:  client * 17686 --------------------------------------------------------------- close log_r.1116068192.wf ------------
+WARNING: 06-13 15:59:02:  client * 17688 --------------------------------------------------------------- close log_r.1137047904.wf ------------
+WARNING: 06-13 15:59:02:  client * 17689 --------------------------------------------------------------- close log_r.1147537760.wf ------------
+WARNING: 06-13 15:59:02:  client * 17690 --------------------------------------------------------------- close log_r.1158027616.wf ------------
+WARNING: 06-13 15:59:02:  client * 17693 --------------------------------------------------------------- close log_r.1189497184.wf ------------
+WARNING: 06-13 15:59:02:  client * 17691 --------------------------------------------------------------- close log_r.1168517472.wf ------------
+WARNING: 06-13 16:06:50:  client * 11236 --------------------------------------------------------------- open log.wf ------------
+WARNING: 06-13 16:06:50:  client * 11239 --------------------------------------------------------------- open log_r.1095375200.wf ------------
+WARNING: 06-13 16:06:50:  client * 11240 --------------------------------------------------------------- open log_r.1110227296.wf ------------
+WARNING: 06-13 16:06:50:  client * 11242 --------------------------------------------------------------- open log_r.1120717152.wf ------------
+WARNING: 06-13 16:06:50:  client * 11246 --------------------------------------------------------------- open log_r.1152186720.wf ------------
+WARNING: 06-13 16:06:50:  client * 11236 [  logid:  ][  reqip:  ][ucm_monitor.cpp:69]not set UbMonitor
+WARNING: 06-13 16:06:50:  client * 11245 --------------------------------------------------------------- open log_r.1141696864.wf ------------
+WARNING: 06-13 16:06:50:  client * 11244 --------------------------------------------------------------- open log_r.1131207008.wf ------------
+WARNING: 06-13 16:06:50:  client * 11247 --------------------------------------------------------------- open log_r.1162676576.wf ------------
+WARNING: 06-13 16:06:50:  client * 11248 --------------------------------------------------------------- open log_r.1173166432.wf ------------
+WARNING: 06-13 16:06:50:  client * 11249 --------------------------------------------------------------- open log_r.1183656288.wf ------------
+WARNING: 06-13 16:06:50:  client * 11250 --------------------------------------------------------------- open log_r.1194146144.wf ------------
+WARNING: 06-13 16:06:50:  client * 11254 --------------------------------------------------------------- open log_r.1236105568.wf ------------
+WARNING: 06-13 16:06:50:  client * 11252 --------------------------------------------------------------- open log_r.1215125856.wf ------------
+WARNING: 06-13 16:06:50:  client * 11259 --------------------------------------------------------------- open log_r.1278064992.wf ------------
+WARNING: 06-13 16:06:50:  client * 11251 --------------------------------------------------------------- open log_r.1204636000.wf ------------
+WARNING: 06-13 16:06:50:  client * 11255 --------------------------------------------------------------- open log_r.1246595424.wf ------------
+WARNING: 06-13 16:06:50:  client * 11257 --------------------------------------------------------------- open log_r.1257085280.wf ------------
+WARNING: 06-13 16:06:50:  client * 11258 --------------------------------------------------------------- open log_r.1267575136.wf ------------
+WARNING: 06-13 16:06:50:  client * 11253 --------------------------------------------------------------- open log_r.1225615712.wf ------------
+WARNING: 06-13 16:06:50:  client * 11260 --------------------------------------------------------------- open log_r.1288554848.wf ------------
+WARNING: 06-13 16:06:50:  client * 11252 <2129835068> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 16:06:50:  client * 11258 <2121007148> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 16:06:50:  client * 11252 [logid:2129835068] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 16:06:50:  client * 11259 <1976986536> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 16:06:50:  client * 11258 [logid:2121007148] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 16:06:50:  client * 11257 [logid:1169974596] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-7(NSHEAD_RET_PEARCLOSE)]
+WARNING: 06-13 16:06:50:  client * 11259 [logid:1976986536] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 16:06:50:  client * 11259 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 16:06:50:  client * 11261 --------------------------------------------------------------- open log_r.1299044704.wf ------------
+WARNING: 06-13 16:06:50:  client * 11258 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 16:06:50:  client * 11257 [connection.cpp:333]freeConnection connection err[-125], ip[127.0.0.1] port[22112]
+WARNING: 06-13 16:06:50:  client * 11252 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 16:06:50:  client * 11263 --------------------------------------------------------------- open log_r.1309534560.wf ------------
+WARNING: 06-13 16:06:50:  client * 11260 [socketpool.cpp:247]ping: connection close by peer! sock[38], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11264 --------------------------------------------------------------- open log_r.1320024416.wf ------------
+WARNING: 06-13 16:06:50:  client * 11265 --------------------------------------------------------------- open log_r.1330514272.wf ------------
+WARNING: 06-13 16:06:50:  client * 11259 [  logid:  ][  reqip:  ][client.cpp:72]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 16:06:50:  client * 11258 [  logid:  ][  reqip:  ][client.cpp:72]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 16:06:50:  client * 11258 --------------------------------------------------------------- close log_r.1267575136.wf ------------
+WARNING: 06-13 16:06:50:  client * 11266 --------------------------------------------------------------- open log_r.1341004128.wf ------------
+WARNING: 06-13 16:06:50:  client * 11257 [  logid:  ][  reqip:  ][client.cpp:72]nshead_simple_singletalk failed; err:Peer closed connection
+WARNING: 06-13 16:06:50:  client * 11252 [  logid:  ][  reqip:  ][client.cpp:72]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 16:06:50:  client * 11259 --------------------------------------------------------------- close log_r.1278064992.wf ------------
+WARNING: 06-13 16:06:50:  client * 11252 --------------------------------------------------------------- close log_r.1215125856.wf ------------
+WARNING: 06-13 16:06:50:  client * 11257 --------------------------------------------------------------- close log_r.1257085280.wf ------------
+WARNING: 06-13 16:06:50:  client * 11266 <360825088> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 16:06:50:  client * 11260 [logid:398815998] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-7(NSHEAD_RET_PEARCLOSE)]
+WARNING: 06-13 16:06:50:  client * 11261 [socketpool.cpp:247]ping: connection close by peer! sock[38], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11254 <1814707212> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 16:06:50:  client * 11267 --------------------------------------------------------------- open log_r.1351493984.wf ------------
+WARNING: 06-13 16:06:50:  client * 11260 [connection.cpp:333]freeConnection connection err[-125], ip[127.0.0.1] port[22112]
+WARNING: 06-13 16:06:50:  client * 11266 [logid:360825088] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 16:06:50:  client * 11266 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 16:06:50:  client * 11266 [  logid:  ][  reqip:  ][client.cpp:72]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 16:06:50:  client * 11260 [  logid:  ][  reqip:  ][client.cpp:72]nshead_simple_singletalk failed; err:Peer closed connection
+WARNING: 06-13 16:06:50:  client * 11266 --------------------------------------------------------------- close log_r.1341004128.wf ------------
+WARNING: 06-13 16:06:50:  client * 11260 --------------------------------------------------------------- close log_r.1288554848.wf ------------
+WARNING: 06-13 16:06:50:  client * 11268 --------------------------------------------------------------- open log_r.1361983840.wf ------------
+WARNING: 06-13 16:06:50:  client * 11264 [socketpool.cpp:247]ping: connection close by peer! sock[37], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11264 [socketpool.cpp:247]ping: connection close by peer! sock[41], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11264 [socketpool.cpp:247]ping: connection close by peer! sock[43], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11254 [logid:1814707212] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 16:06:50:  client * 11255 [socketpool.cpp:247]ping: connection close by peer! sock[38], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11255 [socketpool.cpp:247]ping: connection close by peer! sock[39], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11254 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 16:06:50:  client * 11263 [socketpool.cpp:247]ping: connection close by peer! sock[42], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11254 [  logid:  ][  reqip:  ][client.cpp:72]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 16:06:50:  client * 11254 --------------------------------------------------------------- close log_r.1236105568.wf ------------
+WARNING: 06-13 16:06:50:  client * 11261 [socketpool.cpp:247]ping: connection close by peer! sock[35], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11267 [logid:1291476857] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-7(NSHEAD_RET_PEARCLOSE)]
+WARNING: 06-13 16:06:50:  client * 11267 [connection.cpp:333]freeConnection connection err[-125], ip[127.0.0.1] port[22112]
+WARNING: 06-13 16:06:50:  client * 11267 [  logid:  ][  reqip:  ][client.cpp:72]nshead_simple_singletalk failed; err:Peer closed connection
+WARNING: 06-13 16:06:50:  client * 11267 --------------------------------------------------------------- close log_r.1351493984.wf ------------
+WARNING: 06-13 16:06:50:  client * 11253 [socketpool.cpp:247]ping: connection close by peer! sock[41], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11268 [socketpool.cpp:247]ping: connection close by peer! sock[40], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11263 [logid:2129565531] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-7(NSHEAD_RET_PEARCLOSE)]
+WARNING: 06-13 16:06:50:  client * 11263 [connection.cpp:333]freeConnection connection err[-125], ip[127.0.0.1] port[22112]
+WARNING: 06-13 16:06:50:  client * 11263 [  logid:  ][  reqip:  ][client.cpp:72]nshead_simple_singletalk failed; err:Peer closed connection
+WARNING: 06-13 16:06:50:  client * 11263 --------------------------------------------------------------- close log_r.1309534560.wf ------------
+WARNING: 06-13 16:06:50:  client * 11265 [socketpool.cpp:247]ping: connection close by peer! sock[39], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11265 [socketpool.cpp:247]ping: connection close by peer! sock[42], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11264 [socketpool.cpp:247]ping: connection close by peer! sock[35], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11264 [socketpool.cpp:247]ping: connection close by peer! sock[36], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11264 [socketpool.cpp:247]ping: connection close by peer! sock[37], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11264 [socketpool.cpp:247]ping: connection close by peer! sock[40], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11253 <1121739342> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 16:06:50:  client * 11253 [logid:1121739342] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 16:06:50:  client * 11264 <419250715> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 16:06:50:  client * 11265 [socketpool.cpp:247]ping: connection close by peer! sock[38], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11253 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 16:06:50:  client * 11261 [socketpool.cpp:247]ping: connection close by peer! sock[37], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11261 [socketpool.cpp:247]ping: connection close by peer! sock[40], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11261 [socketpool.cpp:247]ping: connection close by peer! sock[39], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11264 [logid:419250715] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 16:06:50:  client * 11253 [  logid:  ][  reqip:  ][client.cpp:72]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 16:06:50:  client * 11264 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 16:06:50:  client * 11253 --------------------------------------------------------------- close log_r.1225615712.wf ------------
+WARNING: 06-13 16:06:50:  client * 11264 [  logid:  ][  reqip:  ][client.cpp:72]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 16:06:50:  client * 11264 --------------------------------------------------------------- close log_r.1320024416.wf ------------
+WARNING: 06-13 16:06:50:  client * 11265 [socketpool.cpp:247]ping: connection close by peer! sock[35], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11255 [socketpool.cpp:247]ping: connection close by peer! sock[37], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11255 [socketpool.cpp:247]ping: connection close by peer! sock[36], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11255 [socketpool.cpp:247]ping: connection close by peer! sock[38], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11261 [socketpool.cpp:247]ping: connection close by peer! sock[35], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11255 [socketpool.cpp:247]ping: connection close by peer! sock[36], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11265 [socketpool.cpp:247]ping: connection close by peer! sock[38], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11268 <250114979> nshead_read_ex fail: ret=-1 ERR[Connection reset by peer]
+WARNING: 06-13 16:06:50:  client * 11268 [logid:250114979] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-4(NSHEAD_RET_READ)]
+WARNING: 06-13 16:06:50:  client * 11268 [connection.cpp:333]freeConnection connection err[-122], ip[127.0.0.1] port[22112]
+WARNING: 06-13 16:06:50:  client * 11268 [  logid:  ][  reqip:  ][client.cpp:72]nshead_simple_singletalk failed; err:Read nshead message failed
+WARNING: 06-13 16:06:50:  client * 11261 [socketpool.cpp:247]ping: connection close by peer! sock[35], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11268 --------------------------------------------------------------- close log_r.1361983840.wf ------------
+WARNING: 06-13 16:06:50:  client * 11255 [socketpool.cpp:247]ping: connection close by peer! sock[36], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11261 [socketpool.cpp:247]ping: connection close by peer! sock[35], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11261 [socketpool.cpp:247]ping: connection close by peer! sock[38], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11255 [socketpool.cpp:247]ping: connection close by peer! sock[36], ip[127.0.0.1:22112]
+WARNING: 06-13 16:06:50:  client * 11261 [logid:1214660608] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-7(NSHEAD_RET_PEARCLOSE)]
+WARNING: 06-13 16:06:50:  client * 11261 [connection.cpp:333]freeConnection connection err[-125], ip[127.0.0.1] port[22112]
+WARNING: 06-13 16:06:50:  client * 11265 [logid:707348237] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-7(NSHEAD_RET_PEARCLOSE)]
+WARNING: 06-13 16:06:50:  client * 11261 [  logid:  ][  reqip:  ][client.cpp:72]nshead_simple_singletalk failed; err:Peer closed connection
+WARNING: 06-13 16:06:50:  client * 11265 [connection.cpp:333]freeConnection connection err[-125], ip[127.0.0.1] port[22112]
+WARNING: 06-13 16:06:50:  client * 11261 --------------------------------------------------------------- close log_r.1299044704.wf ------------
+WARNING: 06-13 16:06:50:  client * 11265 [  logid:  ][  reqip:  ][client.cpp:72]nshead_simple_singletalk failed; err:Peer closed connection
+WARNING: 06-13 16:06:50:  client * 11265 --------------------------------------------------------------- close log_r.1330514272.wf ------------
+WARNING: 06-13 16:06:50:  client * 11255 [logid:148470854] [ucm_nshead.cpp:149] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:rstree] [server_ip:127.0.0.1] [server_port:22112] [system_errno:] [system_msg:] [msg: read nshead response Failed, through nshead_read_ex(), ret=-7(NSHEAD_RET_PEARCLOSE)]
+WARNING: 06-13 16:06:50:  client * 11255 [connection.cpp:333]freeConnection connection err[-125], ip[127.0.0.1] port[22112]
+WARNING: 06-13 16:06:50:  client * 11255 [  logid:  ][  reqip:  ][client.cpp:72]nshead_simple_singletalk failed; err:Peer closed connection
+WARNING: 06-13 16:06:50:  client * 11255 --------------------------------------------------------------- close log_r.1246595424.wf ------------
+WARNING: 06-13 16:06:50:  client * 11274 --------------------------------------------------------------- open log_r.1361983840.wf ------------
+WARNING: 06-13 16:06:50:  client * 11275 --------------------------------------------------------------- open log_r.1351493984.wf ------------
+WARNING: 06-13 16:06:50:  client * 11275 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11274 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11275 [  logid:  ][  reqip:  ][client.cpp:134]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 16:06:50:  client * 11274 [  logid:  ][  reqip:  ][client.cpp:134]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 16:06:50:  client * 11275 --------------------------------------------------------------- close log_r.1351493984.wf ------------
+WARNING: 06-13 16:06:50:  client * 11274 --------------------------------------------------------------- close log_r.1361983840.wf ------------
+WARNING: 06-13 16:06:50:  client * 11276 --------------------------------------------------------------- open log_r.1341004128.wf ------------
+WARNING: 06-13 16:06:50:  client * 11276 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11276 [  logid:  ][  reqip:  ][client.cpp:134]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 16:06:50:  client * 11281 --------------------------------------------------------------- open log_r.1225615712.wf ------------
+WARNING: 06-13 16:06:50:  client * 11276 --------------------------------------------------------------- close log_r.1341004128.wf ------------
+WARNING: 06-13 16:06:50:  client * 11281 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11281 [  logid:  ][  reqip:  ][client.cpp:134]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 16:06:50:  client * 11278 --------------------------------------------------------------- open log_r.1215125856.wf ------------
+WARNING: 06-13 16:06:50:  client * 11281 --------------------------------------------------------------- close log_r.1225615712.wf ------------
+WARNING: 06-13 16:06:50:  client * 11278 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11282 --------------------------------------------------------------- open log_r.1236105568.wf ------------
+WARNING: 06-13 16:06:50:  client * 11278 [  logid:  ][  reqip:  ][client.cpp:134]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 16:06:50:  client * 11278 --------------------------------------------------------------- close log_r.1215125856.wf ------------
+WARNING: 06-13 16:06:50:  client * 11282 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11282 [  logid:  ][  reqip:  ][client.cpp:134]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 16:06:50:  client * 11282 --------------------------------------------------------------- close log_r.1236105568.wf ------------
+WARNING: 06-13 16:06:50:  client * 11283 --------------------------------------------------------------- open log_r.1084852576.wf ------------
+WARNING: 06-13 16:06:50:  client * 11283 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11284 --------------------------------------------------------------- open log_r.1246595424.wf ------------
+WARNING: 06-13 16:06:50:  client * 11283 [  logid:  ][  reqip:  ][client.cpp:134]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 16:06:50:  client * 11283 --------------------------------------------------------------- close log_r.1084852576.wf ------------
+WARNING: 06-13 16:06:50:  client * 11284 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11285 --------------------------------------------------------------- open log_r.1257085280.wf ------------
+WARNING: 06-13 16:06:50:  client * 11284 [  logid:  ][  reqip:  ][client.cpp:134]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 16:06:50:  client * 11284 --------------------------------------------------------------- close log_r.1246595424.wf ------------
+WARNING: 06-13 16:06:50:  client * 11285 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11286 --------------------------------------------------------------- open log_r.1267575136.wf ------------
+WARNING: 06-13 16:06:50:  client * 11285 [  logid:  ][  reqip:  ][client.cpp:134]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 16:06:50:  client * 11285 --------------------------------------------------------------- close log_r.1257085280.wf ------------
+WARNING: 06-13 16:06:50:  client * 11286 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11290 --------------------------------------------------------------- open log_r.1309534560.wf ------------
+WARNING: 06-13 16:06:50:  client * 11286 [  logid:  ][  reqip:  ][client.cpp:134]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 16:06:50:  client * 11286 --------------------------------------------------------------- close log_r.1267575136.wf ------------
+WARNING: 06-13 16:06:50:  client * 11290 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11290 [  logid:  ][  reqip:  ][client.cpp:134]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 16:06:50:  client * 11288 --------------------------------------------------------------- open log_r.1288554848.wf ------------
+WARNING: 06-13 16:06:50:  client * 11290 --------------------------------------------------------------- close log_r.1309534560.wf ------------
+WARNING: 06-13 16:06:50:  client * 11288 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11288 [  logid:  ][  reqip:  ][client.cpp:134]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 16:06:50:  client * 11288 --------------------------------------------------------------- close log_r.1288554848.wf ------------
+WARNING: 06-13 16:06:50:  client * 11289 --------------------------------------------------------------- open log_r.1299044704.wf ------------
+WARNING: 06-13 16:06:50:  client * 11289 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11289 [  logid:  ][  reqip:  ][client.cpp:134]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 16:06:50:  client * 11289 --------------------------------------------------------------- close log_r.1299044704.wf ------------
+WARNING: 06-13 16:06:50:  client * 11287 --------------------------------------------------------------- open log_r.1278064992.wf ------------
+WARNING: 06-13 16:06:50:  client * 11287 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11287 [  logid:  ][  reqip:  ][client.cpp:134]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 16:06:50:  client * 11291 --------------------------------------------------------------- open log_r.1320024416.wf ------------
+WARNING: 06-13 16:06:50:  client * 11287 --------------------------------------------------------------- close log_r.1278064992.wf ------------
+WARNING: 06-13 16:06:50:  client * 11291 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11291 [  logid:  ][  reqip:  ][client.cpp:134]nshead_simple_singletalk failed; err:No service
+WARNING: 06-13 16:06:50:  client * 11291 --------------------------------------------------------------- close log_r.1320024416.wf ------------
+WARNING: 06-13 16:06:50:  client * 11292 --------------------------------------------------------------- open log_r.1320024416.wf ------------
+WARNING: 06-13 16:06:50:  client * 11292 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11294 --------------------------------------------------------------- open log_r.1299044704.wf ------------
+WARNING: 06-13 16:06:50:  client * 11294 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11293 --------------------------------------------------------------- open log_r.1309534560.wf ------------
+WARNING: 06-13 16:06:50:  client * 11293 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11292 [  logid:  ][  reqip:  ][client.cpp:202]nshead_singletalk failed; err:param_error
+WARNING: 06-13 16:06:50:  client * 11294 [  logid:  ][  reqip:  ][client.cpp:202]nshead_singletalk failed; err:param_error
+WARNING: 06-13 16:06:50:  client * 11293 [  logid:  ][  reqip:  ][client.cpp:202]nshead_singletalk failed; err:param_error
+WARNING: 06-13 16:06:50:  client * 11295 --------------------------------------------------------------- open log_r.1215125856.wf ------------
+WARNING: 06-13 16:06:50:  client * 11292 --------------------------------------------------------------- close log_r.1320024416.wf ------------
+WARNING: 06-13 16:06:50:  client * 11294 --------------------------------------------------------------- close log_r.1299044704.wf ------------
+WARNING: 06-13 16:06:50:  client * 11293 --------------------------------------------------------------- close log_r.1309534560.wf ------------
+WARNING: 06-13 16:06:50:  client * 11295 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11296 --------------------------------------------------------------- open log_r.1225615712.wf ------------
+WARNING: 06-13 16:06:50:  client * 11295 [  logid:  ][  reqip:  ][client.cpp:202]nshead_singletalk failed; err:param_error
+WARNING: 06-13 16:06:50:  client * 11296 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11295 --------------------------------------------------------------- close log_r.1215125856.wf ------------
+WARNING: 06-13 16:06:50:  client * 11296 [  logid:  ][  reqip:  ][client.cpp:202]nshead_singletalk failed; err:param_error
+WARNING: 06-13 16:06:50:  client * 11298 --------------------------------------------------------------- open log_r.1236105568.wf ------------
+WARNING: 06-13 16:06:50:  client * 11296 --------------------------------------------------------------- close log_r.1225615712.wf ------------
+WARNING: 06-13 16:06:50:  client * 11298 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11298 [  logid:  ][  reqip:  ][client.cpp:202]nshead_singletalk failed; err:param_error
+WARNING: 06-13 16:06:50:  client * 11299 --------------------------------------------------------------- open log_r.1246595424.wf ------------
+WARNING: 06-13 16:06:50:  client * 11298 --------------------------------------------------------------- close log_r.1236105568.wf ------------
+WARNING: 06-13 16:06:50:  client * 11299 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11299 [  logid:  ][  reqip:  ][client.cpp:202]nshead_singletalk failed; err:param_error
+WARNING: 06-13 16:06:50:  client * 11299 --------------------------------------------------------------- close log_r.1246595424.wf ------------
+WARNING: 06-13 16:06:50:  client * 11300 --------------------------------------------------------------- open log_r.1257085280.wf ------------
+WARNING: 06-13 16:06:50:  client * 11300 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11300 [  logid:  ][  reqip:  ][client.cpp:202]nshead_singletalk failed; err:param_error
+WARNING: 06-13 16:06:50:  client * 11301 --------------------------------------------------------------- open log_r.1267575136.wf ------------
+WARNING: 06-13 16:06:50:  client * 11300 --------------------------------------------------------------- close log_r.1257085280.wf ------------
+WARNING: 06-13 16:06:50:  client * 11301 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11301 [  logid:  ][  reqip:  ][client.cpp:202]nshead_singletalk failed; err:param_error
+WARNING: 06-13 16:06:50:  client * 11302 --------------------------------------------------------------- open log_r.1278064992.wf ------------
+WARNING: 06-13 16:06:50:  client * 11301 --------------------------------------------------------------- close log_r.1267575136.wf ------------
+WARNING: 06-13 16:06:50:  client * 11302 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11302 [  logid:  ][  reqip:  ][client.cpp:202]nshead_singletalk failed; err:param_error
+WARNING: 06-13 16:06:50:  client * 11303 --------------------------------------------------------------- open log_r.1288554848.wf ------------
+WARNING: 06-13 16:06:50:  client * 11302 --------------------------------------------------------------- close log_r.1278064992.wf ------------
+WARNING: 06-13 16:06:50:  client * 11303 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11303 [  logid:  ][  reqip:  ][client.cpp:202]nshead_singletalk failed; err:param_error
+WARNING: 06-13 16:06:50:  client * 11304 --------------------------------------------------------------- open log_r.1330514272.wf ------------
+WARNING: 06-13 16:06:50:  client * 11303 --------------------------------------------------------------- close log_r.1288554848.wf ------------
+WARNING: 06-13 16:06:50:  client * 11304 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11304 [  logid:  ][  reqip:  ][client.cpp:202]nshead_singletalk failed; err:param_error
+WARNING: 06-13 16:06:50:  client * 11304 --------------------------------------------------------------- close log_r.1330514272.wf ------------
+WARNING: 06-13 16:06:50:  client * 11306 --------------------------------------------------------------- open log_r.1341004128.wf ------------
+WARNING: 06-13 16:06:50:  client * 11306 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11306 [  logid:  ][  reqip:  ][client.cpp:202]nshead_singletalk failed; err:param_error
+WARNING: 06-13 16:06:50:  client * 11307 --------------------------------------------------------------- open log_r.1351493984.wf ------------
+WARNING: 06-13 16:06:50:  client * 11307 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11306 --------------------------------------------------------------- close log_r.1341004128.wf ------------
+WARNING: 06-13 16:06:50:  client * 11307 [  logid:  ][  reqip:  ][client.cpp:202]nshead_singletalk failed; err:param_error
+WARNING: 06-13 16:06:50:  client * 11308 --------------------------------------------------------------- open log_r.1361983840.wf ------------
+WARNING: 06-13 16:06:50:  client * 11307 --------------------------------------------------------------- close log_r.1351493984.wf ------------
+WARNING: 06-13 16:06:50:  client * 11308 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11308 [  logid:  ][  reqip:  ][client.cpp:202]nshead_singletalk failed; err:param_error
+WARNING: 06-13 16:06:50:  client * 11308 --------------------------------------------------------------- close log_r.1361983840.wf ------------
+WARNING: 06-13 16:06:50:  client * 11310 --------------------------------------------------------------- open log_r.1361983840.wf ------------
+WARNING: 06-13 16:06:50:  client * 11310 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11312 --------------------------------------------------------------- open log_r.1341004128.wf ------------
+WARNING: 06-13 16:06:50:  client * 11310 --------------------------------------------------------------- close log_r.1361983840.wf ------------
+WARNING: 06-13 16:06:50:  client * 11312 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11311 --------------------------------------------------------------- open log_r.1351493984.wf ------------
+WARNING: 06-13 16:06:50:  client * 11312 --------------------------------------------------------------- close log_r.1341004128.wf ------------
+WARNING: 06-13 16:06:50:  client * 11314 --------------------------------------------------------------- open log_r.1225615712.wf ------------
+WARNING: 06-13 16:06:50:  client * 11311 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11311 --------------------------------------------------------------- close log_r.1351493984.wf ------------
+WARNING: 06-13 16:06:50:  client * 11314 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11314 --------------------------------------------------------------- close log_r.1225615712.wf ------------
+WARNING: 06-13 16:06:50:  client * 11313 --------------------------------------------------------------- open log_r.1215125856.wf ------------
+WARNING: 06-13 16:06:50:  client * 11313 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11315 --------------------------------------------------------------- open log_r.1236105568.wf ------------
+WARNING: 06-13 16:06:50:  client * 11313 --------------------------------------------------------------- close log_r.1215125856.wf ------------
+WARNING: 06-13 16:06:50:  client * 11315 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11316 --------------------------------------------------------------- open log_r.1246595424.wf ------------
+WARNING: 06-13 16:06:50:  client * 11315 --------------------------------------------------------------- close log_r.1236105568.wf ------------
+WARNING: 06-13 16:06:50:  client * 11316 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11316 --------------------------------------------------------------- close log_r.1246595424.wf ------------
+WARNING: 06-13 16:06:50:  client * 11317 --------------------------------------------------------------- open log_r.1257085280.wf ------------
+WARNING: 06-13 16:06:50:  client * 11317 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11318 --------------------------------------------------------------- open log_r.1267575136.wf ------------
+WARNING: 06-13 16:06:50:  client * 11317 --------------------------------------------------------------- close log_r.1257085280.wf ------------
+WARNING: 06-13 16:06:50:  client * 11318 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11319 --------------------------------------------------------------- open log_r.1278064992.wf ------------
+WARNING: 06-13 16:06:50:  client * 11318 --------------------------------------------------------------- close log_r.1267575136.wf ------------
+WARNING: 06-13 16:06:50:  client * 11319 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11319 --------------------------------------------------------------- close log_r.1278064992.wf ------------
+WARNING: 06-13 16:06:50:  client * 11320 --------------------------------------------------------------- open log_r.1288554848.wf ------------
+WARNING: 06-13 16:06:50:  client * 11320 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11322 --------------------------------------------------------------- open log_r.1309534560.wf ------------
+WARNING: 06-13 16:06:50:  client * 11320 --------------------------------------------------------------- close log_r.1288554848.wf ------------
+WARNING: 06-13 16:06:50:  client * 11322 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11322 --------------------------------------------------------------- close log_r.1309534560.wf ------------
+WARNING: 06-13 16:06:50:  client * 11321 --------------------------------------------------------------- open log_r.1299044704.wf ------------
+WARNING: 06-13 16:06:50:  client * 11321 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11321 --------------------------------------------------------------- close log_r.1299044704.wf ------------
+WARNING: 06-13 16:06:50:  client * 11323 --------------------------------------------------------------- open log_r.1320024416.wf ------------
+WARNING: 06-13 16:06:50:  client * 11323 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11323 --------------------------------------------------------------- close log_r.1320024416.wf ------------
+WARNING: 06-13 16:06:50:  client * 11324 --------------------------------------------------------------- open log_r.1330514272.wf ------------
+WARNING: 06-13 16:06:50:  client * 11324 [logid:0] [ubclient_manager.cpp:1123] [ub_client:] [need_care:no] [event_ptr:(nil)] [service:] [server_ip:] [server_port:0] [system_errno:] [system_msg:] [msg: get service(service1)'s UbClientPool instance Failed]
+WARNING: 06-13 16:06:50:  client * 11324 --------------------------------------------------------------- close log_r.1330514272.wf ------------
+WARNING: 06-13 16:06:55:  client * 11251 --------------------------------------------------------------- close log_r.1204636000.wf ------------
+WARNING: 06-13 16:06:55:  client * 11239 --------------------------------------------------------------- close log_r.1095375200.wf ------------
+WARNING: 06-13 16:06:55:  client * 11240 --------------------------------------------------------------- close log_r.1110227296.wf ------------
+WARNING: 06-13 16:06:55:  client * 11242 --------------------------------------------------------------- close log_r.1120717152.wf ------------
+WARNING: 06-13 16:06:55:  client * 11244 --------------------------------------------------------------- close log_r.1131207008.wf ------------
+WARNING: 06-13 16:06:55:  client * 11249 --------------------------------------------------------------- close log_r.1183656288.wf ------------
+WARNING: 06-13 16:06:55:  client * 11248 --------------------------------------------------------------- close log_r.1173166432.wf ------------
+WARNING: 06-13 16:06:55:  client * 11247 --------------------------------------------------------------- close log_r.1162676576.wf ------------
+WARNING: 06-13 16:06:55:  client * 11245 --------------------------------------------------------------- close log_r.1141696864.wf ------------
+WARNING: 06-13 16:06:55:  client * 11250 --------------------------------------------------------------- close log_r.1194146144.wf ------------
+WARNING: 06-13 16:06:55:  client * 11246 --------------------------------------------------------------- close log_r.1152186720.wf ------------
