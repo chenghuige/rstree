@@ -117,8 +117,8 @@ public:
     rstree_t()
     {
         min_frequency = DEFAULT_MIN_FREQUENCY;
-        min_length = DEFAULT_MIN_LENGTH;
-        max_length = DEFAULT_MAX_LENGTH;
+        min_substr_len = DEFAULT_MIN_LENGTH;
+        max_substr_len = DEFAULT_MAX_LENGTH;
         tree_size = DEFAULT_TREE_SIZE;
         end_string = L"\n";
 
@@ -139,14 +139,45 @@ public:
         min_frequency = freq;
     }
 
-    void set_min_length(int len)
+    void set_min_substr_len(int len)
     {
-        min_length = len;
+        min_substr_len = len;
     }
 
-    void set_max_length(int len)
+    int get_min_substr_len()
     {
-        max_length = len;
+        return min_substr_len;
+    }
+
+    void set_max_substr_len(int len)
+    {
+        max_substr_len = len;
+    }
+
+    int get_max_substr_len()
+    {
+        return max_substr_len;
+
+    }
+
+    void set_min_str_len(int len)
+    {
+        min_str_len = len;
+    }
+
+    int get_min_str_len()
+    {
+        return min_str_len;
+    }
+
+    void set_max_str_len(int len)
+    {
+        max_str_len = len;
+    }
+
+    int get_max_str_len()
+    {
+        return max_str_len;
     }
 
     void set_end_string(const wstring& s)
@@ -164,11 +195,16 @@ public:
         return text_map.size();
     }
 
+    size_t get_max_tree_size()
+    {
+        return tree_size;
+    }
+
     map<string, int> get_substr_freq();
 
     void print_tree();
 
-    map<wstring, int> add_text(wstring  text);
+    map<wstring, int> add_text(wstring text);
 
     int remove_text();
 
@@ -179,12 +215,16 @@ private:
     map<int, wstring> text_map;
     suffix_node_t * root;
     suffix_node_t * seed;
+
     int min_frequency;
-    int min_length;
-    int max_length;
+    int min_substr_len;
+    int max_substr_len;
     int tree_size;
     int text_id;
     int remove_id;
+
+    int min_str_len;
+    int max_str_len;
 
     wstring end_string;
 

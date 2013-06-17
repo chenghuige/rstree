@@ -41,7 +41,7 @@ void *thread_nshead_simple_singletalk(void *param)
         //申请内存用于存放response
         nshead_t reshead;
         reshead.log_id = reqhead.log_id;
-        int recvLen = 100;
+        int recvLen = 20000;
         char resbuf[recvLen];
         memset(resbuf, 0, sizeof(resbuf));
 
@@ -49,14 +49,14 @@ void *thread_nshead_simple_singletalk(void *param)
         char pack_buf[20000];
 
         mc_pack_t * req_pack = mc_pack_open_w(2, pack_buf, sizeof(pack_buf), temp_buf, sizeof(pack_buf));
-        mc_pack_put_str(req_pack, "content", "test content");
+        mc_pack_put_str(req_pack, "content", "test content test title");
         mc_pack_put_int32(req_pack, "freq", 2);
-        mc_pack_put_int32(req_pack, "len", 2);
+        mc_pack_put_int32(req_pack, "min_len", 2);
+        mc_pack_put_int32(req_pack, "max_len", 10);
 
         reqhead.body_len = mc_pack_get_size(req_pack);
 
         mc_pack_close(req_pack);
-        
 
         gettimeofday(&s1, NULL);
 
@@ -74,13 +74,31 @@ void *thread_nshead_simple_singletalk(void *param)
         }
         gettimeofday(&e1, NULL);
 
+        printf("ret head len is [%d]\n", reshead.body_len);
+        
+        mc_pack_t * res_pack = mc_pack_open_r(resbuf, reshead.body_len, temp_buf, sizeof(temp_buf));
+
+        int pack_size = mc_pack_get_size(res_pack);
+        printf("ret pack size is [%d]\n", pack_size);
+        int error_no;
+        mc_pack_get_int32(res_pack, "error_no", &error_no);
+        printf("ret error_no is [%d]\n", error_no);
+        mc_pack_t * array_pack = mc_pack_get_array(res_pack, "substr_array");
+        if(MC_PACK_PTR_ERR(array_pack) < 0)
+        {
+            printf("error in get array pack [%d]\n", MC_PACK_PTR_ERR(array_pack));
+        }
+        int str_cnt = mc_pack_get_item_count(array_pack);
+        printf("ret str cnt is [%d]\n", str_cnt);
+
+
         UB_LOG_NOTICE("nshead_simple_singletalk with server(%s:%d) Success, response:%s, consume time:%ldus, err:%s", 
             ip, port, resbuf, 
             (long)((e1.tv_sec-s1.tv_sec)*1000000+(e1.tv_usec-s1.tv_usec)),
             ub::get_talk_errorinfo(ret));
 
         repNum ++;
-        if (repNum > 100000) {
+        if (repNum > 1000) {
             break;
         }
 
@@ -117,7 +135,7 @@ void *thread_nshead_simple_singletalk_ex(void *param)
         reqhead->body_len = snprintf(req_body_buf, 100, "%s", Msg);
 
         //申请内存用于存放response
-	    char res_buff[1000];
+	    char res_buff[20000];
 	    memset(res_buff,0,sizeof(res_buff));
 
         gettimeofday(&s1, NULL);

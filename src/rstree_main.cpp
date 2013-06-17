@@ -8,6 +8,7 @@
 #include "rstree.h"
 #include "conf.h"
 #include "rstree_def.h"
+#include "rstree_util.h"
 
 bsl::var::Ref g_monitor_info;
 char g_proc_name[1024];
@@ -31,10 +32,16 @@ void get_proc_name()
     snprintf(g_proc_name, sizeof(g_proc_name), "%s", p + 1); 
 }
 
-static int query_process(mc_pack_t * in_pack, mc_pack_t * out_pack)
+/**
+ * @brief：后缀树输入文本做预处理
+ *
+ */
+static string filter(const char * input)
 {
+	string s(input);
+	s = str_replace_all(s, " ", "");	
 
-	return 0;	
+	return s;
 }
 
 /**
@@ -49,28 +56,98 @@ static int update_server_callback()
 	char *req_buf = (char*) (req_head + 1);
 	req_buf[req_body_len] = 0;
 
-	char *res_buf = (char*)(res_head + 1);
-
-	size_t res_len = ub_server_get_write_size() - sizeof(nshead_t);
-	res_head->body_len = snprintf(res_buf, res_len, "%s", req_buf);
-
-
 	ub_log_setbasic(UB_LOG_REQSVR, "%s", req_head->provider);
 	ub_log_setbasic(UB_LOG_SVRNAME, "%s", "rstree");
 
-	char temp_buf[20000];
+	res_head->log_id = req_head->log_id;
+
+	char temp_buf[MC_PACK_BUF_SIZE];
 	mc_pack_t *req_pack = mc_pack_open_r(req_buf, req_head->body_len, temp_buf, sizeof(temp_buf));
 
+	int error_no = 0;
 	const char* content = mc_pack_get_str(req_pack, "content");
-	int freq, len;
-	mc_pack_get_int32(req_pack, "freq", &freq);
-	mc_pack_get_int32(req_pack, "len", &len);
 
-	printf("req content:[%s]\n", content);
-	printf("req freq:[%d]\n", freq);
-	printf("req len:[%d]\n", len);
+	if(MC_PACK_PTR_ERR(content) < 0)
+	{
+		error_no = -1;
+	}
+
+	int freq, min_len, max_len;
+	int ret_no = 0;
+	ret_no |= mc_pack_get_int32(req_pack, "freq", &freq);
+	ret_no |= mc_pack_get_int32(req_pack, "min_len", &min_len);
+	ret_no |= mc_pack_get_int32(req_pack, "max_len", &max_len);
+
+	if(ret_no != 0)
+	{
+		error_no = -1;
+	}
 
 	mc_pack_close(req_pack);
+
+	map<wstring, int> ret_map;
+
+	if(error_no == 0)
+	{
+		g_rstree->set_min_frequency(freq);
+		g_rstree->set_min_substr_len(min_len);
+		g_rstree->set_max_substr_len(max_len);
+
+		string fcontent = filter(content);
+
+		wstring wc = c2w(fcontent.c_str());
+
+		if((int)wc.size() < g_rstree->get_min_str_len() || (int)wc.size() > g_rstree->get_max_str_len())
+		{
+			error_no = -3;	
+		}
+		else
+		{
+			ret_map = g_rstree->add_text(wc);
+
+			if(g_rstree->get_tree_size() >= g_rstree->get_max_tree_size())
+			{
+				int ret_no = g_rstree->remove_text();
+				if(ret_no != 0)
+				{
+					ul_writelog(UL_LOG_WARNING, "failed to remove text, ret_no=[%d]", ret_no);
+					error_no = -2;
+				}	
+				else
+				{
+					ul_writelog(UL_LOG_TRACE, "remove text done!");
+				}
+			}
+
+//			g_rstree->print_tree();
+		}
+	}
+
+	char mcpack_buf[MC_PACK_BUF_SIZE];
+	mc_pack_t *ret_pack = mc_pack_open_w(2, mcpack_buf, sizeof(mcpack_buf), temp_buf, sizeof(temp_buf));
+	mc_pack_t *array_pack = mc_pack_put_array(ret_pack, "substr_array");
+	for(map<wstring, int>::iterator iter = ret_map.begin(); iter != ret_map.end(); iter++)
+	{
+		string substr = w2c(iter->first.c_str());
+		mc_pack_put_int32(array_pack, substr.c_str(), iter->second);
+		ul_writelog(UL_LOG_TRACE, "result substring[%s] freq[%d]", substr.c_str(), iter->second);
+		ul_writelog(UL_LOG_DEBUG, "array pack size is [%d]", mc_pack_get_item_count(array_pack));
+
+		if(mc_pack_get_size(ret_pack) + 50000 > (int)ub_server_get_write_size())
+		{
+			break;
+		}
+	}
+
+	mc_pack_put_int32(ret_pack, "error_no", error_no);
+	mc_pack_close(ret_pack);
+
+	char *res_buf = (char*)(res_head + 1);
+
+	res_head->body_len = mc_pack_get_size(ret_pack);
+	memcpy(res_buf, mcpack_buf, res_head->body_len);
+
+	printf("ret pack size is [%d]\n", res_head->body_len);
 
 	return 0;
 }
@@ -86,15 +163,43 @@ static int monitor_timer(void *)
 
 static void app_init()
 {
-	int tree_size;
+	setlocale(LC_ALL, "zh_CN.UTF-8");
+	int tree_size = -1;
 	Conf::getSharedInstance()->getConfValueByKey("tree_size", CONF_VALUE_TYPE_INT32, (void*)(&tree_size), sizeof(int));
+	if(tree_size == -1)
+	{
+		tree_size = DEFAULT_TREE_SIZE;
+		ul_writelog(UL_LOG_WARNING, "can not find conf tree_size, use default value [%d]", DEFAULT_TREE_SIZE);
+	}
 
-	int min_str_len;
+	int min_str_len = -1;
 	Conf::getSharedInstance()->getConfValueByKey("min_str_len", CONF_VALUE_TYPE_INT32, (void*)(&min_str_len), sizeof(int));
+	if(min_str_len == -1)
+	{
+		min_str_len = DEFAULT_MIN_STR_LEN;
+		ul_writelog(UL_LOG_WARNING, "can not find conf min_str_len, use default value [%d]", DEFAULT_MIN_STR_LEN);
+	}
+
+	int max_str_len = -1;
+	Conf::getSharedInstance()->getConfValueByKey("max_str_len", CONF_VALUE_TYPE_INT32, (void*)(&max_str_len), sizeof(int));
+	if(max_str_len == -1)
+	{
+		max_str_len = DEFAULT_MAX_STR_LEN;
+		ul_writelog(UL_LOG_WARNING, "can not find conf max_str_len, use default value [%d]", DEFAULT_MAX_STR_LEN);
+	}
 
 	g_rstree = new rstree_t();
 	g_rstree->set_tree_size(tree_size);
 	g_rstree->set_min_str_len(min_str_len);
+	g_rstree->set_max_str_len(max_str_len);
+
+	ul_writelog(UL_LOG_NOTICE, "init suffix tree done, tree_size=[%d] min_str_len=[%d] max_str_len=[%d]", tree_size, min_str_len, max_str_len);
+
+}
+
+static void app_close()
+{
+
 }
 
 /**

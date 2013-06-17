@@ -17,18 +17,17 @@
 
 
 
-#ifndef  __INCLUDE/RSTREE_DEF_H_
-#define  __INCLUDE/RSTREE_DEF_H_
+#ifndef  __RSTREE_DEF_H_
+#define  __RSTREE_DEF_H_
 
 
 #define TREE_CONF_FILE "tree.conf"
-#define MAX_CONTENT_LENGTH 50000
+#define MAX_CONTENT_LENGTH 30000
+#define MC_PACK_BUF_SIZE 100000
 
-
-
-
-
-
+#define DEFAULT_TREE_SIZE 500000
+#define DEFAULT_MIN_STR_LEN 8
+#define DEFAULT_MAX_STR_LEN 20000
 
 
 

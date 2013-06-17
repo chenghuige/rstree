@@ -77,7 +77,7 @@ void rstree_t::dfs_print(int level, suffix_node_t * node)
     {
         suffix_edge_t *gt = iter->second;
         wstring src_text = text_map[gt->text_id];
-        if(gt->start == src_text.size() - 1 && gt->end == src_text.size())
+        if(gt->start == (int)src_text.size() - 1 && gt->end == (int)src_text.size())
         {
             continue;
         }
@@ -162,9 +162,9 @@ wstring rstree_t::inc_freq_recursive(map<wstring, int> & ret, suffix_node_t *nod
             {
                 int t_end = node->parent_edge->end;
                 wstring & src_text = text_map[node->parent_edge->text_id];
-                if(t_end >= src_text.length())
+                if(t_end >= (int)src_text.size())
                 {
-                    t_end = src_text.length();
+                    t_end = (int)src_text.size();
                 }
                 length = t_end - node->parent_edge->start;
 
@@ -198,7 +198,7 @@ wstring rstree_t::inc_freq_recursive(map<wstring, int> & ret, suffix_node_t *nod
     int end_index = node->parent_edge->end + 1;
     int start_index = node->parent_edge->start;
     wstring & src = text_map[node->parent_edge->text_id];
-    if(end_index >= src.size())
+    if(end_index >= (int)src.size())
     {
         end_index = src.size();
     }
@@ -208,7 +208,7 @@ wstring rstree_t::inc_freq_recursive(map<wstring, int> & ret, suffix_node_t *nod
 
     wstring ret_str = inc_freq_recursive(ret, node->parent_node, lowest_node, id, start_index, up) + cur_str;
 
-    if(node->frequency >= this->min_frequency && ret_str.size() >= this->min_length)
+    if(node->frequency >= this->min_frequency && (int)ret_str.size() >= this->min_substr_len && (int)ret_str.size() <= this->max_substr_len)
     {
         ret[ret_str] = node->frequency;
     }
@@ -423,10 +423,15 @@ void rstree_t::filter_result(map<wstring, int> & m)
 
 /**
  * @brief: 增加字符串
+ * @param min_freq: 最低频率限制
+ * @param min_substr_len: 最短子串长度限制
+ * @param max_substr_len: 最大子串长度限制
+ * @retval: 满足上述三个条件的子串及其频率
  *
  */
 map<wstring, int> rstree_t::add_text(wstring text)
 {
+
     map<wstring, int> ret;
     if( text.size() == 0)
     {
@@ -471,7 +476,7 @@ map<wstring, int> rstree_t::add_text(wstring text)
                 suffix_node_t * tt_next_bk = tt->next;
 
 
-                while( i <= tt->end && index < text.size() )
+                while( i <= tt->end && index < (int)text.size() )
                 {
                     if(text[index] == src_text[i])
                     {
@@ -512,14 +517,14 @@ map<wstring, int> rstree_t::add_text(wstring text)
                     }
                 }
 
-                if(index >= text.size())
+                if(index >= (int)text.size())
                 {
                     map<wstring, int> t_ret = inc_freq(tt_next_bk, current_text_id, temp_index);
 
                     ret.insert(t_ret.begin(), t_ret.end());
                 }
 
-                if(i > tt_end_bk && index < text.size())
+                if(i > tt_end_bk && index < (int)text.size())
                 {
                     temp_index = -1;
                     u = tt_next_bk;
@@ -538,9 +543,9 @@ map<wstring, int> rstree_t::add_text(wstring text)
             }
 
 
-            if(index >= text.size())
+            if(index >= (int)text.size())
             {
-                if(u != root && temp_index < text.size())
+                if(u != root && temp_index < (int)text.size())
                 {
                     u = u->suffix_link;
                     if(temp_index != -1)
@@ -549,7 +554,7 @@ map<wstring, int> rstree_t::add_text(wstring text)
                     }
                     continue;
                 }
-                else if(u == root && temp_index + 1 < text.size())
+                else if(u == root && temp_index + 1 < (int)text.size())
                 {
                     index = temp_index + 1;
                     continue;
@@ -596,7 +601,7 @@ map<wstring, int> rstree_t::add_text(wstring text)
             }
             else
             {
-                if(temp_index != -1 && temp_index + 1 < text.size())
+                if(temp_index != -1 && temp_index + 1 < (int)text.size())
                 {
                     index = temp_index + 1;
                 }
@@ -697,7 +702,7 @@ int rstree_t::remove_text()
                 wstring src_text = text_map[tt->text_id];
                 int i = tt->start;
 
-                while(i <= tt->end && index < text.size())
+                while(i <= tt->end && index < (int)text.size())
                 {
 
                     if(text[index] == src_text[i])
@@ -713,13 +718,13 @@ int rstree_t::remove_text()
                 }
 
                 int tt_end_bk = tt->end;
-                if(index >= text.size())
+                if(index >= (int)text.size())
                 {
                     dec_freq(tt->next);
                 }
 
 
-                if(i > tt_end_bk && index < text.size())
+                if(i > tt_end_bk && index < (int)text.size())
                 {
                     temp_index = -1;
                     u = tt->next;
@@ -732,9 +737,9 @@ int rstree_t::remove_text()
             }
 
 
-            if(index >= text.size())
+            if(index >= (int)text.size())
             {
-                if(u != root && temp_index < text.size())
+                if(u != root && temp_index < (int)text.size())
                 {
                     u = us;
                     us = u->suffix_link;
@@ -744,7 +749,7 @@ int rstree_t::remove_text()
                     }
                     continue;
                 }
-                else if(u == root && temp_index + 1 < text.size())
+                else if(u == root && temp_index + 1 < (int)text.size())
                 {
                     index = temp_index + 1;
                     continue;
@@ -770,8 +775,7 @@ int rstree_t::remove_text()
 
     text_map.erase(remove_id++);
 
-    return true;
-
+    return 0;
 }
 
 
