@@ -135,7 +135,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=92cd1df69a218ef3ba524ea501705e20  COMAKE
+COMAKE_MD5=ea09311e8ad0e80bcc2ae11be248ee57  COMAKE
 
 
 .PHONY:all
@@ -162,6 +162,8 @@ clean:ccpclean
 	rm -rf rstree
 	rm -rf ./output/bin/rstree
 	rm -rf src/rstree_rstree_main.o
+	rm -rf src/rstree_rstree.o
+	rm -rf src/rstree_conf.o
 
 .PHONY:dist
 dist:
@@ -180,9 +182,13 @@ love:
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mlove[0m']"
 	@echo "make love done"
 
-rstree:src/rstree_rstree_main.o
+rstree:src/rstree_rstree_main.o \
+  src/rstree_rstree.o \
+  src/rstree_conf.o
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree[0m']"
-	$(CXX) src/rstree_rstree_main.o -Xlinker "-("  ../../../../../com/idlcompiler/astyle/libastyle.a \
+	$(CXX) src/rstree_rstree_main.o \
+  src/rstree_rstree.o \
+  src/rstree_conf.o -Xlinker "-("  ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
   ../../../../../com/idlcompiler/parser/libparser.a \
@@ -247,9 +253,26 @@ rstree:src/rstree_rstree_main.o
 	mkdir -p ./output/bin
 	cp -f --link rstree ./output/bin
 
-src/rstree_rstree_main.o:src/rstree_main.cpp
+src/rstree_rstree_main.o:src/rstree_main.cpp \
+  include/rstree.h \
+  include/conf.h \
+  include/rstree_def.h \
+  include/rstree_util.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_rstree_main.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_rstree_main.o src/rstree_main.cpp
+
+src/rstree_rstree.o:src/rstree.cpp \
+  include/rstree.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_rstree.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_rstree.o src/rstree.cpp
+
+src/rstree_conf.o:src/conf.cpp \
+  include/conf.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_conf.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_conf.o src/conf.cpp
+
+venus0:
+	scp -r rstree src/ include/ Makefile conf/ test/ iknow@db-septest-venus0.vm:~/weizheng/rstree/
 
 endif #ifeq ($(shell uname -m),x86_64)
 
