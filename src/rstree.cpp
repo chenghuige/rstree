@@ -433,8 +433,7 @@ wstring wstr_replace_all(wstring& str,const wstring& old_value,const wstring& ne
  */
 void rstree_t::filter_result(map<wstring, int> & m)
 {
-
-    UB_LOG_DEBUG("before filter map size=[%d]", (int)m.size());
+ //   UB_LOG_DEBUG("before filter map size=[%d]", (int)m.size());
     vector< pair<wstring, int> > vec(m.begin(), m.end());
     sort(vec.begin(), vec.end(), freq_map_comparator_inc);
 
@@ -460,7 +459,7 @@ void rstree_t::filter_result(map<wstring, int> & m)
         }
     }
 
-    UB_LOG_DEBUG("after filter map size=[%d]", (int)m.size());
+ //   UB_LOG_DEBUG("after filter map size=[%d]", (int)m.size());
 }
 
 /**
@@ -665,7 +664,9 @@ map<wstring, int> rstree_t::add_text(wstring text)
 
     }
 
+    UB_LOG_DEBUG("before filter map size=[%d]", (int)ret.size());
     filter_result(ret);
+    UB_LOG_DEBUG("after filter map size=[%d]", (int)ret.size());
 
     return ret;
 
