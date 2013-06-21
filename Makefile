@@ -255,6 +255,7 @@ rstree:src/rstree_rstree_main.o \
 
 src/rstree_rstree_main.o:src/rstree_main.cpp \
   include/rstree.h \
+  include/rstree_def.h \
   include/conf.h \
   include/rstree_def.h \
   include/rstree_util.h
@@ -262,7 +263,9 @@ src/rstree_rstree_main.o:src/rstree_main.cpp \
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_rstree_main.o src/rstree_main.cpp
 
 src/rstree_rstree.o:src/rstree.cpp \
-  include/rstree.h
+  include/rstree.h \
+  include/rstree_def.h \
+  include/rstree_util.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_rstree.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_rstree.o src/rstree.cpp
 
@@ -270,9 +273,6 @@ src/rstree_conf.o:src/conf.cpp \
   include/conf.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_conf.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_conf.o src/conf.cpp
-
-venus0:
-	scp -r rstree src/ include/ Makefile conf/ test/ iknow@db-septest-venus0.vm:~/weizheng/rstree/
 
 endif #ifeq ($(shell uname -m),x86_64)
 
