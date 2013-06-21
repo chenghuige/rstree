@@ -5,6 +5,7 @@
 #include <bsl/var/String.h>
 
 #include <set>
+#include <cmath>
 
 #include "mc_pack.h"
 #include "rstree.h"
@@ -96,7 +97,7 @@ static vector<wstring> cut_wstring(const wstring & s, int unit)
 	vector<wstring> ret;
 	for(int i = 0; i <= (int)s.size() / unit; i++)
 	{
-		ret.push_back(s.substr(i*unit, unit));
+		ret.push_back(s.substr(max(0, i*unit - 10), unit + 10));
 	}
 	return ret;
 }
