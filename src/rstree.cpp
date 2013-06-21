@@ -15,8 +15,11 @@
  **/
 
 #include "rstree.h"
+#include "rstree_util.h"
 #include <iostream>
 #include <vector>
+
+#include <ub.h>
 
 
 /**
@@ -38,6 +41,22 @@ wstring trim(const wstring & s)
     return s.substr(start, end - start + 1);
 }
 
+/*
+ * @brief: 合并map，将m2中的key-value对合并入m1，当m2中不包含这个key，或者对应的value值比m1中的大时
+ *
+ */
+void merge_map(map<wstring, int> & m1, const map<wstring ,int> & m2)
+{
+    for(map<wstring, int>::const_iterator iter = m2.begin(); iter != m2.end(); iter++)
+    {
+        map<wstring, int>::iterator iter1 = m1.find(iter->first);
+        if(iter1 == m1.end() || iter1->second < iter->second)
+        {
+            m1[iter->first] = iter->second;
+        }
+    }
+}
+
 /**
  * @brief: 打印树
  *
@@ -45,7 +64,7 @@ wstring trim(const wstring & s)
 void rstree_t::print_tree()
 {
     wstring tree_string = L"";
-    for(map<int, wstring>::iterator iter = text_map.begin(); iter != text_map.end(); iter++)
+    for(map<long long, wstring>::iterator iter = text_map.begin(); iter != text_map.end(); iter++)
     {
         tree_string += iter->second;
     }
@@ -113,7 +132,7 @@ void rstree_t::free_tree_recursive(int level, suffix_node_t * node)
     for(rstree_map_t::iterator iter = m.begin(); iter != m.end(); iter++)
     {
         suffix_edge_t *gt = iter->second;
-
+        free_tree_recursive(level + 1, gt->next);
         delete gt;
     }
     delete node;
@@ -167,7 +186,6 @@ wstring rstree_t::inc_freq_recursive(map<wstring, int> & ret, suffix_node_t *nod
                     t_end = (int)src_text.size();
                 }
                 length = t_end - node->parent_edge->start;
-
             }
 
             if(!up)
@@ -210,8 +228,13 @@ wstring rstree_t::inc_freq_recursive(map<wstring, int> & ret, suffix_node_t *nod
 
     if(node->frequency >= this->min_frequency && (int)ret_str.size() >= this->min_substr_len && (int)ret_str.size() <= this->max_substr_len)
     {
-        ret[ret_str] = node->frequency;
+        map<wstring, int>::iterator iter = ret.find(ret_str);
+        if(iter == ret.end() || iter->second < node->frequency)
+        {
+            ret[ret_str] = node->frequency;
+        }
     }
+
     return ret_str;
 } 
 
@@ -248,6 +271,7 @@ map<wstring, int> rstree_t::inc_freq(suffix_node_t * lowest_node, int id, int st
     bool up = false;
     map<wstring, int> freq_map;
     inc_freq_recursive(freq_map, node, lowest_node, id, start, up);
+    filter_result(freq_map);
     map<wstring, int> ret;
     
     vector< pair<wstring,int> > vec(freq_map.begin(), freq_map.end());
@@ -256,8 +280,12 @@ map<wstring, int> rstree_t::inc_freq(suffix_node_t * lowest_node, int id, int st
     {
         if(vec[i].second >= this->min_frequency)
         {
-            ret[ vec[i].first ] = vec[i].second;
-            break;
+            map<wstring, int>::iterator iter = ret.find(vec[i].first);
+            if(iter == ret.end() || iter->second < vec[i].second)
+            {
+                ret[ vec[i].first ] = vec[i].second;
+            }
+        //    break;
         }
     }
 
@@ -358,7 +386,7 @@ map<wstring, int> rstree_t::build_tree(const wstring & text)
             tmp->parent_edge = rg;
 
             map<wstring, int>  t_ret = inc_freq(tmp, -1, 0);
-            ret.insert(t_ret.begin(), t_ret.end());
+            merge_map(ret, t_ret);
 
             if(oldr != root)
             {
@@ -405,20 +433,34 @@ wstring wstr_replace_all(wstring& str,const wstring& old_value,const wstring& ne
  */
 void rstree_t::filter_result(map<wstring, int> & m)
 {
+
+    UB_LOG_DEBUG("before filter map size=[%d]", (int)m.size());
     vector< pair<wstring, int> > vec(m.begin(), m.end());
     sort(vec.begin(), vec.end(), freq_map_comparator_inc);
 
+    if((int)vec.size() > get_max_substr_cnt())
+    {
+        int pre_size = (int)vec.size();
+        vec.erase(vec.begin() + get_max_substr_cnt(), vec.end());
+        m = map<wstring, int>(vec.begin(), vec.end());
+        UB_LOG_DEBUG("remove substr from map, before size=[%d] after size=[%d]", pre_size, (int)vec.size());
+    }
+
+
     int n = (int)vec.size();
-    for(int i = 0; i < n - 1; i++) 
+    for(int i = 0; i < n - 1; i++)
     {
         for(int j = i+1; j < n; j++)
         {
             if(vec[j].first.find(vec[i].first) != wstring::npos)
             {
                 m.erase(vec[i].first);
+                break;
             }
         }
     }
+
+    UB_LOG_DEBUG("after filter map size=[%d]", (int)m.size());
 }
 
 /**
@@ -446,7 +488,7 @@ map<wstring, int> rstree_t::add_text(wstring text)
     if(root == NULL)
     {
         map<wstring, int> t_ret = build_tree(text);
-        ret.insert(t_ret.begin(), t_ret.end());
+        merge_map(ret, t_ret);
         return ret;
     }
 
@@ -474,7 +516,6 @@ map<wstring, int> rstree_t::add_text(wstring text)
 
                 int tt_end_bk = tt->end;
                 suffix_node_t * tt_next_bk = tt->next;
-
 
                 while( i <= tt->end && index < (int)text.size() )
                 {
@@ -521,7 +562,7 @@ map<wstring, int> rstree_t::add_text(wstring text)
                 {
                     map<wstring, int> t_ret = inc_freq(tt_next_bk, current_text_id, temp_index);
 
-                    ret.insert(t_ret.begin(), t_ret.end());
+                    merge_map(ret, t_ret);
                 }
 
                 if(i > tt_end_bk && index < (int)text.size())
@@ -571,7 +612,8 @@ map<wstring, int> rstree_t::add_text(wstring text)
             r->edge_map[ text[index] ] = rg;
             tmp->parent_edge = rg;
             map<wstring, int> t_ret = inc_freq(tmp, current_text_id, index);
-            ret.insert(t_ret.begin(), t_ret.end());
+
+            merge_map(ret, t_ret);
 
             if(r == root)
             {
@@ -644,10 +686,6 @@ void rstree_t::dec_freq(suffix_node_t * lowest_node)
         }
         else if(node->frequency == 1)
         {
-            if(node->edge_map.size() > 0)
-            {
-                wcout << L"fuck i found it size=" << node->edge_map.size() << endl;
-            }
             node->frequency = 0;
             node->parent_node->edge_map.erase(node->parent_edge->key);
         }
@@ -671,14 +709,13 @@ void rstree_t::dec_freq(suffix_node_t * lowest_node)
  */
 int rstree_t::remove_text()
 {
-    map<int, wstring>::iterator iter = text_map.find(remove_id);
+    map<long long, wstring>::iterator iter = text_map.find(remove_id);
     if(iter == text_map.end() || root == NULL)
     {
         return -1;
     }
 
     wstring text = iter->second;
-    wcout << L"begin remove text[" << text << L"]" << endl;
     int length = text.size();
     suffix_node_t *u = root;
     suffix_node_t *us = u->suffix_link;

@@ -4,6 +4,8 @@
 #include "ub_server_monitor.h"
 #include <bsl/var/String.h>
 
+#include <set>
+
 #include "mc_pack.h"
 #include "rstree.h"
 #include "conf.h"
@@ -14,11 +16,13 @@ bsl::var::Ref g_monitor_info;
 char g_proc_name[1024];
 rstree_t *g_rstree;
 
+extern void merge_map(map<wstring, int> &, const map<wstring, int> &);
 
 bsl::var::IVar &get_service_monitor_list(bsl::ResourcePool &rp)
 {
     return g_monitor_info;
 }
+
 void get_proc_name() 
 {
     pid_t pid = getpid();
@@ -36,18 +40,71 @@ void get_proc_name()
  * @brief：后缀树输入文本做预处理
  *
  */
-static string filter(const char * input)
+static wstring filter(const wstring & input)
 {
-	string s(input);
-	s = str_replace_all(s, " ", "");	
 
-	return s;
+	UB_LOG_DEBUG("wstring before filter:[%s]", w2c(input.c_str()).c_str());
+
+	//去除空格
+	wstring s(input);
+	s = wstr_replace_all(s, L" ", L"");	
+
+
+	//去除连续出现10次以上的字符
+	wstring ret = L"";
+	int start = 0;
+	int end = start + 1;
+	while(start < (int)s.size())
+	{
+		while(end < (int)s.size() && s[end] == s[start])
+		{
+			end++;
+		}
+		if(end - start <= 10)
+		{
+			ret += s.substr(start, end - start);
+		}
+		start = end;
+		end = start + 1;
+	}
+
+	//过滤少量字大量重复的情况
+	set<wchar_t> wset;
+	for(int i = 0; i < (int)ret.size(); i++)
+	{
+		wset.insert(ret[i]);
+	}
+	int uniq_size = (int)wset.size();
+	if(uniq_size < 10 && uniq_size != 0 && (int)input.size() / uniq_size > 10)
+	{
+
+		UB_LOG_DEBUG("wstring after filter:[]");
+		return L"";
+	}	
+
+	UB_LOG_DEBUG("wstring after filter:[%s]", w2c(ret.c_str()).c_str());
+	return ret;
 }
 
 /**
- *@update server
+ * @brief: 剪切字符串，剪切为最大长度为unit的子串
+ *
+ *
+ */
+static vector<wstring> cut_wstring(const wstring & s, int unit)
+{
+	vector<wstring> ret;
+	for(int i = 0; i <= (int)s.size() / unit; i++)
+	{
+		ret.push_back(s.substr(i*unit, unit));
+	}
+	return ret;
+}
+
+/**
+ *@rstree server 回调函数
 **/
-static int update_server_callback()
+static int rstree_server_callback()
 {
 	nshead_t *req_head = (nshead_t *) ub_server_get_read_buf();
 	nshead_t *res_head = (nshead_t *) ub_server_get_write_buf();
@@ -72,6 +129,8 @@ static int update_server_callback()
 		error_no = -1;
 	}
 
+	UB_LOG_DEBUG("logid[%d] get content[%s]", res_head->log_id, content);
+
 	int freq, min_len, max_len;
 	int ret_no = 0;
 	ret_no |= mc_pack_get_int32(req_pack, "freq", &freq);
@@ -80,6 +139,7 @@ static int update_server_callback()
 
 	if(ret_no != 0)
 	{
+		UB_LOG_WARNING("request format is wrong log id [%d]", res_head->log_id);
 		error_no = -1;
 	}
 
@@ -93,44 +153,54 @@ static int update_server_callback()
 		g_rstree->set_min_substr_len(min_len);
 		g_rstree->set_max_substr_len(max_len);
 
-		string fcontent = filter(content);
+		wstring wct = c2w(content);
 
-		wstring wc = c2w(fcontent.c_str());
+		wstring wc = filter(wct);
 
-		if((int)wc.size() < g_rstree->get_min_str_len() || (int)wc.size() > g_rstree->get_max_str_len())
+		if((int)wc.size() < g_rstree->get_min_str_len())
 		{
 			error_no = -3;	
 		}
 		else
 		{
-			ret_map = g_rstree->add_text(wc);
+			vector<wstring> svec = cut_wstring(wc, g_rstree->get_max_str_len());
 
-			if(g_rstree->get_tree_size() >= g_rstree->get_max_tree_size())
+			for(int i = 0; i < (int)svec.size(); i++)
 			{
-				int ret_no = g_rstree->remove_text();
-				if(ret_no != 0)
+				wstring &sub_wc = svec[i];
+				if((int)sub_wc.size() < g_rstree->get_min_str_len())
 				{
-					ul_writelog(UL_LOG_WARNING, "failed to remove text, ret_no=[%d]", ret_no);
-					error_no = -2;
-				}	
-				else
+					break;
+				}
+				map<wstring, int> t_ret_map = g_rstree->add_text(sub_wc);
+				merge_map(ret_map, t_ret_map);
+
+				if(g_rstree->get_tree_size() >= g_rstree->get_max_tree_size())
 				{
-					ul_writelog(UL_LOG_TRACE, "remove text done!");
+					int ret_no = g_rstree->remove_text();
+					if(ret_no != 0)
+					{
+						ul_writelog(UL_LOG_WARNING, "failed to remove text [%s] ret_no=[%d]",content, ret_no);
+						error_no = -2;
+					}	
+					else
+					{
+						ul_writelog(UL_LOG_TRACE, "remove text done!");
+					}
 				}
 			}
 
-//			g_rstree->print_tree();
 		}
 	}
 
 	char mcpack_buf[MC_PACK_BUF_SIZE];
 	mc_pack_t *ret_pack = mc_pack_open_w(2, mcpack_buf, sizeof(mcpack_buf), temp_buf, sizeof(temp_buf));
-	mc_pack_t *array_pack = mc_pack_put_array(ret_pack, "substr_array");
+	mc_pack_t *array_pack = mc_pack_put_object(ret_pack, "substr_array");
 	for(map<wstring, int>::iterator iter = ret_map.begin(); iter != ret_map.end(); iter++)
 	{
 		string substr = w2c(iter->first.c_str());
-		mc_pack_put_int32(array_pack, substr.c_str(), iter->second);
-		ul_writelog(UL_LOG_TRACE, "result substring[%s] freq[%d]", substr.c_str(), iter->second);
+		int ret_no = mc_pack_put_int32(array_pack, substr.c_str(), iter->second);
+		ul_writelog(UL_LOG_TRACE, "result substring[%s] freq[%d] ret_no[%d]", substr.c_str(), iter->second, ret_no);
 		ul_writelog(UL_LOG_DEBUG, "array pack size is [%d]", mc_pack_get_item_count(array_pack));
 
 		if(mc_pack_get_size(ret_pack) + 50000 > (int)ub_server_get_write_size())
@@ -142,12 +212,14 @@ static int update_server_callback()
 	mc_pack_put_int32(ret_pack, "error_no", error_no);
 	mc_pack_close(ret_pack);
 
+	ub_log_setbasic(UB_LOG_ERRNO, "%d", error_no);
+	ub_log_pushnotice("ret_cnt", "%d", ret_map.size());
+	ub_log_pushnotice("tree_size", "%d", g_rstree->get_tree_size());
+
 	char *res_buf = (char*)(res_head + 1);
 
 	res_head->body_len = mc_pack_get_size(ret_pack);
 	memcpy(res_buf, mcpack_buf, res_head->body_len);
-
-	printf("ret pack size is [%d]\n", res_head->body_len);
 
 	return 0;
 }
@@ -161,6 +233,11 @@ static int monitor_timer(void *)
 	return 0;
 }
 
+/**
+ * @brief: 加载配置文件以及全局变量初始化
+ *
+ *
+ */
 static void app_init()
 {
 	setlocale(LC_ALL, "zh_CN.UTF-8");
@@ -171,6 +248,10 @@ static void app_init()
 		tree_size = DEFAULT_TREE_SIZE;
 		ul_writelog(UL_LOG_WARNING, "can not find conf tree_size, use default value [%d]", DEFAULT_TREE_SIZE);
 	}
+	else
+	{
+		UB_LOG_NOTICE("get conf tree_size=[%d]", tree_size);
+	}
 
 	int min_str_len = -1;
 	Conf::getSharedInstance()->getConfValueByKey("min_str_len", CONF_VALUE_TYPE_INT32, (void*)(&min_str_len), sizeof(int));
@@ -178,6 +259,10 @@ static void app_init()
 	{
 		min_str_len = DEFAULT_MIN_STR_LEN;
 		ul_writelog(UL_LOG_WARNING, "can not find conf min_str_len, use default value [%d]", DEFAULT_MIN_STR_LEN);
+	}
+	else
+	{
+		UB_LOG_NOTICE("get conf min_str_len=[%d]", min_str_len);
 	}
 
 	int max_str_len = -1;
@@ -187,19 +272,40 @@ static void app_init()
 		max_str_len = DEFAULT_MAX_STR_LEN;
 		ul_writelog(UL_LOG_WARNING, "can not find conf max_str_len, use default value [%d]", DEFAULT_MAX_STR_LEN);
 	}
+	else
+	{
+		UB_LOG_NOTICE("get conf max_str_len=[%d]", max_str_len);
+	}
+
+	int max_substr_cnt = -1;
+	Conf::getSharedInstance()->getConfValueByKey("max_substr_cnt", CONF_VALUE_TYPE_INT32, (void*)(&max_substr_cnt), sizeof(int));
+	if(max_substr_cnt == -1)
+	{
+		max_substr_cnt = DEFAULT_MAX_SUBSTR_CNT;
+		ul_writelog(UL_LOG_WARNING, "can not find conf max_substr_cnt, use default value [%d]", DEFAULT_MAX_SUBSTR_CNT);
+	}
+	else
+	{
+		UB_LOG_NOTICE("get conf max_substr_cnt=[%d]", max_substr_cnt);
+	}
 
 	g_rstree = new rstree_t();
 	g_rstree->set_tree_size(tree_size);
 	g_rstree->set_min_str_len(min_str_len);
 	g_rstree->set_max_str_len(max_str_len);
+	g_rstree->set_max_substr_cnt(max_substr_cnt);
 
 	ul_writelog(UL_LOG_NOTICE, "init suffix tree done, tree_size=[%d] min_str_len=[%d] max_str_len=[%d]", tree_size, min_str_len, max_str_len);
 
 }
 
+/**
+ * @brief: 释放全局变量
+ *
+ */
 static void app_close()
 {
-
+	delete g_rstree;
 }
 
 /**
@@ -247,7 +353,7 @@ int main(int argc, char **argv)
 	ub_server_t *updatesvr = ub_load_svr(fw, "update");	//加载 update server
 	UBFW_ASSERT(fw->conf_build || updatesvr != NULL, "create update server error");
 	ub_server_setoptsock(updatesvr, UBSVR_NODELAY);
-	ub_server_set_callback(updatesvr, update_server_callback);	//设置服务器回调
+	ub_server_set_callback(updatesvr, rstree_server_callback);	//设置服务器回调
 	ub_svr_vec_add(svrvec, updatesvr, fw);	//把server添加到容器中统一管理
 	ub_server_set_monitor(updatesvr, monitor);
 	g_monitor_info[g_proc_name][ub_server_get_server_name(updatesvr)] = get_monitor_list(rp);

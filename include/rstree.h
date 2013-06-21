@@ -25,13 +25,9 @@
 #include <string>
 #include <ext/malloc_allocator.h>
 #include <ext/pool_allocator.h>
+#include "rstree_def.h"
 
 using namespace std;
-
-const int DEFAULT_MIN_LENGTH = 5;
-const int DEFAULT_MIN_FREQUENCY = 2;
-const int DEFAULT_MAX_LENGTH = 100000;
-const int DEFAULT_TREE_SIZE = 10000;
 
 
 class suffix_edge_t;
@@ -117,8 +113,11 @@ public:
     rstree_t()
     {
         min_frequency = DEFAULT_MIN_FREQUENCY;
-        min_substr_len = DEFAULT_MIN_LENGTH;
-        max_substr_len = DEFAULT_MAX_LENGTH;
+        min_substr_len = DEFAULT_MIN_SUBSTR_LEN;
+        max_substr_len = DEFAULT_MAX_SUBSTR_LEN;
+        max_substr_cnt = DEFAULT_MAX_SUBSTR_CNT;
+        max_str_len = DEFAULT_MAX_STR_LEN;
+        min_str_len = DEFAULT_MIN_STR_LEN;
         tree_size = DEFAULT_TREE_SIZE;
         end_string = L"\n";
 
@@ -180,6 +179,16 @@ public:
         return max_str_len;
     }
 
+    void set_max_substr_cnt(int cnt)
+    {
+        max_substr_cnt = cnt;
+    }
+
+    int get_max_substr_cnt()
+    {
+        return max_substr_cnt;
+    }
+
     void set_end_string(const wstring& s)
     {
         end_string = s;
@@ -212,21 +221,22 @@ public:
 
 
 private:
-    map<int, wstring> text_map;
+    map<long long, wstring> text_map;
     suffix_node_t * root;
     suffix_node_t * seed;
 
-    int min_frequency;
-    int min_substr_len;
-    int max_substr_len;
-    int tree_size;
-    int text_id;
-    int remove_id;
+    int min_frequency; //请求重复子串的最小频率限制
+    int min_substr_len; //请求重复子串最短长度限制
+    int max_substr_len; //请求重复子串最大长度限制
+    int tree_size; //树的大小限制
+    long long text_id; //当前的文本id
+    long long remove_id; //当前最旧的文本id
+ 
+    int min_str_len; //建树文本最短长度限制
+    int max_str_len; //建树文本最大长度限制
+    int max_substr_cnt; //请求的重复子串最大数量限制
 
-    int min_str_len;
-    int max_str_len;
-
-    wstring end_string;
+    wstring end_string; //
 
     map<wstring, int> inc_freq(suffix_node_t *lowest_node, int id, int start);
     wstring inc_freq_recursive(map<wstring, int> & ret, suffix_node_t * node, suffix_node_t * lowest_node, int id, int start, bool up);
