@@ -45,12 +45,10 @@ static wstring c2w(const char* pc)
         return val;
     }
     size_of_wc = destlen+1; 
-    wchar_t * pw  = new wchar_t[size_of_wc];
-    mbstowcs(pw,pc,size_of_wc); 
+    wchar_t  pw[DEFAULT_MAX_STR_LEN];;
+    mbstowcs(pw,pc,DEFAULT_MAX_STR_LEN); 
     val = pw;  
-    delete pw;
     return val;
-
 }
 
 
@@ -66,20 +64,15 @@ static string w2c(const wchar_t *pw)
         return val;
     }
     size_t size = wcslen(pw) * sizeof(wchar_t);
-    char* pc = NULL;
-    if(!(pc = (char*)malloc(size)))
-    {
-        return val;
-    }
+    char pc[DEFAULT_MAX_STR_LEN];
 
-    size_t destlen = wcstombs(pc,pw,size);
+    size_t destlen = wcstombs(pc,pw,DEFAULT_MAX_STR_LEN);
 
     if(destlen == 0)
     {
         return val;
     }
     val = pc;
-    delete pc;
 
     return val;
 }
