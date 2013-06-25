@@ -240,7 +240,7 @@ private:
 
     map<wstring, int> inc_freq(suffix_node_t *lowest_node, int id, int start);
     wstring inc_freq_recursive(map<wstring, int> & ret, suffix_node_t * node, suffix_node_t * lowest_node, int id, int start, bool up);
-    void dec_freq(suffix_node_t * lowest_node);
+    void dec_freq(suffix_node_t * lowest_node, int &cnt);
 
     void dfs_print(int level, suffix_node_t *node);
 

@@ -173,9 +173,11 @@ static int rstree_server_callback()
 				{
 					break;
 				}
-				UB_LOG_DEBUG("begin to add text[%s]", w2c(sub_wc.c_str()).c_str());
+				//UB_LOG_DEBUG("begin to add text[%s]", w2c(sub_wc.c_str()).c_str());
 				map<wstring, int> t_ret_map = g_rstree->add_text(sub_wc);
 				merge_map(ret_map, t_ret_map);
+				
+				//g_rstree->print_tree();
 
 				if(g_rstree->get_tree_size() >= g_rstree->get_max_tree_size())
 				{

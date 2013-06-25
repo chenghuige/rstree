@@ -21,6 +21,12 @@
 
 #include <ub.h>
 
+#include <boost/pool/object_pool.hpp>
+
+
+//内存池，用来提升内存反复申请和释放的性能
+boost::object_pool<suffix_node_t> g_node_mempool;
+boost::object_pool<suffix_edge_t> g_edge_mempool;
 
 /**
  * @brief: 对字符串两边的空白字符做剪切
@@ -133,9 +139,11 @@ void rstree_t::free_tree_recursive(int level, suffix_node_t * node)
     {
         suffix_edge_t *gt = iter->second;
         free_tree_recursive(level + 1, gt->next);
-        delete gt;
+        //delete gt;
+        g_edge_mempool.free(gt);
     }
-    delete node;
+    //delete node;
+    g_node_mempool.free(node);
 
 }
 
@@ -305,14 +313,18 @@ map<wstring, int> rstree_t::build_tree(const wstring & text)
 
     int length = (int)text.size();
 
-    root = new suffix_node_t(NULL);
+    void * t_node_mem = g_node_mempool.malloc();
+    root = new(t_node_mem) suffix_node_t(NULL);
     root->length = 0;
-    seed = new suffix_node_t(NULL);
+
+    t_node_mem = g_node_mempool.malloc();
+    seed = new(t_node_mem) suffix_node_t(NULL);
     root->suffix_link = seed;
 
     suffix_node_t *s = root;
     int k = 0;
-    suffix_edge_t *tag = new suffix_edge_t(-1, -2, -2, L'0', root);
+    void * t_edge_mem = g_edge_mempool.malloc();
+    suffix_edge_t *tag = new(t_edge_mem) suffix_edge_t(-1, -2, -2, L'0', root);
 
     for(int i = 0; i < length; i++)
     {
@@ -355,15 +367,19 @@ map<wstring, int> rstree_t::build_tree(const wstring & text)
                 }
                 else
                 {
-                    r = new suffix_node_t(s);
+                    t_node_mem = g_node_mempool.malloc();
+                    r = new(t_node_mem) suffix_node_t(s);
                     sp->parent_node = r;
                     int j = kp + i - k;
                     wchar_t tj = text[j];
-                    suffix_edge_t *rg = new suffix_edge_t(0, j, pp, tj, sp);
+
+                    t_edge_mem = g_edge_mempool.malloc();
+                    suffix_edge_t *rg = new(t_edge_mem) suffix_edge_t(0, j, pp, tj, sp);
                     r->edge_map[tj] = rg;
                     sp->parent_edge = rg;
 
-                    suffix_edge_t *sg = new suffix_edge_t(0, kp, j-1, text[kp], r);
+                    t_edge_mem = g_edge_mempool.malloc();
+                    suffix_edge_t *sg = new(t_edge_mem) suffix_edge_t(0, kp, j-1, text[kp], r);
                     s->edge_map[ text[kp] ] = sg;
                     r->parent_edge = sg;
                     r->frequency = sp->frequency;
@@ -380,8 +396,11 @@ map<wstring, int> rstree_t::build_tree(const wstring & text)
                 r = s;
             }
 
-            suffix_node_t *tmp = new suffix_node_t(r);
-            suffix_edge_t *rg = new suffix_edge_t(0, i, length, t, tmp);
+            t_node_mem = g_node_mempool.malloc();
+            suffix_node_t *tmp = new(t_node_mem) suffix_node_t(r);
+
+            t_edge_mem = g_edge_mempool.malloc();
+            suffix_edge_t *rg = new(t_edge_mem) suffix_edge_t(0, i, length, t, tmp);
             r->edge_map[t] = rg;
             tmp->parent_edge = rg;
 
@@ -473,6 +492,8 @@ void rstree_t::filter_result(map<wstring, int> & m)
 map<wstring, int> rstree_t::add_text(wstring text)
 {
 
+    UB_LOG_DEBUG("begin add text [%s]", w2c(text.c_str()).c_str());
+
     map<wstring, int> ret;
     if( text.size() == 0)
     {
@@ -494,12 +515,21 @@ map<wstring, int> rstree_t::add_text(wstring text)
     int length = (int)text.size();
     suffix_node_t *u = root;
     int index = 0;
+
+    int inner_cnt_4 = 0;
+    int inner_cnt_3 = 0;
+    int inner_cnt_2 = 0;
+
+    int new_cnt = 0, delete_cnt = 0;
+
+
     while(index < length - 1)
     {
         bool flag = false;
         suffix_node_t * oldr = root;
         while(true)
         {
+            inner_cnt_2++;
             suffix_node_t *r = u;
             bool split = false;
             int temp_index = -1;
@@ -507,6 +537,7 @@ map<wstring, int> rstree_t::add_text(wstring text)
 
             while(u->edge_map.count(text[index]) > 0)
             {
+                inner_cnt_3++;
                 temp_index = index;
 
                 suffix_edge_t * tt = u->edge_map[ text[index] ];
@@ -518,6 +549,9 @@ map<wstring, int> rstree_t::add_text(wstring text)
 
                 while( i <= tt->end && index < (int)text.size() )
                 {
+
+                    inner_cnt_4++;
+
                     if(text[index] == src_text[i])
                     {
                         index++;
@@ -527,12 +561,20 @@ map<wstring, int> rstree_t::add_text(wstring text)
                     else
                     {
                         suffix_node_t * v = tt->next;
-                        r = new suffix_node_t(u);
+                        void * t_node_mem = g_node_mempool.malloc();
+                        r = new(t_node_mem) suffix_node_t(u);
+                        new_cnt++;
                         v->parent_node = r;
-                        suffix_edge_t * rg = new suffix_edge_t(tt->text_id, i, tt->end, src_text[i], v);
+
+                        void *t_edge_mem = g_edge_mempool.malloc();
+                        suffix_edge_t * rg = new(t_edge_mem) suffix_edge_t(tt->text_id, i, tt->end, src_text[i], v);
+                        new_cnt++;
                         r->edge_map[ src_text[i] ] = rg;
                         v->parent_edge = rg;
-                        suffix_edge_t * ug = new suffix_edge_t(tt->text_id, tt->start, i - 1, src_text[tt->start], r);
+
+                        t_edge_mem = g_edge_mempool.malloc();
+                        suffix_edge_t * ug = new(t_edge_mem) suffix_edge_t(tt->text_id, tt->start, i - 1, src_text[tt->start], r);
+                        new_cnt++;
 
                         u->edge_map[ src_text[tt->start] ] = ug;
                         r->parent_edge = ug;
@@ -549,8 +591,10 @@ map<wstring, int> rstree_t::add_text(wstring text)
                         if(NULL != tt)
                         {
 
-                            delete tt;
+                            //delete tt;
+                            g_edge_mempool.free(tt);
                             tt = NULL;
+                            delete_cnt++;
                         }
 
                         break;
@@ -606,8 +650,13 @@ map<wstring, int> rstree_t::add_text(wstring text)
                 }
             }
             
-            suffix_node_t * tmp = new suffix_node_t(r);
-            suffix_edge_t * rg = new suffix_edge_t(current_text_id, index, length, text[index], tmp);
+            void * t_node_mem = g_node_mempool.malloc(); 
+            suffix_node_t * tmp = new(t_node_mem) suffix_node_t(r);
+            new_cnt++;
+
+            void * t_edge_mem = g_edge_mempool.malloc();
+            suffix_edge_t * rg = new(t_edge_mem) suffix_edge_t(current_text_id, index, length, text[index], tmp);
+            new_cnt++;
             r->edge_map[ text[index] ] = rg;
             tmp->parent_edge = rg;
             map<wstring, int> t_ret = inc_freq(tmp, current_text_id, index);
@@ -664,6 +713,8 @@ map<wstring, int> rstree_t::add_text(wstring text)
 
     }
 
+    UB_LOG_DEBUG("add text inner count4=[%d] count_3=[%d] count_2=[%d] new=[%d] delete=[%d]", inner_cnt_4, inner_cnt_3, inner_cnt_2, new_cnt, delete_cnt);
+
     UB_LOG_DEBUG("before filter map size=[%d]", (int)ret.size());
     filter_result(ret);
     UB_LOG_DEBUG("after filter map size=[%d]", (int)ret.size());
@@ -676,7 +727,7 @@ map<wstring, int> rstree_t::add_text(wstring text)
  * @brief: 从当前节点开始，将其父节点频率减一，直至root
  * @param lowest_node: 当前节点
  */
-void rstree_t::dec_freq(suffix_node_t * lowest_node)
+void rstree_t::dec_freq(suffix_node_t * lowest_node ,int &delete_cnt)
 {
     suffix_node_t * node = lowest_node;
     while(node != root)
@@ -695,10 +746,14 @@ void rstree_t::dec_freq(suffix_node_t * lowest_node)
 
         if(tmp->frequency == 0)
         {
-           delete tmp->parent_edge;
+           //delete tmp->parent_edge;
+           g_edge_mempool.free(tmp->parent_edge);
            tmp->parent_edge = NULL;
-           delete tmp;
+           //delete tmp;
+           g_node_mempool.free(tmp);
            tmp = NULL;
+
+           delete_cnt += 2;
 
         }
     }
@@ -717,10 +772,18 @@ int rstree_t::remove_text()
     }
 
     wstring text = iter->second;
+    UB_LOG_DEBUG("begin remove text [%s]", w2c(text.c_str()).c_str());
+
     int length = text.size();
     suffix_node_t *u = root;
     suffix_node_t *us = u->suffix_link;
     int index = 0;
+
+    int inner_cnt_2 = 0;
+    int inner_cnt_3 = 0;
+    int inner_cnt_4 = 0;
+    int new_cnt = 0, delete_cnt = 0;
+
     while(index < length)
     {
         bool flag = false;
@@ -728,25 +791,27 @@ int rstree_t::remove_text()
 
         while(true)
         {
+            inner_cnt_2++;
             int temp_index = -1;
-            int matched_char_count = 0;
 
             while(u->edge_map.find(text[index]) != u->edge_map.end())
             {
 
+                inner_cnt_3++;
                 temp_index = index;
 
                 suffix_edge_t * tt = u->edge_map[ text[index] ];
                 wstring src_text = text_map[tt->text_id];
                 int i = tt->start;
 
+                /*
                 while(i <= tt->end && index < (int)text.size())
                 {
+                    inner_cnt_4++;
 
                     if(text[index] == src_text[i])
                     {
                         index++;
-                        matched_char_count++;
                         i++;
                     }
                     else
@@ -755,10 +820,15 @@ int rstree_t::remove_text()
                     }
                 }
 
+                */
+
+                i += tt->end - tt->start + 1;
+                index += tt->end - tt->start + 1;
+
                 int tt_end_bk = tt->end;
                 if(index >= (int)text.size())
                 {
-                    dec_freq(tt->next);
+                    dec_freq(tt->next, delete_cnt);
                 }
 
 
@@ -811,6 +881,7 @@ int rstree_t::remove_text()
         }
     }
 
+    UB_LOG_DEBUG("remove text inner count4=[%d] count3=[%d] count2=[%d] delete=[%d]", inner_cnt_4, inner_cnt_3, inner_cnt_2, delete_cnt);
     text_map.erase(remove_id++);
 
     return 0;
