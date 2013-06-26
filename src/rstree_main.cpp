@@ -184,12 +184,12 @@ static int rstree_server_callback()
 					int ret_no = g_rstree->remove_text();
 					if(ret_no != 0)
 					{
-						ul_writelog(UL_LOG_WARNING, "failed to remove text [%s] ret_no=[%d]",content, ret_no);
+						UB_LOG_WARNING("failed to remove text [%s] ret_no=[%d]",content, ret_no);
 						error_no = -2;
 					}	
 					else
 					{
-						ul_writelog(UL_LOG_TRACE, "remove text done!");
+						UB_LOG_TRACE( "remove text done!");
 					}
 				}
 			}
@@ -204,8 +204,7 @@ static int rstree_server_callback()
 	{
 		string substr = w2c(iter->first.c_str());
 		int ret_no = mc_pack_put_int32(array_pack, substr.c_str(), iter->second);
-		ul_writelog(UL_LOG_TRACE, "result substring[%s] freq[%d] ret_no[%d]", substr.c_str(), iter->second, ret_no);
-		ul_writelog(UL_LOG_DEBUG, "array pack size is [%d]", mc_pack_get_item_count(array_pack));
+		UB_LOG_TRACE( "result substring[%s] freq[%d] ret_no[%d]", substr.c_str(), iter->second, ret_no);
 
 		if(mc_pack_get_size(ret_pack) + 50000 > (int)ub_server_get_write_size())
 		{
@@ -233,7 +232,7 @@ static int rstree_server_callback()
 **/
 static int monitor_timer(void *)
 {
-	ul_writelog(UL_LOG_NOTICE, "call timer");
+	UB_LOG_NOTICE( "call timer");
 	return 0;
 }
 
@@ -250,7 +249,7 @@ static void app_init()
 	if(tree_size == -1)
 	{
 		tree_size = DEFAULT_TREE_SIZE;
-		ul_writelog(UL_LOG_WARNING, "can not find conf tree_size, use default value [%d]", DEFAULT_TREE_SIZE);
+		UB_LOG_WARNING("can not find conf tree_size, use default value [%d]", DEFAULT_TREE_SIZE);
 	}
 	else
 	{
@@ -262,7 +261,7 @@ static void app_init()
 	if(min_str_len == -1)
 	{
 		min_str_len = DEFAULT_MIN_STR_LEN;
-		ul_writelog(UL_LOG_WARNING, "can not find conf min_str_len, use default value [%d]", DEFAULT_MIN_STR_LEN);
+		UB_LOG_WARNING( "can not find conf min_str_len, use default value [%d]", DEFAULT_MIN_STR_LEN);
 	}
 	else
 	{
@@ -274,7 +273,7 @@ static void app_init()
 	if(max_str_len == -1)
 	{
 		max_str_len = DEFAULT_MAX_STR_LEN;
-		ul_writelog(UL_LOG_WARNING, "can not find conf max_str_len, use default value [%d]", DEFAULT_MAX_STR_LEN);
+		UB_LOG_WARNING( "can not find conf max_str_len, use default value [%d]", DEFAULT_MAX_STR_LEN);
 	}
 	else
 	{
@@ -286,7 +285,7 @@ static void app_init()
 	if(max_substr_cnt == -1)
 	{
 		max_substr_cnt = DEFAULT_MAX_SUBSTR_CNT;
-		ul_writelog(UL_LOG_WARNING, "can not find conf max_substr_cnt, use default value [%d]", DEFAULT_MAX_SUBSTR_CNT);
+		UB_LOG_WARNING( "can not find conf max_substr_cnt, use default value [%d]", DEFAULT_MAX_SUBSTR_CNT);
 	}
 	else
 	{
@@ -299,7 +298,7 @@ static void app_init()
 	g_rstree->set_max_str_len(max_str_len);
 	g_rstree->set_max_substr_cnt(max_substr_cnt);
 
-	ul_writelog(UL_LOG_NOTICE, "init suffix tree done, tree_size=[%d] min_str_len=[%d] max_str_len=[%d]", tree_size, min_str_len, max_str_len);
+	UB_LOG_NOTICE("init suffix tree done, tree_size=[%d] min_str_len=[%d] max_str_len=[%d]", tree_size, min_str_len, max_str_len);
 
 }
 

@@ -10,7 +10,7 @@
  * @file rstree.cpp
  * @author weizheng(com@baidu.com)
  * @date 2013/05/06 19:00:06
- * @brief 
+ * @brief 后缀树操作，提供了建树，添加文本，删除文本，打印等功能
  *  
  **/
 
@@ -21,12 +21,71 @@
 
 #include <ub.h>
 
-#include <boost/pool/object_pool.hpp>
-
+#include <boost/pool/pool.hpp>
 
 //内存池，用来提升内存反复申请和释放的性能
-boost::object_pool<suffix_node_t> g_node_mempool;
-boost::object_pool<suffix_edge_t> g_edge_mempool;
+boost::pool<> g_node_mempool(sizeof(suffix_node_t));
+boost::pool<> g_edge_mempool(sizeof(suffix_edge_t));
+
+/**
+ * @brief: 构建后缀树节点
+ * @param: 当前节点的父节点
+ * @retval: 构建的后缀节点指针
+ *
+ */
+suffix_node_t * construct_suffix_node(suffix_node_t * parent_node)
+{
+    suffix_node_t * p_node = (suffix_node_t *) g_node_mempool.malloc();
+    p_node->suffix_link = NULL;
+    p_node->parent_node = parent_node;
+    p_node->frequency = 0;
+    p_node->length = -1;
+
+    p_node->edge_map = new rstree_map_t;
+
+    return p_node;
+}
+
+/**
+ * 释放后缀树节点
+ *
+ */
+void free_suffix_node(suffix_node_t * p)
+{
+    delete p->edge_map;
+    g_node_mempool.free(p);
+}
+
+/**
+ * @brief: 构建后缀树的边
+ * @param text_id: 边所在文本的id
+ * @param start: 边的第一个字符在文本中的index
+ * @param end: 边的最后一个字符在文本中的index
+ * @param key: 边的第一个字符，作为保存这条边的map的key
+ * @param next: 边所连接的孩子节点
+ * @retval: 构建的后缀树边
+ *
+ */
+suffix_edge_t * construct_suffix_edge(long long text_id, int start, int end, wchar_t key, suffix_node_t *next)
+{
+    suffix_edge_t * p_edge = (suffix_edge_t *) g_edge_mempool.malloc();
+    p_edge->text_id = text_id;
+    p_edge->start = start;
+    p_edge->end = end;
+    p_edge->key = key;
+    p_edge->next = next;
+
+    return p_edge;
+}
+
+/**
+ * 释放后缀树边
+ *
+ */
+void free_suffix_edge(suffix_edge_t *p)
+{
+    g_edge_mempool.free(p);
+}
 
 /**
  * @brief: 对字符串两边的空白字符做剪切
@@ -96,7 +155,7 @@ void rstree_t::print_tree()
  */
 void rstree_t::dfs_print(int level, suffix_node_t * node)
 {
-    rstree_map_t & m = node->edge_map;
+    rstree_map_t  m = *(node->edge_map);
 
     for(rstree_map_t::iterator iter = m.begin(); iter != m.end(); iter++)
     {
@@ -134,7 +193,7 @@ void rstree_t::dfs_print(int level, suffix_node_t * node)
  */
 void rstree_t::free_tree_recursive(int level, suffix_node_t * node)
 {
-    rstree_map_t & m = node->edge_map;
+    rstree_map_t  m = *(node->edge_map);
     for(rstree_map_t::iterator iter = m.begin(); iter != m.end(); iter++)
     {
         suffix_edge_t *gt = iter->second;
@@ -169,7 +228,7 @@ void rstree_t::free_tree()
  * @retval: 本次操作所得到的满足条件的文本 
  *
  */
-wstring rstree_t::inc_freq_recursive(map<wstring, int> & ret, suffix_node_t *node, suffix_node_t *lowest_node, int id, int start, bool up)
+wstring rstree_t::inc_freq_recursive(map<wstring, int> & ret, suffix_node_t *node, suffix_node_t *lowest_node, long long id, int start, bool up)
 {
     if(node == root)
     {
@@ -198,7 +257,7 @@ wstring rstree_t::inc_freq_recursive(map<wstring, int> & ret, suffix_node_t *nod
 
             if(!up)
             {
-                node->parent_edge->set_text_id(id);
+                node->parent_edge->text_id = id;
                 if(node == lowest_node)
                 {
                     node->parent_edge->start = start;
@@ -210,7 +269,7 @@ wstring rstree_t::inc_freq_recursive(map<wstring, int> & ret, suffix_node_t *nod
             }
             else
             {
-                node->parent_edge->set_text_id(id);
+                node->parent_edge->text_id = id;
                 start -= length;
                 node->parent_edge->start = start;
                 node->parent_edge->end = start + length - 1;
@@ -239,6 +298,7 @@ wstring rstree_t::inc_freq_recursive(map<wstring, int> & ret, suffix_node_t *nod
         map<wstring, int>::iterator iter = ret.find(ret_str);
         if(iter == ret.end() || iter->second < node->frequency)
         {
+            UB_LOG_DEBUG("add substring [%s] freq[%d]" , w2c(ret_str.c_str()).c_str(), node->frequency);
             ret[ret_str] = node->frequency;
         }
     }
@@ -273,7 +333,7 @@ bool freq_map_comparator_dec(const pair<wstring, int> &p1, const pair<wstring, i
  * @retval: 本次操作所得到的满足条件的文本及其频率 
  *
 */
-map<wstring, int> rstree_t::inc_freq(suffix_node_t * lowest_node, int id, int start)
+map<wstring, int> rstree_t::inc_freq(suffix_node_t * lowest_node, long long id, int start)
 {
     suffix_node_t *node = lowest_node;
     bool up = false;
@@ -313,25 +373,22 @@ map<wstring, int> rstree_t::build_tree(const wstring & text)
 
     int length = (int)text.size();
 
-    void * t_node_mem = g_node_mempool.malloc();
-    root = new(t_node_mem) suffix_node_t(NULL);
+    root = construct_suffix_node(NULL);
     root->length = 0;
 
-    t_node_mem = g_node_mempool.malloc();
-    seed = new(t_node_mem) suffix_node_t(NULL);
+    seed = construct_suffix_node(NULL);
     root->suffix_link = seed;
 
     suffix_node_t *s = root;
     int k = 0;
-    void * t_edge_mem = g_edge_mempool.malloc();
-    suffix_edge_t *tag = new(t_edge_mem) suffix_edge_t(-1, -2, -2, L'0', root);
+    suffix_edge_t *tag = construct_suffix_edge(-1, -2, -2, L'0', root);
 
     for(int i = 0; i < length; i++)
     {
         wchar_t t = text[i];
-        if(this->seed->edge_map.count(t) == 0)
+        if(this->seed->edge_map->count(t) == 0)
         {
-            this->seed->edge_map[t] = tag;
+            (*(this->seed->edge_map))[t] = tag;
         }
     
         suffix_node_t * oldr = this->root;
@@ -339,7 +396,7 @@ map<wstring, int> rstree_t::build_tree(const wstring & text)
         {
             while(i > k)
             {
-                suffix_edge_t *tt = s->edge_map[text[k]];
+                suffix_edge_t *tt = (*(s->edge_map))[text[k]];
                 int kk = tt->start;
                 int pp = tt->end;
                 suffix_node_t *ss = tt->next;
@@ -357,7 +414,7 @@ map<wstring, int> rstree_t::build_tree(const wstring & text)
             if(i > k)
             {
                 wchar_t tk = text[k];
-                suffix_edge_t *tt = s->edge_map[tk];
+                suffix_edge_t *tt = (*(s->edge_map))[tk];
                 int kp = tt->start;
                 int pp = tt->end;
                 suffix_node_t *sp = tt->next;
@@ -367,27 +424,24 @@ map<wstring, int> rstree_t::build_tree(const wstring & text)
                 }
                 else
                 {
-                    t_node_mem = g_node_mempool.malloc();
-                    r = new(t_node_mem) suffix_node_t(s);
+                    r = construct_suffix_node(s);
                     sp->parent_node = r;
                     int j = kp + i - k;
                     wchar_t tj = text[j];
 
-                    t_edge_mem = g_edge_mempool.malloc();
-                    suffix_edge_t *rg = new(t_edge_mem) suffix_edge_t(0, j, pp, tj, sp);
-                    r->edge_map[tj] = rg;
+                    suffix_edge_t *rg = construct_suffix_edge(0, j, pp, tj, sp);
+                    (*(r->edge_map))[tj] = rg;
                     sp->parent_edge = rg;
 
-                    t_edge_mem = g_edge_mempool.malloc();
-                    suffix_edge_t *sg = new(t_edge_mem) suffix_edge_t(0, kp, j-1, text[kp], r);
-                    s->edge_map[ text[kp] ] = sg;
+                    suffix_edge_t *sg = construct_suffix_edge(0, kp, j-1, text[kp], r);
+                    (*(s->edge_map))[ text[kp] ] = sg;
                     r->parent_edge = sg;
                     r->frequency = sp->frequency;
                     r->length = s->length + j - kp;
 
                 }
             }
-            else if(s->edge_map.count(t) > 0)
+            else if(s->edge_map->count(t) > 0)
             {
                 break;
             }
@@ -396,12 +450,10 @@ map<wstring, int> rstree_t::build_tree(const wstring & text)
                 r = s;
             }
 
-            t_node_mem = g_node_mempool.malloc();
-            suffix_node_t *tmp = new(t_node_mem) suffix_node_t(r);
+            suffix_node_t *tmp = construct_suffix_node(r);
 
-            t_edge_mem = g_edge_mempool.malloc();
-            suffix_edge_t *rg = new(t_edge_mem) suffix_edge_t(0, i, length, t, tmp);
-            r->edge_map[t] = rg;
+            suffix_edge_t *rg = construct_suffix_edge(0, i, length, t, tmp);
+            (*(r->edge_map))[t] = rg;
             tmp->parent_edge = rg;
 
             map<wstring, int>  t_ret = inc_freq(tmp, -1, 0);
@@ -452,7 +504,7 @@ wstring wstr_replace_all(wstring& str,const wstring& old_value,const wstring& ne
  */
 void rstree_t::filter_result(map<wstring, int> & m)
 {
- //   UB_LOG_DEBUG("before filter map size=[%d]", (int)m.size());
+    UB_LOG_DEBUG("before filter map size=[%d]", (int)m.size());
     vector< pair<wstring, int> > vec(m.begin(), m.end());
     sort(vec.begin(), vec.end(), freq_map_comparator_inc);
 
@@ -470,15 +522,16 @@ void rstree_t::filter_result(map<wstring, int> & m)
     {
         for(int j = i+1; j < n; j++)
         {
-            if(vec[j].first.find(vec[i].first) != wstring::npos)
+            if(vec[j].first.find(vec[i].first) != wstring::npos && vec[i].second <= vec[j].second)
             {
+                UB_LOG_DEBUG("remove key [%s] freq [%d] longer key [%s] freq [%d]", w2c(vec[i].first.c_str()).c_str(), vec[i].second, w2c(vec[j].first.c_str()).c_str(), vec[j].second );
                 m.erase(vec[i].first);
                 break;
             }
         }
     }
 
- //   UB_LOG_DEBUG("after filter map size=[%d]", (int)m.size());
+    UB_LOG_DEBUG("after filter map size=[%d]", (int)m.size());
 }
 
 /**
@@ -502,7 +555,7 @@ map<wstring, int> rstree_t::add_text(wstring text)
 
     text = wstr_replace_all(text, end_string, L"");
     text += end_string;
-    int current_text_id = text_id;
+    long long current_text_id = text_id;
     text_map[text_id++] = text;
 
     if(root == NULL)
@@ -516,12 +569,6 @@ map<wstring, int> rstree_t::add_text(wstring text)
     suffix_node_t *u = root;
     int index = 0;
 
-    int inner_cnt_4 = 0;
-    int inner_cnt_3 = 0;
-    int inner_cnt_2 = 0;
-
-    int new_cnt = 0, delete_cnt = 0;
-
 
     while(index < length - 1)
     {
@@ -529,18 +576,16 @@ map<wstring, int> rstree_t::add_text(wstring text)
         suffix_node_t * oldr = root;
         while(true)
         {
-            inner_cnt_2++;
             suffix_node_t *r = u;
             bool split = false;
             int temp_index = -1;
             int matched_char_count = 0;
 
-            while(u->edge_map.count(text[index]) > 0)
+            while(u->edge_map->count(text[index]) > 0)
             {
-                inner_cnt_3++;
                 temp_index = index;
 
-                suffix_edge_t * tt = u->edge_map[ text[index] ];
+                suffix_edge_t * tt = (*(u->edge_map))[ text[index] ];
                 wstring src_text = text_map[tt->text_id];
                 int i = tt->start;
 
@@ -549,8 +594,6 @@ map<wstring, int> rstree_t::add_text(wstring text)
 
                 while( i <= tt->end && index < (int)text.size() )
                 {
-
-                    inner_cnt_4++;
 
                     if(text[index] == src_text[i])
                     {
@@ -561,22 +604,16 @@ map<wstring, int> rstree_t::add_text(wstring text)
                     else
                     {
                         suffix_node_t * v = tt->next;
-                        void * t_node_mem = g_node_mempool.malloc();
-                        r = new(t_node_mem) suffix_node_t(u);
-                        new_cnt++;
+                        r = construct_suffix_node(u);
                         v->parent_node = r;
 
-                        void *t_edge_mem = g_edge_mempool.malloc();
-                        suffix_edge_t * rg = new(t_edge_mem) suffix_edge_t(tt->text_id, i, tt->end, src_text[i], v);
-                        new_cnt++;
-                        r->edge_map[ src_text[i] ] = rg;
+                        suffix_edge_t * rg = construct_suffix_edge(tt->text_id, i, tt->end, src_text[i], v);
+                        (*(r->edge_map))[ src_text[i] ] = rg;
                         v->parent_edge = rg;
 
-                        t_edge_mem = g_edge_mempool.malloc();
-                        suffix_edge_t * ug = new(t_edge_mem) suffix_edge_t(tt->text_id, tt->start, i - 1, src_text[tt->start], r);
-                        new_cnt++;
+                        suffix_edge_t * ug = construct_suffix_edge(tt->text_id, tt->start, i - 1, src_text[tt->start], r);
 
-                        u->edge_map[ src_text[tt->start] ] = ug;
+                        (*(u->edge_map))[ src_text[tt->start] ] = ug;
                         r->parent_edge = ug;
                         r->frequency = v->frequency;
                         r->length = u->length + i - tt->start;
@@ -592,9 +629,8 @@ map<wstring, int> rstree_t::add_text(wstring text)
                         {
 
                             //delete tt;
-                            g_edge_mempool.free(tt);
+                            free_suffix_edge(tt);
                             tt = NULL;
-                            delete_cnt++;
                         }
 
                         break;
@@ -650,14 +686,10 @@ map<wstring, int> rstree_t::add_text(wstring text)
                 }
             }
             
-            void * t_node_mem = g_node_mempool.malloc(); 
-            suffix_node_t * tmp = new(t_node_mem) suffix_node_t(r);
-            new_cnt++;
+            suffix_node_t * tmp = construct_suffix_node(r);
 
-            void * t_edge_mem = g_edge_mempool.malloc();
-            suffix_edge_t * rg = new(t_edge_mem) suffix_edge_t(current_text_id, index, length, text[index], tmp);
-            new_cnt++;
-            r->edge_map[ text[index] ] = rg;
+            suffix_edge_t * rg = construct_suffix_edge(current_text_id, index, length, text[index], tmp);
+            (*(r->edge_map))[ text[index] ] = rg;
             tmp->parent_edge = rg;
             map<wstring, int> t_ret = inc_freq(tmp, current_text_id, index);
 
@@ -713,11 +745,7 @@ map<wstring, int> rstree_t::add_text(wstring text)
 
     }
 
-    UB_LOG_DEBUG("add text inner count4=[%d] count_3=[%d] count_2=[%d] new=[%d] delete=[%d]", inner_cnt_4, inner_cnt_3, inner_cnt_2, new_cnt, delete_cnt);
-
-    UB_LOG_DEBUG("before filter map size=[%d]", (int)ret.size());
     filter_result(ret);
-    UB_LOG_DEBUG("after filter map size=[%d]", (int)ret.size());
 
     return ret;
 
@@ -727,7 +755,7 @@ map<wstring, int> rstree_t::add_text(wstring text)
  * @brief: 从当前节点开始，将其父节点频率减一，直至root
  * @param lowest_node: 当前节点
  */
-void rstree_t::dec_freq(suffix_node_t * lowest_node ,int &delete_cnt)
+void rstree_t::dec_freq(suffix_node_t * lowest_node )
 {
     suffix_node_t * node = lowest_node;
     while(node != root)
@@ -739,7 +767,7 @@ void rstree_t::dec_freq(suffix_node_t * lowest_node ,int &delete_cnt)
         else if(node->frequency == 1)
         {
             node->frequency = 0;
-            node->parent_node->edge_map.erase(node->parent_edge->key);
+            node->parent_node->edge_map->erase(node->parent_edge->key);
         }
         suffix_node_t *tmp = node;
         node = node->parent_node;
@@ -747,13 +775,11 @@ void rstree_t::dec_freq(suffix_node_t * lowest_node ,int &delete_cnt)
         if(tmp->frequency == 0)
         {
            //delete tmp->parent_edge;
-           g_edge_mempool.free(tmp->parent_edge);
+           free_suffix_edge(tmp->parent_edge);
            tmp->parent_edge = NULL;
            //delete tmp;
-           g_node_mempool.free(tmp);
+           free_suffix_node(tmp);
            tmp = NULL;
-
-           delete_cnt += 2;
 
         }
     }
@@ -779,28 +805,20 @@ int rstree_t::remove_text()
     suffix_node_t *us = u->suffix_link;
     int index = 0;
 
-    int inner_cnt_2 = 0;
-    int inner_cnt_3 = 0;
-    int inner_cnt_4 = 0;
-    int new_cnt = 0, delete_cnt = 0;
-
     while(index < length)
     {
         bool flag = false;
 
-
         while(true)
         {
-            inner_cnt_2++;
             int temp_index = -1;
 
-            while(u->edge_map.find(text[index]) != u->edge_map.end())
+            while(u->edge_map->find(text[index]) != u->edge_map->end())
             {
 
-                inner_cnt_3++;
                 temp_index = index;
 
-                suffix_edge_t * tt = u->edge_map[ text[index] ];
+                suffix_edge_t * tt = (*(u->edge_map))[ text[index] ];
                 wstring src_text = text_map[tt->text_id];
                 int i = tt->start;
 
@@ -828,7 +846,7 @@ int rstree_t::remove_text()
                 int tt_end_bk = tt->end;
                 if(index >= (int)text.size())
                 {
-                    dec_freq(tt->next, delete_cnt);
+                    dec_freq(tt->next);
                 }
 
 
@@ -868,7 +886,7 @@ int rstree_t::remove_text()
                     break;
                 }
             }
-            else if(index == (int)text.size() - 1 && u->edge_map.count(text[index]) == 0)
+            else if(index == (int)text.size() - 1 && u->edge_map->count(text[index]) == 0)
             {
                 flag = true;
                 break;
@@ -881,7 +899,6 @@ int rstree_t::remove_text()
         }
     }
 
-    UB_LOG_DEBUG("remove text inner count4=[%d] count3=[%d] count2=[%d] delete=[%d]", inner_cnt_4, inner_cnt_3, inner_cnt_2, delete_cnt);
     text_map.erase(remove_id++);
 
     return 0;

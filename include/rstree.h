@@ -32,6 +32,9 @@ using namespace std;
 
 class suffix_edge_t;
 
+/**
+ * 后缀树节点中保存边的map，使用gnu_cxx的pool_allocator作为内存分配器
+ */
 typedef map<wchar_t, suffix_edge_t*, less<wchar_t>, 
       __gnu_cxx::__pool_alloc<pair<wchar_t, suffix_edge_t*> > > rstree_map_t;
 
@@ -39,73 +42,62 @@ typedef map<wchar_t, suffix_edge_t*, less<wchar_t>,
 /*
  * 后缀树的节点
  */
-class suffix_node_t
+struct suffix_node_t
 {
-public:
     suffix_node_t * suffix_link; //后缀链接
     suffix_node_t * parent_node; //父节点
-    rstree_map_t  edge_map; //所有的边
+    rstree_map_t*  edge_map; //所有的边
     int frequency; //从root到当前节点的子串的频率
     int length; //从root到当前节点的子串的长度
     suffix_edge_t * parent_edge; //父亲边
 
-    suffix_node_t(suffix_node_t* parent_node)
-    {
-        suffix_link = NULL;
-        this->parent_node = parent_node;
-        frequency = 0;
-        length = -1;        
-    }
-    suffix_node_t()
-    {
-        suffix_link = NULL;
-        parent_node = NULL;
-        frequency = 0;
-        length = -1;
-    }
-
-    ~suffix_node_t()
-    {
-        rstree_map_t().swap(edge_map);
-    }
-
-    void set_parent_edge(suffix_edge_t * parent_edge)
-    {
-        this->parent_edge = parent_edge;
-    }
-
-private:
-
-
 };
+
+/**
+ * @brief: 构建后缀树节点
+ * @param: 当前节点的父节点
+ * @retval: 构建的后缀节点指针
+ *
+ */
+suffix_node_t * construct_suffix_node(suffix_node_t *);
+
+
+/**
+ * 释放后缀树节点
+ *
+ */
+void free_suffix_node(suffix_node_t *);
 
 /**
  * 后缀树的边
  */
-class suffix_edge_t
+struct suffix_edge_t
 {
-public:
-    int text_id; //这条边所属的文本id
+    long long text_id; //这条边所属的文本id
     suffix_node_t * next; //边所连接的子节点
     int start; //边在文本中的开始index
     int end; //边在文本中的结束index
     wchar_t  key; //边所包含的文本的第一个字
 
-    suffix_edge_t(int text_id, int start, int end, wchar_t key, suffix_node_t *next)
-    {
-        this->text_id = text_id;
-        this->start = start;
-        this->end = end;
-        this->key = key;
-        this->next = next;
-    } 
-
-    void set_text_id(int text_id)
-    {
-        this->text_id = text_id;
-    }
-
 };
+
+/**
+ * @brief: 构建后缀树的边
+ * @param text_id: 边所在文本的id
+ * @param start: 边的第一个字符在文本中的index
+ * @param end: 边的最后一个字符在文本中的index
+ * @param key: 边的第一个字符，作为保存这条边的map的key
+ * @param next: 边所连接的孩子节点
+ * @retval: 构建的后缀树边
+ *
+ */
+suffix_edge_t * construct_suffix_edge(long long text_id, int start, int end, wchar_t key, suffix_node_t *next);
+
+/**
+ * 释放后缀树边
+ *
+ */
+void free_suffix_edge(suffix_edge_t *);
 
 class rstree_t
 {
@@ -238,9 +230,9 @@ private:
 
     wstring end_string; //
 
-    map<wstring, int> inc_freq(suffix_node_t *lowest_node, int id, int start);
-    wstring inc_freq_recursive(map<wstring, int> & ret, suffix_node_t * node, suffix_node_t * lowest_node, int id, int start, bool up);
-    void dec_freq(suffix_node_t * lowest_node, int &cnt);
+    map<wstring, int> inc_freq(suffix_node_t *lowest_node, long long id, int start);
+    wstring inc_freq_recursive(map<wstring, int> & ret, suffix_node_t * node, suffix_node_t * lowest_node, long long id, int start, bool up);
+    void dec_freq(suffix_node_t * lowest_node);
 
     void dfs_print(int level, suffix_node_t *node);
 

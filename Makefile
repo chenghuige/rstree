@@ -135,11 +135,11 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=ea09311e8ad0e80bcc2ae11be248ee57  COMAKE
+COMAKE_MD5=ea86c144c5d311c3a217c8c6a2635a28  COMAKE
 
 
 .PHONY:all
-all:rstree 
+all:comake2_makefile_check rstree 
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mall[0m']"
 	@echo "make all done"
 
@@ -164,6 +164,7 @@ clean:ccpclean
 	rm -rf src/rstree_rstree_main.o
 	rm -rf src/rstree_rstree.o
 	rm -rf src/rstree_conf.o
+	rm -rf src/rstree_rstree_util.o
 
 .PHONY:dist
 dist:
@@ -184,11 +185,13 @@ love:
 
 rstree:src/rstree_rstree_main.o \
   src/rstree_rstree.o \
-  src/rstree_conf.o
+  src/rstree_conf.o \
+  src/rstree_rstree_util.o
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree[0m']"
 	$(CXX) src/rstree_rstree_main.o \
   src/rstree_rstree.o \
-  src/rstree_conf.o -Xlinker "-("  ../../../../../com/idlcompiler/astyle/libastyle.a \
+  src/rstree_conf.o \
+  src/rstree_rstree_util.o -Xlinker "-("  ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
   ../../../../../com/idlcompiler/parser/libparser.a \
@@ -273,6 +276,11 @@ src/rstree_conf.o:src/conf.cpp \
   include/conf.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_conf.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_conf.o src/conf.cpp
+
+src/rstree_rstree_util.o:src/rstree_util.cpp \
+  include/rstree_util.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_rstree_util.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_rstree_util.o src/rstree_util.cpp
 
 endif #ifeq ($(shell uname -m),x86_64)
 
