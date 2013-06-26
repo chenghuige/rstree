@@ -139,7 +139,7 @@ COMAKE_MD5=ea86c144c5d311c3a217c8c6a2635a28  COMAKE
 
 
 .PHONY:all
-all:comake2_makefile_check rstree 
+all:rstree 
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mall[0m']"
 	@echo "make all done"
 
