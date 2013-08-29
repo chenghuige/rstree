@@ -37,21 +37,22 @@ INCPATHS('. ./include ./output ./output/include')
 LDFLAGS('-lpthread -lcrypto -lrt')
 
 #依赖模块
-CONFIGS('lib2-64/ullib@base public/ub@base public/mcpack@base')
+CONFIGS('lib2-64/ullib public/ub public/mcpack third-64/boost public/gm/galileo lib2-64/ccode lib2-64/string third-64/tcmalloc')
 
 #为32位/64位指定不同的依赖路径.
 #CONFIGS_32('lib2/ullib')
 #CONFIGS_64('lib2-64/ullib')
 
-user_sources='src/rstree_main.cpp'
-user_headers=''
+
+INCPATHS('./include ./utils')
+srcs=GLOB('./src/*.cpp')
 
 #可执行文件
-Application('rstree',Sources(user_sources))
+Application('rstree',Sources(srcs))
 #静态库
-#StaticLibrary('rstree',Sources(user_sources),HeaderFiles(user_headers))
+#StaticLibrary('rstree',Sources(srcs))
 #共享库
-#SharedLibrary('rstree',Sources(user_sources),HeaderFiles(user_headers))
+#SharedLibrary('rstree',Sources(srcs))
 #子目录
 #Directory('demo')
 
