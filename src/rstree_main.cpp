@@ -12,10 +12,12 @@
 #include "conf.h"
 #include "rstree_def.h"
 #include "rstree_util.h"
+#include "dsuffix_tree.h"
 
 bsl::var::Ref g_monitor_info;
 char g_proc_name[1024];
-rstree_t *g_rstree;
+//rstree_t *g_rstree;
+DSuffixTree* g_rstree;
 
 extern void merge_map(map<wstring, int> &, const map<wstring, int> &);
 
@@ -174,23 +176,26 @@ static int rstree_server_callback()
 					break;
 				}
 				//UB_LOG_DEBUG("begin to add text[%s]", w2c(sub_wc.c_str()).c_str());
-				map<wstring, int> t_ret_map = g_rstree->add_text(sub_wc);
+				//map<wstring, int> t_ret_map = g_rstree->add_text(sub_wc);
+				map<wstring, int> t_ret_map;
+				g_rstree->add_text(sub_wc, t_ret_map);
 				merge_map(ret_map, t_ret_map);
 				
 				//g_rstree->print_tree();
 
 				if(g_rstree->get_tree_size() >= g_rstree->get_max_tree_size())
 				{
-					int ret_no = g_rstree->remove_text();
-					if(ret_no != 0)
-					{
-						UB_LOG_WARNING("failed to remove text [%s] ret_no=[%d]",content, ret_no);
-						error_no = -2;
-					}	
-					else
-					{
-						UB_LOG_TRACE( "remove text done!");
-					}
+					g_rstree->remove_text();
+					//int ret_no = g_rstree->remove_text();
+					//if(ret_no != 0)
+					//{
+					//	UB_LOG_WARNING("failed to remove text [%s] ret_no=[%d]",content, ret_no);
+					//	error_no = -2;
+					//}	
+					//else
+					//{
+					//	UB_LOG_TRACE( "remove text done!");
+					//}
 				}
 			}
 
@@ -292,7 +297,8 @@ static void app_init()
 		UB_LOG_NOTICE("get conf max_substr_cnt=[%d]", max_substr_cnt);
 	}
 
-	g_rstree = new rstree_t();
+	//g_rstree = new rstree_t();
+	g_rstree = new DSuffixTree();
 	g_rstree->set_tree_size(tree_size);
 	g_rstree->set_min_str_len(min_str_len);
 	g_rstree->set_max_str_len(max_str_len);
