@@ -104,6 +104,22 @@ static vector<wstring> cut_wstring(const wstring & s, int unit)
 	return ret;
 }
 
+/*
+ * @brief: 合并map，将m2中的key-value对合并入m1，当m2中不包含这个key，或者对应的value值比m1中的大时
+ *
+ */
+void merge_map(map<wstring, int> & m1, const map<wstring ,int> & m2)
+{
+    for(map<wstring, int>::const_iterator iter = m2.begin(); iter != m2.end(); iter++)
+    {
+        map<wstring, int>::iterator iter1 = m1.find(iter->first);
+        if(iter1 == m1.end() || iter1->second < iter->second)
+        {
+            m1[iter->first] = iter->second;
+        }
+    }
+}
+
 /**
  *@rstree server 回调函数
 **/

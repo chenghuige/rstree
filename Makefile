@@ -168,7 +168,6 @@ clean:ccpclean
 	rm -rf rstree
 	rm -rf ./output/bin/rstree
 	rm -rf src/rstree_conf.o
-	rm -rf src/rstree_rstree.o
 	rm -rf src/rstree_rstree_main.o
 	rm -rf src/rstree_rstree_util.o
 
@@ -190,12 +189,10 @@ love:
 	@echo "make love done"
 
 rstree:src/rstree_conf.o \
-  src/rstree_rstree.o \
   src/rstree_rstree_main.o \
   src/rstree_rstree_util.o
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree[0m']"
 	$(CXX) src/rstree_conf.o \
-  src/rstree_rstree.o \
   src/rstree_rstree_main.o \
   src/rstree_rstree_util.o -Xlinker "-("  ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
@@ -300,13 +297,6 @@ src/rstree_conf.o:src/conf.cpp \
   include/conf.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_conf.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_conf.o src/conf.cpp
-
-src/rstree_rstree.o:src/rstree.cpp \
-  include/rstree.h \
-  include/rstree_def.h \
-  include/rstree_util.h
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_rstree.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_rstree.o src/rstree.cpp
 
 src/rstree_rstree_main.o:src/rstree_main.cpp \
   include/rstree.h \
