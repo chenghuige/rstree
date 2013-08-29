@@ -19,7 +19,9 @@ CPPFLAGS=-D_GNU_SOURCE \
 INCPATH=-I. \
   -I./include \
   -I./output \
-  -I./output/include
+  -I./output/include \
+  -I./include \
+  -I./utils
 DEP_INCPATH=-I../../../../../com/idlcompiler \
   -I../../../../../com/idlcompiler/include \
   -I../../../../../com/idlcompiler/output \
@@ -123,7 +125,11 @@ DEP_INCPATH=-I../../../../../com/idlcompiler \
   -I../../../../../third-64/stlport \
   -I../../../../../third-64/stlport/include \
   -I../../../../../third-64/stlport/output \
-  -I../../../../../third-64/stlport/output/include
+  -I../../../../../third-64/stlport/output/include \
+  -I../../../../../third-64/tcmalloc \
+  -I../../../../../third-64/tcmalloc/include \
+  -I../../../../../third-64/tcmalloc/output \
+  -I../../../../../third-64/tcmalloc/output/include
 
 #============ CCP vars ============
 CCHECK=@ccheck.py
@@ -135,11 +141,11 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=ea86c144c5d311c3a217c8c6a2635a28  COMAKE
+COMAKE_MD5=1d9dea555f7972a2f2550316b42124d4  COMAKE
 
 
 .PHONY:all
-all:rstree 
+all:comake2_makefile_check rstree 
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mall[0m']"
 	@echo "make all done"
 
@@ -161,9 +167,9 @@ clean:ccpclean
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mclean[0m']"
 	rm -rf rstree
 	rm -rf ./output/bin/rstree
-	rm -rf src/rstree_rstree_main.o
-	rm -rf src/rstree_rstree.o
 	rm -rf src/rstree_conf.o
+	rm -rf src/rstree_rstree.o
+	rm -rf src/rstree_rstree_main.o
 	rm -rf src/rstree_rstree_util.o
 
 .PHONY:dist
@@ -183,14 +189,14 @@ love:
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mlove[0m']"
 	@echo "make love done"
 
-rstree:src/rstree_rstree_main.o \
+rstree:src/rstree_conf.o \
   src/rstree_rstree.o \
-  src/rstree_conf.o \
+  src/rstree_rstree_main.o \
   src/rstree_rstree_util.o
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree[0m']"
-	$(CXX) src/rstree_rstree_main.o \
+	$(CXX) src/rstree_conf.o \
   src/rstree_rstree.o \
-  src/rstree_conf.o \
+  src/rstree_rstree_main.o \
   src/rstree_rstree_util.o -Xlinker "-("  ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
@@ -245,25 +251,55 @@ rstree:src/rstree_rstree_main.o \
   ../../../../../public/ub/output/lib/libubex.a \
   ../../../../../public/ub/output/lib/libubfw.a \
   ../../../../../public/uconv/libuconv.a \
+  ../../../../../third-64/boost/lib/libboost_atomic.a \
+  ../../../../../third-64/boost/lib/libboost_chrono.a \
+  ../../../../../third-64/boost/lib/libboost_context.a \
+  ../../../../../third-64/boost/lib/libboost_date_time.a \
+  ../../../../../third-64/boost/lib/libboost_exception.a \
+  ../../../../../third-64/boost/lib/libboost_filesystem.a \
+  ../../../../../third-64/boost/lib/libboost_graph.a \
+  ../../../../../third-64/boost/lib/libboost_locale.a \
+  ../../../../../third-64/boost/lib/libboost_math_c99.a \
+  ../../../../../third-64/boost/lib/libboost_math_c99f.a \
+  ../../../../../third-64/boost/lib/libboost_math_c99l.a \
+  ../../../../../third-64/boost/lib/libboost_math_tr1.a \
+  ../../../../../third-64/boost/lib/libboost_math_tr1f.a \
+  ../../../../../third-64/boost/lib/libboost_math_tr1l.a \
+  ../../../../../third-64/boost/lib/libboost_prg_exec_monitor.a \
+  ../../../../../third-64/boost/lib/libboost_program_options.a \
+  ../../../../../third-64/boost/lib/libboost_python.a \
+  ../../../../../third-64/boost/lib/libboost_random.a \
+  ../../../../../third-64/boost/lib/libboost_regex.a \
+  ../../../../../third-64/boost/lib/libboost_serialization.a \
+  ../../../../../third-64/boost/lib/libboost_signals.a \
+  ../../../../../third-64/boost/lib/libboost_system.a \
+  ../../../../../third-64/boost/lib/libboost_test_exec_monitor.a \
+  ../../../../../third-64/boost/lib/libboost_thread.a \
+  ../../../../../third-64/boost/lib/libboost_timer.a \
+  ../../../../../third-64/boost/lib/libboost_unit_test_framework.a \
+  ../../../../../third-64/boost/lib/libboost_wave.a \
+  ../../../../../third-64/boost/lib/libboost_wserialization.a \
   ../../../../../third-64/pcre/lib/libpcre.a \
   ../../../../../third-64/pcre/lib/libpcrecpp.a \
   ../../../../../third-64/pcre/lib/libpcreposix.a \
   ../../../../../third-64/protobuf/lib/libprotobuf-lite.a \
   ../../../../../third-64/protobuf/lib/libprotobuf.a \
-  ../../../../../third-64/protobuf/lib/libprotoc.a -lpthread \
+  ../../../../../third-64/protobuf/lib/libprotoc.a \
+  ../../../../../third-64/tcmalloc/lib/libprofiler.a \
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc.a \
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc_and_profiler.a \
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc_debug.a \
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal.a \
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
   -lcrypto \
   -lrt -Xlinker "-)" -o rstree
 	mkdir -p ./output/bin
 	cp -f --link rstree ./output/bin
 
-src/rstree_rstree_main.o:src/rstree_main.cpp \
-  include/rstree.h \
-  include/rstree_def.h \
-  include/conf.h \
-  include/rstree_def.h \
-  include/rstree_util.h
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_rstree_main.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_rstree_main.o src/rstree_main.cpp
+src/rstree_conf.o:src/conf.cpp \
+  include/conf.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_conf.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_conf.o src/conf.cpp
 
 src/rstree_rstree.o:src/rstree.cpp \
   include/rstree.h \
@@ -272,13 +308,21 @@ src/rstree_rstree.o:src/rstree.cpp \
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_rstree.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_rstree.o src/rstree.cpp
 
-src/rstree_conf.o:src/conf.cpp \
-  include/conf.h
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_conf.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_conf.o src/conf.cpp
+src/rstree_rstree_main.o:src/rstree_main.cpp \
+  include/rstree.h \
+  include/rstree_def.h \
+  include/conf.h \
+  include/rstree_def.h \
+  include/rstree_util.h \
+  include/dsuffix_tree.h \
+  include/suffix_tree.h \
+  utils/hashmap_util.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_rstree_main.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_rstree_main.o src/rstree_main.cpp
 
 src/rstree_rstree_util.o:src/rstree_util.cpp \
-  include/rstree_util.h
+  include/rstree_util.h \
+  include/rstree_def.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_rstree_util.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_rstree_util.o src/rstree_util.cpp
 
