@@ -190,14 +190,14 @@ public:
 		}
 	}
 
-	bool IsNodeOk(Node* node)
+	bool is_node_ok(Node* node)
 	{
 		return node->freq >= _min_frequency
 			&& node->length >= _min_substr_len
 			&& node->length <= _max_substr_len;
 	}
 
-	bool IsLeafOk(Node* leaf)
+	bool is_leaf_ok(Node* leaf)
 	{
 		int length = leaf->length - 1;
 		return leaf->freq >= _min_frequency
@@ -214,10 +214,11 @@ public:
 		for (leaf_node = _first_leafs[_current_text_id - _oldest_text_id]; leaf_node != NULL; leaf_node = leaf_node->suffix_link)
 		{
 			if (leaf_node->freq > pre_leaf_freq
-				&& IsLeafOk(leaf_node)
+				&& is_leaf_ok(leaf_node)
 				)
 			{
 				wstring substr = text.substr(leaf_node->end - leaf_node->length, leaf_node->length - 1);
+
 				result_vec.push_back(SubStrFreq(substr, leaf_node->freq));
 			}
 
@@ -225,7 +226,7 @@ public:
 			{
 				if (internal_nodes_map.find(node) == internal_nodes_map.end())
 				{
-					if (IsNodeOk(node))
+					if (is_node_ok(node))
 					{
 						internal_nodes_map[node] = true;
 					}
@@ -261,6 +262,7 @@ public:
 			if (iter->second == true)
 			{
 				wstring substr = text.substr(node->end - node->length, node->length);
+
 				result_vec.push_back(SubStrFreq(substr, node->freq));
 			}
 		}

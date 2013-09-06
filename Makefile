@@ -4,11 +4,13 @@ ifeq ($(shell uname -m),x86_64)
 CC=gcc
 CXX=g++
 CXXFLAGS=-g \
+  -O2 \
   -pipe \
   -W \
   -Wall \
   -fPIC
 CFLAGS=-g \
+  -O2 \
   -pipe \
   -W \
   -Wall \
@@ -141,7 +143,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=1d9dea555f7972a2f2550316b42124d4  COMAKE
+COMAKE_MD5=23abc3735829d3d298dddc4c3fb754cd  COMAKE
 
 
 .PHONY:all

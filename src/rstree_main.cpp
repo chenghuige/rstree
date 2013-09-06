@@ -6,6 +6,7 @@
 
 #include <set>
 #include <cmath>
+#include <iostream>
 
 #include "mc_pack.h"
 #include "rstree.h"
@@ -312,7 +313,6 @@ static void app_init()
 	{
 		UB_LOG_NOTICE("get conf max_substr_cnt=[%d]", max_substr_cnt);
 	}
-
 	//g_rstree = new rstree_t();
 	g_rstree = new DSuffixTree();
 	g_rstree->set_tree_size(tree_size);
