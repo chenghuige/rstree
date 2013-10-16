@@ -40,6 +40,43 @@ void get_proc_name()
     snprintf(g_proc_name, sizeof(g_proc_name), "%s", p + 1); 
 }
 
+wstring remove_dupspace(wstring input)
+{
+	if (input.size() == 0)
+	{
+		return input;
+	}
+	
+	wchar_t* buf = new wchar_t[input.size() + 1];
+	bool before_is_space = true;
+	int j = 0;
+	for (int i = 0; i < input.size(); i++)
+	{
+		if (input[i] == L' ')
+		{
+			if (!before_is_space)
+			{ //the first space
+				buf[j++] = input[i];
+			}
+			before_is_space = true;
+		}
+		else
+		{
+			buf[j++] = input[i];
+			before_is_space = false;
+		}
+	}
+	if (j > 1 && (buf[j - 1] == L' '))
+	{ //remove the last single space if exists
+		j--;
+	}
+	buf[j] = L'\0';
+
+	wstring rs = buf;
+	delete [] buf;
+	return rs;
+}
+
 /**
  * @brief：后缀树输入文本做预处理
  *
@@ -51,8 +88,8 @@ static wstring filter(const wstring & input)
 
 	//去除空格
 	wstring s(input);
-	s = wstr_replace_all(s, L" ", L"");	
-
+	//s = wstr_replace_all(s, L" ", L"");	
+	s = remove_dupspace(s);
 
 	//去除连续出现10次以上的字符
 	wstring ret = L"";
