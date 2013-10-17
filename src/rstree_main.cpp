@@ -210,9 +210,9 @@ static int rstree_server_callback()
 		g_rstree->set_min_substr_len(min_len);
 		g_rstree->set_max_substr_len(max_len);
 
-		wstring wct = c2w(content);
-
-		wstring wc = filter(wct);
+		//wstring wct = c2w(content);
+		wstring wc = c2w(content);
+		//wstring wc = filter(wct);
 
 		if((int)wc.size() < g_rstree->get_min_str_len())
 		{
