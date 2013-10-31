@@ -1,0 +1,24 @@
+#edit-mode: -*- python -*-
+#coding:gbk
+GCC_VERSION='4.8.1'
+
+GLIBC_VERSION='2.9'
+
+BINUTILS_VERSION='2.20'
+
+KERNAL_VERSION='2.6.32'
+
+# for gcc4:
+#TOOLCHAIN=TOOLCHAIN_ROOT + '/gcc_only_%s'%(GCC_VERSION)
+#GCC4=TOOLCHAIN + '/bin/g++'
+TOOLCHAIN=TOOLCHAIN_ROOT + '/x86_64-unknown-linux-gnu-%s-%s-%s-%s/'%(GCC_VERSION,GLIBC_VERSION,BINUTILS_VERSION,KERNAL_VERSION)
+GCC=TOOLCHAIN + '/bin/x86_64-unknown-linux-gnu-g++'
+#GCC='g++'
+
+GCC3_COMPATIBLE_FLAGS='-std=c++0x -fpermissive -Wno-write-strings -Wno-literal-suffix -Wno-unused-local-typedefs'
+NOFLAGS=GCC3_COMPATIBLE_FLAGS
+
+GCC_LDFLAGS='-static-libgcc -static-libstdc++'
+
+# for gcc4:
+CONFIGS('ps/se/toolchain@trunk')

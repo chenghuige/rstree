@@ -1,0 +1,5 @@
+#edit-mode: -*- python -*-
+#coding:gbk
+GCC='g++'
+NOFLAGS=""
+GCC_LDFLAGS=''

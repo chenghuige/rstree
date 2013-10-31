@@ -1,28 +1,44 @@
 #COMAKE2 edit-mode: -*- Makefile -*-
 ####################64Bit Mode####################
 ifeq ($(shell uname -m),x86_64)
-CC=gcc
-CXX=g++
+CC=../../../../../ps/se/toolchain/x86_64-unknown-linux-gnu-4.8.1-2.9-2.20-2.6.32//bin/x86_64-unknown-linux-gnu-g++
+CXX=../../../../../ps/se/toolchain/x86_64-unknown-linux-gnu-4.8.1-2.9-2.20-2.6.32//bin/x86_64-unknown-linux-gnu-g++
 CXXFLAGS=-g \
-  -O2 \
+  -O3 \
   -pipe \
   -W \
   -Wall \
-  -fPIC
+  -fPIC \
+  -DHAVE_NETINET_IN_H \
+  -Wno-unused-parameter \
+  -std=c++0x \
+  -fpermissive \
+  -Wno-write-strings \
+  -Wno-literal-suffix \
+  -Wno-unused-local-typedefs
 CFLAGS=-g \
-  -O2 \
+  -O3 \
   -pipe \
   -W \
   -Wall \
-  -fPIC
+  -fPIC \
+  -DHAVE_NETINET_IN_H \
+  -Wno-unused-parameter \
+  -std=c++0x \
+  -fpermissive \
+  -Wno-write-strings \
+  -Wno-literal-suffix \
+  -Wno-unused-local-typedefs
 CPPFLAGS=-D_GNU_SOURCE \
   -D__STDC_LIMIT_MACROS \
-  -DVERSION=\"1.9.8.7\"
-INCPATH=-I. \
-  -I./include \
-  -I./output \
-  -I./output/include \
-  -I./include \
+  -U_BTEST_ \
+  -D__VERSION_ID__=\"1.0.0\" \
+  -D__REVISION__=\"$(shell \
+  svnversion \
+  -n \
+  .)\"
+INCPATH=-I./include \
+  -I./include/post_process \
   -I./utils
 DEP_INCPATH=-I../../../../../com/idlcompiler \
   -I../../../../../com/idlcompiler/include \
@@ -44,18 +60,10 @@ DEP_INCPATH=-I../../../../../com/idlcompiler \
   -I../../../../../lib2-64/bsl/include \
   -I../../../../../lib2-64/bsl/output \
   -I../../../../../lib2-64/bsl/output/include \
-  -I../../../../../lib2-64/ccode \
-  -I../../../../../lib2-64/ccode/include \
-  -I../../../../../lib2-64/ccode/output \
-  -I../../../../../lib2-64/ccode/output/include \
   -I../../../../../lib2-64/dict \
   -I../../../../../lib2-64/dict/include \
   -I../../../../../lib2-64/dict/output \
   -I../../../../../lib2-64/dict/output/include \
-  -I../../../../../lib2-64/string \
-  -I../../../../../lib2-64/string/include \
-  -I../../../../../lib2-64/string/output \
-  -I../../../../../lib2-64/string/output/include \
   -I../../../../../lib2-64/ullib \
   -I../../../../../lib2-64/ullib/include \
   -I../../../../../lib2-64/ullib/output \
@@ -116,6 +124,18 @@ DEP_INCPATH=-I../../../../../com/idlcompiler \
   -I../../../../../third-64/boost/include \
   -I../../../../../third-64/boost/output \
   -I../../../../../third-64/boost/output/include \
+  -I../../../../../third-64/gflags \
+  -I../../../../../third-64/gflags/include \
+  -I../../../../../third-64/gflags/output \
+  -I../../../../../third-64/gflags/output/include \
+  -I../../../../../third-64/glog \
+  -I../../../../../third-64/glog/include \
+  -I../../../../../third-64/glog/output \
+  -I../../../../../third-64/glog/output/include \
+  -I../../../../../third-64/openssl \
+  -I../../../../../third-64/openssl/include \
+  -I../../../../../third-64/openssl/output \
+  -I../../../../../third-64/openssl/output/include \
   -I../../../../../third-64/pcre \
   -I../../../../../third-64/pcre/include \
   -I../../../../../third-64/pcre/output \
@@ -131,7 +151,11 @@ DEP_INCPATH=-I../../../../../com/idlcompiler \
   -I../../../../../third-64/tcmalloc \
   -I../../../../../third-64/tcmalloc/include \
   -I../../../../../third-64/tcmalloc/output \
-  -I../../../../../third-64/tcmalloc/output/include
+  -I../../../../../third-64/tcmalloc/output/include \
+  -I../../../../../third-64/zlib \
+  -I../../../../../third-64/zlib/include \
+  -I../../../../../third-64/zlib/output \
+  -I../../../../../third-64/zlib/output/include
 
 #============ CCP vars ============
 CCHECK=@ccheck.py
@@ -143,7 +167,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=23abc3735829d3d298dddc4c3fb754cd  COMAKE
+COMAKE_MD5=f0cd9a3d20287eed998e100c88b96233  COMAKE
 
 
 .PHONY:all
@@ -214,9 +238,7 @@ rstree:src/rstree_conf.o \
   ../../../../../lib2-64/bsl/lib/libbsl_var.a \
   ../../../../../lib2-64/bsl/lib/libbsl_var_implement.a \
   ../../../../../lib2-64/bsl/lib/libbsl_var_utils.a \
-  ../../../../../lib2-64/ccode/lib/libulccode.a \
   ../../../../../lib2-64/dict/lib/libuldict.a \
-  ../../../../../lib2-64/string/lib/libstring.a \
   ../../../../../lib2-64/ullib/lib/libullib.a \
   ../../../../../op/oped/noah/webfoot/naming-lib/output/lib/libwebfoot_naming.a \
   ../../../../../public/bslext/output/lib/libbsl_bml.a \
@@ -278,6 +300,11 @@ rstree:src/rstree_conf.o \
   ../../../../../third-64/boost/lib/libboost_unit_test_framework.a \
   ../../../../../third-64/boost/lib/libboost_wave.a \
   ../../../../../third-64/boost/lib/libboost_wserialization.a \
+  ../../../../../third-64/gflags/lib/libgflags.a \
+  ../../../../../third-64/gflags/lib/libgflags_nothreads.a \
+  ../../../../../third-64/glog/lib/libglog.a \
+  ../../../../../third-64/openssl/lib/libcrypto.a \
+  ../../../../../third-64/openssl/lib/libssl.a \
   ../../../../../third-64/pcre/lib/libpcre.a \
   ../../../../../third-64/pcre/lib/libpcrecpp.a \
   ../../../../../third-64/pcre/lib/libpcreposix.a \
@@ -289,11 +316,15 @@ rstree:src/rstree_conf.o \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_and_profiler.a \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_debug.a \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal.a \
-  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
-  -lcrypto \
-  -lrt -Xlinker "-)" -o rstree
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a \
+  ../../../../../third-64/zlib/lib/libz.a -static-libgcc \
+  -static-libstdc++ \
+  -ldl \
+  -lpthread \
+  -lrt \
+  -rdynamic -Xlinker "-)" -o rstree
 	mkdir -p ./output/bin
-	cp -f --link rstree ./output/bin
+	cp -f rstree ./output/bin
 
 src/rstree_conf.o:src/conf.cpp \
   include/conf.h
@@ -301,14 +332,18 @@ src/rstree_conf.o:src/conf.cpp \
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_conf.o src/conf.cpp
 
 src/rstree_rstree_main.o:src/rstree_main.cpp \
-  include/rstree.h \
-  include/rstree_def.h \
   include/conf.h \
   include/rstree_def.h \
   include/rstree_util.h \
-  include/dsuffix_tree.h \
-  include/suffix_tree.h \
-  utils/hashmap_util.h
+  include/DSuffixTree.h \
+  include/SuffixTree.h \
+  utils/hashmap_util.h \
+  include/rstree_def.h \
+  utils/log_util.h \
+  utils/configure_util.h \
+  utils/log_util.h \
+  utils/string_util.h \
+  include/post_process/RstreeFilter.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_rstree_main.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_rstree_main.o src/rstree_main.cpp
 

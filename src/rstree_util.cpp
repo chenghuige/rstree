@@ -18,7 +18,7 @@
 #include "rstree_util.h"
 #include "rstree_def.h"
 
-
+const int DEFAULT_MAX_STR_LEN = 20000;
 /**
  * @brief ×Ö·û´®×ª»¯³É¿ístring
  *
@@ -37,7 +37,7 @@ wstring c2w(const char* pc)
         return val;
     }
     size_of_wc = destlen+1; 
-    wchar_t  pw[DEFAULT_MAX_STR_LEN];;
+    wchar_t  pw[DEFAULT_MAX_STR_LEN];
     mbstowcs(pw,pc,DEFAULT_MAX_STR_LEN); 
     val = pw;  
     return val;

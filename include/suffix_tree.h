@@ -155,8 +155,8 @@ public:
             node = NULL;
         }
     }
-    
-     int get_tree_size()
+
+    int get_tree_size()
     {
         return _texts.size();
     }
@@ -203,7 +203,7 @@ public:
 
         _oldest_text_id++;
     }
-    
+
     void remove_text()
     {
         remove();
@@ -218,7 +218,7 @@ public:
         {
             return _root;
         }
-        
+
         Node* active_node = _root;
         int cur = start;
 
@@ -232,7 +232,7 @@ public:
             active_node = iter->second;
             int end = cur + (active_node->end - active_node->start);
             int j;
-            for(j = cur + 1; j < end && j < text_length; j++)
+            for (j = cur + 1; j < end && j < text_length; j++)
             {
                 if (_texts[active_node->text_id][active_node->start + j] != text[j])
                 {//找到不匹配
@@ -243,26 +243,27 @@ public:
             { //文本串匹配完
                 return active_node;
             }
-            
-            if(active_node->is_leaf())
+
+            if (active_node->is_leaf())
             {//文本串未匹配完 但是已经到叶子节点
                 return active_node;
             }
-            
+
             cur = end;
         }
-      
+
         return active_node;
     }
 
     //返回匹配到的长度
+
     int find_longest(const wstring& text, int start)
     {
         Node* node = find_longest_node(text, start);
         return node->length;
     }
-    
-     int find_longest(const wstring& text, int start, int & freq)
+
+    int find_longest(const wstring& text, int start, int & freq)
     {
         Node* node = find_longest_node(text, start);
         if (node == _root)
@@ -281,7 +282,7 @@ public:
         {
             return NULL;
         }
-        
+
         Node* active_node = _root;
         int cur = start;
 
@@ -295,7 +296,7 @@ public:
             active_node = iter->second;
             int end = cur + (active_node->end - active_node->start);
             int j;
-            for(j = cur + 1; j < end && j < text_length; j++)
+            for (j = cur + 1; j < end && j < text_length; j++)
             {
                 if (_texts[active_node->text_id][active_node->start + j] != text[j])
                 {//找到不匹配
@@ -306,15 +307,15 @@ public:
             { //文本串匹配完
                 return active_node;
             }
-            
-            if(active_node->is_leaf())
+
+            if (active_node->is_leaf())
             {//文本串未匹配完 但是已经到叶子节点
                 return NULL;
             }
-            
+
             cur = end;
         }
-      
+
         return active_node;
     }
 
@@ -324,7 +325,7 @@ public:
     {
         return find_node(text, start) != NULL;
     }
-    
+
     int find_freq(const wstring& text, int start = 0)
     {
         Node* node = find_node(text, start);
@@ -403,24 +404,7 @@ public:
         }
     }
 
-    /**
-     * @brief: 对字符串两边的空白字符做剪切
-     * @param s: 待剪切字符串
-     * @retval: 剪切后的字符串
-     *
-     */
-    wstring trim(const wstring & s)
-    {
-        wstring ret;
-        int start = 0, end = s.size() - 1;
-        while (start < (int) s.size() && (s[start] == L' ' || s[start] == L'\t' || s[start] == L'\n' || s[start] == L'\r'))
-            start++;
-        while (end >= 0 && (s[end] == L' ' || s[end] == L'\t' || s[end] == L'\n' || s[end] == L'\r'))
-            end--;
-        if (start > end)
-            return L"";
-        return s.substr(start, end - start + 1);
-    }
+    
 protected:
 
     //完全按照
