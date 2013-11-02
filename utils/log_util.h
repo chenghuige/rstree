@@ -7,14 +7,14 @@
  *          
  *          \date   2011-04-02 09:36:45.642369
  *  
- *  \Description:   °ü×°ul/com log
+ *  \Description:   com log wrapper
  *  ==============================================================================
  */
 
 #ifndef LOG_UTIL_H_
 #define LOG_UTIL_H_
 #include <string>
-#include "com_log.h" //TODO remove ul_log
+#include "com_log.h" 
 #include "ul_log.h"
 
 namespace gezi
@@ -43,15 +43,15 @@ namespace gezi
 } while (0)
 
 #define LOG_ERROR(fmt, arg...) do { \
-	com_writelog(COMLOG_FATAL, "[%d:%s]: " fmt,  __LINE__, __FUNCTION__, ## arg); \
+	com_writelog(COMLOG_FATAL, "[%s:%d:%s]: " fmt, __FILE__, __LINE__, __FUNCTION__, ## arg); \
 } while (0)
 
 #define LOG_WARNING(fmt, arg...) do { \
-	com_writelog(COMLOG_WARNING, "[%d:%s]: " fmt, __LINE__, __FUNCTION__, ## arg); \
+	com_writelog(COMLOG_WARNING, "[%s:%d:%s]: " fmt, __FILE__, __LINE__, __FUNCTION__, ## arg); \
 } while (0)
 
 #define LOG_INFO(fmt, arg...) do { \
-	com_writelog(COMLOG_NOTICE, "[%d:%s]: " fmt,  __LINE__, __FUNCTION__, ## arg); \
+	com_writelog(COMLOG_NOTICE, "[%s:%d:%s]: " fmt, __FILE__, __LINE__, __FUNCTION__, ## arg); \
 } while (0)
 
 #define LOG_NOTICE(log_id, fmt, arg...) do { \
@@ -63,7 +63,7 @@ namespace gezi
 } while (0)
 
 #define LOG_DEBUG(fmt, arg...) do { \
-	com_writelog(COMLOG_DEBUG, "[%d:%s]: " fmt,  __LINE__, __FUNCTION__, ## arg); \
+	com_writelog(COMLOG_DEBUG, "[%s:%d:%s]: " fmt, __FILE__, __LINE__, __FUNCTION__, ## arg); \
 } while (0)
 
 #define LOG_SDF(event, log_id, fmt, arg...) do { \

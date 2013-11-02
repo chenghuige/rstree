@@ -84,11 +84,11 @@ inline void set_val(const comcfg::Configure& conf, const std::string& field, con
   try
   {
     val = conf[field.c_str()][key.c_str()].to_cstr();
-    LOG_DEBUG("Get config %s.%s : %s", field.c_str(), key.c_str(), val.c_str());
+    LOG_DEBUG("Get config %s::%s : %s", field.c_str(), key.c_str(), val.c_str());
   }
   catch (...)
   {
-    LOG_WARNING("Using default %s.%s : %s", field.c_str(), key.c_str(), val.c_str());
+    LOG_WARNING("Using default %s::%s : %s", field.c_str(), key.c_str(), val.c_str());
     set_val(conf, key, val);
   }
 }
@@ -119,12 +119,12 @@ inline std::string get_val(const comcfg::Configure& conf, const std::string& fie
   try
   {
     val = conf[field.c_str()][key.c_str()].to_cstr();
-    LOG_DEBUG("Get config %s.%s : %s", field.c_str(), key.c_str(), val.c_str());
+    LOG_DEBUG("Get config %s::%s : %s", field.c_str(), key.c_str(), val.c_str());
   }
   catch (...)
   {
     val = default_val;
-    LOG_WARNING("Using default %s.%s : %s", field.c_str(), key.c_str(), val.c_str());
+    LOG_WARNING("Using default %s::%s : %s", field.c_str(), key.c_str(), val.c_str());
     set_val(conf, key, val);
   }
   return val;
@@ -154,11 +154,11 @@ inline void set_val(const comcfg::Configure& conf, const std::string& field, con
   try
   {
     val = conf[field.c_str()][key.c_str()].to_int32();
-    LOG_DEBUG("Get config %s.%s : %d", field.c_str(), key.c_str(), val);
+    LOG_DEBUG("Get config %s::%s : %d", field.c_str(), key.c_str(), val);
   }
   catch (...)
   {
-    LOG_WARNING("Using default %s.%s : %d", field.c_str(), key.c_str(), val);
+    LOG_WARNING("Using default %s::%s : %d", field.c_str(), key.c_str(), val);
     set_val(conf, key, val);
   }
 }
@@ -189,12 +189,12 @@ inline int get_val(const comcfg::Configure& conf, const std::string& field, cons
   try
   {
     val = conf[field.c_str()][key.c_str()].to_int32();
-    LOG_DEBUG("Get config %s.%s : %d", field.c_str(), key.c_str(), val);
+    LOG_DEBUG("Get config %s::%s : %d", field.c_str(), key.c_str(), val);
   }
   catch (...)
   {
     val = default_val;
-    LOG_WARNING("Using default %s.%s : %d", field.c_str(), key.c_str(), val);
+    LOG_WARNING("Using default %s::%s : %d", field.c_str(), key.c_str(), val);
     set_val(conf, key, val);
   }
   return val;
@@ -225,11 +225,11 @@ inline void set_val(const comcfg::Configure& conf, const std::string& field, std
   try
   {
     val = conf[field.c_str()][key.c_str()].to_int64();
-    LOG_DEBUG("Using default %s.%s : %lld", field.c_str(), key.c_str(), val);
+    LOG_DEBUG("Using default %s::%s : %lld", field.c_str(), key.c_str(), val);
   }
   catch (...)
   {
-    LOG_WARNING("Using default %s.%s : %lld", field.c_str(), key.c_str(), val);
+    LOG_WARNING("Using default %s::%s : %lld", field.c_str(), key.c_str(), val);
     set_val(conf, key, val);
   }
 }
@@ -260,12 +260,12 @@ inline long long get_val(const comcfg::Configure& conf, const std::string& field
   try
   {
     val = conf[field.c_str()][key.c_str()].to_int64();
-    LOG_DEBUG("Using default %s.%s : %lld", field.c_str(), key.c_str(), val);
+    LOG_DEBUG("Using default %s::%s : %lld", field.c_str(), key.c_str(), val);
   }
   catch (...)
   {
     val = default_val;
-    LOG_WARNING("Using default %s.%s : %lld", field.c_str(), key.c_str(), val);
+    LOG_WARNING("Using default %s::%s : %lld", field.c_str(), key.c_str(), val);
     set_val(conf, key, val);
   }
   return val;
@@ -297,11 +297,11 @@ inline void set_val(const comcfg::Configure& conf, const std::string& field, con
   try
   {
     val = conf[field.c_str()][key.c_str()].to_double();
-    LOG_DEBUG("Using default %s.%s : %f", field.c_str(), key.c_str(), val);
+    LOG_DEBUG("Using default %s::%s : %f", field.c_str(), key.c_str(), val);
   }
   catch (...)
   {
-    LOG_WARNING("Using default %s.%s : %f", field.c_str(), key.c_str(), val);
+    LOG_WARNING("Using default %s::%s : %f", field.c_str(), key.c_str(), val);
     set_val(conf, key, val);
   }
 }
@@ -333,12 +333,12 @@ inline double get_val(const comcfg::Configure& conf, const std::string& field, c
   try
   {
     val = conf[field.c_str()][key.c_str()].to_double();
-    LOG_DEBUG("Using default %s.%s : %f", field.c_str(), key.c_str(), val);
+    LOG_DEBUG("Using default %s::%s : %f", field.c_str(), key.c_str(), val);
   }
   catch (...)
   {
     val = default_val;
-    LOG_WARNING("Using default %s.%s : %f", field.c_str(), key.c_str(), val);
+    LOG_WARNING("Using default %s::%s : %f", field.c_str(), key.c_str(), val);
     set_val(conf, key, val);
   }
   return val;

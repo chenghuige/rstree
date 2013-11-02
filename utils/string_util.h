@@ -16,6 +16,8 @@
 #include <string>
 #include <iconv.h>
 #include "log_util.h"
+#include "chinese.h"
+#include <boost/algorithm/string.hpp>
 
 namespace gezi
 {
@@ -39,7 +41,118 @@ inline bool is_gbk_ch(const string& phrase)
   return is_gbk_ch((unsigned char) phrase[0], (unsigned char) phrase[1]);
 }
 
-inline string remove_space_ch(const string& phrase)
+
+//en means single byte
+inline bool all_en(const std::string& phrase)
+{
+  for (size_t i = 0; i < phrase.size();i++)
+  {
+    //双字节截断 不算single
+    if (((unsigned char) phrase[i]) >= 0x80)
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+//这里的en是single btye cn 限定gbk ch
+inline bool is_en_dominate(const std::string& phrase, int var = 3)
+{
+  int cn_count = 0;
+  int en_count = 0;
+  for (size_t i = 0; i < phrase.size();)
+  {
+    if (((unsigned char) phrase[i]) >= 0x80 && i + 1 < phrase.size())
+    {
+      if (is_gbk_ch((unsigned char) phrase[i], (unsigned char) phrase[i + 1]))
+      {
+        cn_count++;
+      }
+      else
+      {
+        en_count++;
+      }
+      i += 2;
+    }
+    else
+    {
+      en_count++;
+      i++;
+    }
+  }
+
+  return en_count > cn_count * var;
+}
+
+//提取中文
+string extract_chinese(const string& temp){
+	char out[temp.size() + 1];
+	memset(out, 0, sizeof(out));
+	int index = 0;
+	for(size_t i = 0; i < temp.size(); i++)
+	{
+		unsigned high = (unsigned)(0xff & temp[i]);
+		if(high >= 0x81)
+		{
+			if((high > 0xa9 || high >= 0x81 && high <= 0xa0)&& i < temp.size() - 1)
+			{
+				out[index] = temp[i];
+				out[index + 1] =  temp[i+1];
+				index += 2;
+			}
+			i++;
+		} 
+
+	}
+	string ret(out);
+	return ret;
+}
+//提取符号
+string extract_suspect_symb(const string& temp){
+	char out[temp.size() + 1];
+	memset(out, 0, sizeof(out));
+	int index = 0;
+	unsigned lastcode=0;
+	for(size_t i = 0; i < temp.size(); i++)
+	{
+		unsigned code = (unsigned)(((0xff & temp[i])<<8)+(0xff & temp[i+1]));
+		if(code >= 0x8100)
+		{   
+		 	if(code > 0xa100&&code<0xaa00&&
+				code!=0xa3bf&&code!=0xa1a0&&
+				code!=0xa3ac&&code!=0xa3a0&&
+				code!=0xa1a3&&code!=0xa3a1&&
+				code!=0xa1a4&&code!=0xa1a2&&
+				code!=0xa3a8&&code!=0xa3a9&&
+				code!=0xa1a2&&code!=0xa1a1&&
+				code!=0xa3ba&&code!=0xa3bb&&
+				code!=0xa1b0&&code!=0xa1b1&&
+				code!=0xa1ad)
+			{
+				if(code!=lastcode){
+				out[index] = temp[ i];
+				out[index + 1] =  temp[i+1];
+				index += 2;
+				}
+				lastcode=code;
+				char logtmp[3];
+				logtmp[0]=temp[i];
+				logtmp[1]=temp[i+1];
+				logtmp[2]=0;
+	            ul_writelog(UL_LOG_DEBUG,"extract suspect [%s] [%x]",logtmp,code);
+			}
+		 	i++;
+		} 
+
+	}
+	string ret(out);
+	return ret;
+
+}
+
+inline string remove_space_cn(const string& phrase)
 {
   if (phrase.empty())
   {
@@ -50,7 +163,7 @@ inline string remove_space_ch(const string& phrase)
   bool pre_ch = false;
   for (size_t i = 0; i < phrase.size();)
   {
-    if (((unsigned char) phrase[i]) >= 0x81 && ((unsigned char) phrase[i]) <= 0xFE && i + 1 < phrase.size())
+    if (((unsigned char) phrase[i]) >= 0x80 && i + 1 < phrase.size())
     {
       buf[j++] = phrase[i];
       buf[j++] = phrase[i + 1];
@@ -61,7 +174,7 @@ inline string remove_space_ch(const string& phrase)
     {
       if (phrase[i] != ' ' ||
               (!pre_ch && i + 1 < phrase.size() &&
-              (((unsigned char) phrase[i + 1]) < 0x81 || ((unsigned char) phrase[i]) > 0xFE)))
+              (((unsigned char) phrase[i + 1]) < 0x80)))
       {
         buf[j++] = phrase[i];
       }
@@ -75,15 +188,14 @@ inline string remove_space_ch(const string& phrase)
   return rs;
 }
 
-inline string remove_space_chonly(const string & phrase)
+inline string remove_space_cnonly(const string & phrase)
 {
   char *buf = new char[phrase.size() + 1];
   int j = 0;
   bool pre_ch = false;
   for (size_t i = 0; i < phrase.size();)
   {
-    if (((unsigned char) phrase[i]) >= 0x81 &&
-            ((unsigned char) phrase[i]) <= 0xFE && i + 1 < phrase.size())
+    if (((unsigned char) phrase[i]) >= 0x80)
     {
       buf[j++] = phrase[i];
       buf[j++] = phrase[i + 1];
@@ -94,8 +206,7 @@ inline string remove_space_chonly(const string & phrase)
     {
       if ((phrase[i] == ' ') && (pre_ch == true)
               && (i + 2 < phrase.size())
-              && (((unsigned char) phrase[i + 1]) >= 0x81)
-              && (((unsigned char) phrase[i + 1]) <= 0xFE)
+              && (((unsigned char) phrase[i + 1]) >= 0x80)
               )
       {
         buf[j++] = phrase[i + 1];
@@ -122,7 +233,7 @@ inline int word_num(const string& phrase)
   bool not_ch = false;
   for (size_t i = 0; i < phrase.size();)
   {
-    if (((unsigned char) phrase[i]) >= 0x81 && ((unsigned char) phrase[i]) <= 0xFE && i + 1 < phrase.size())
+    if (((unsigned char) phrase[i]) >= 0x80 && i + 1 < phrase.size())
     {
       if (not_ch)
       {
@@ -194,13 +305,13 @@ inline int code_convert(char *from_charset, char *to_charset, char *inbuf, size_
 
 inline string gbk_to_utf8(char* src)
 {
-   int outlen = strlen(src) * 3 + 1;
+  int outlen = strlen(src) * 3 + 1;
   char* outbuf = new char[outlen];
   memset(outbuf, 0, sizeof (outbuf));
 
   if (code_convert("gbk", "utf-8", src, strlen(src), outbuf, outlen) < 0)
   {
-     LOG_WARNING("Convert from gbk_to_utf8 fail:%s", src);
+    LOG_WARNING("Convert from gbk_to_utf8 fail:%s", src);
     return "";
   }
 
@@ -217,7 +328,7 @@ inline string gbk_to_utf8(const string & src)
 
   if (code_convert("gbk", "utf-8", const_cast<char*> (src.c_str()), src.length(), outbuf, outlen) < 0)
   {
-     LOG_WARNING("Convert from gbk_to_utf8 fail:%s", src.c_str());
+    LOG_WARNING("Convert from gbk_to_utf8 fail:%s", src.c_str());
     return "";
   }
 
@@ -225,7 +336,6 @@ inline string gbk_to_utf8(const string & src)
   delete [] outbuf;
   return rs;
 }
-
 
 inline string utf8_to_gbk(char* src)
 {
@@ -235,7 +345,7 @@ inline string utf8_to_gbk(char* src)
 
   if (code_convert("utf-8", "gbk", src, strlen(src), outbuf, outlen) < 0)
   {
-    LOG_WARNING("Convert from utf8_to_gbk fail:%s",src);
+    LOG_WARNING("Convert from utf8_to_gbk fail:%s", src);
     return "";
   }
 
@@ -252,7 +362,7 @@ inline string utf8_to_gbk(const string & src)
 
   if (code_convert("utf-8", "gbk", const_cast<char*> (src.c_str()), src.length(), outbuf, outlen) < 0)
   {
-    LOG_WARNING("Convert from utf8_to_gbk fail:%s",src.c_str());
+    LOG_WARNING("Convert from utf8_to_gbk fail:%s", src.c_str());
     return "";
   }
 
@@ -271,7 +381,7 @@ inline string remove_dupspace(const string& input)
   char* buf = new char[input.size() + 1];
   bool before_is_space = true;
   int j = 0;
-  for (int i = 0; i < (int)input.size(); i++)
+  for (int i = 0; i < (int) input.size(); i++)
   {
     if (input[i] == ' ')
     {
@@ -297,6 +407,7 @@ inline string remove_dupspace(const string& input)
   delete [] buf;
   return rs;
 }
+
 }
 
 #endif  //----end of STRING_UTIL_H_
