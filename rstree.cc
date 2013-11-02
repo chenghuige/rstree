@@ -11,13 +11,17 @@
 #include <iostream>
 
 #include "mc_pack.h"
-#include "conf.h"
+
+#include "conf_util.h"
+#include "string_util.h"
+
 #include "rstree_def.h"
 #include "rstree_util.h"
+
 #include "DSuffixTree.h"
-#include "configure_util.h"
-#include "string_util.h"
 #include "RstreeFilter.h"
+#include "PostProcessor.h"
+
 
 using namespace std;
 using namespace gezi;
@@ -25,8 +29,7 @@ bsl::var::Ref g_monitor_info;
 char g_proc_name[1024];
 //rstree_t *g_rstree;
 DSuffixTree* g_rstree;
-RstreeFilter g_filter;
-DECLARE_SHAREDCONF;
+PostProcessor g_post_processor;
 
 DEFINE_int32(level, 0, "min log level");
 DEFINE_int32(min_text_length, 8, "");
@@ -53,91 +56,6 @@ void get_proc_name()
   snprintf(g_proc_name, sizeof (g_proc_name), "%s", p + 1);
 }
 
-wstring remove_dupspace(wstring input)
-{
-  if (input.size() == 0)
-  {
-    return input;
-  }
-
-  wchar_t* buf = new wchar_t[input.size() + 1];
-  bool before_is_space = true;
-  int j = 0;
-  for (int i = 0; i < input.size(); i++)
-  {
-    if (input[i] == L' ')
-    {
-      if (!before_is_space)
-      { //the first space
-        buf[j++] = input[i];
-      }
-      before_is_space = true;
-    } else
-    {
-      buf[j++] = input[i];
-      before_is_space = false;
-    }
-  }
-  if (j > 1 && (buf[j - 1] == L' '))
-  { //remove the last single space if exists
-    j--;
-  }
-  buf[j] = L'\0';
-
-  wstring rs = buf;
-  delete [] buf;
-  return rs;
-}
-
-/**
- * @brief：后缀树输入文本做预处理
- *
- */
-static wstring filter(const wstring & input)
-{
-
-  UB_LOG_DEBUG("wstring before filter:[%s]", w2c(input.c_str()).c_str());
-
-  //去除空格
-  wstring s(input);
-  //s = wstr_replace_all(s, L" ", L"");	
-  s = remove_dupspace(s);
-
-  //去除连续出现10次以上的字符
-  wstring ret = L"";
-  int start = 0;
-  int end = start + 1;
-  while (start < (int) s.size())
-  {
-    while (end < (int) s.size() && s[end] == s[start])
-    {
-      end++;
-    }
-    if (end - start <= 10)
-    {
-      ret += s.substr(start, end - start);
-    }
-    start = end;
-    end = start + 1;
-  }
-
-  //过滤少量字大量重复的情况
-  set<wchar_t> wset;
-  for (int i = 0; i < (int) ret.size(); i++)
-  {
-    wset.insert(ret[i]);
-  }
-  int uniq_size = (int) wset.size();
-  if (uniq_size < 10 && uniq_size != 0 && (int) input.size() / uniq_size > 10)
-  {
-
-    UB_LOG_DEBUG("wstring after filter:[]");
-    return L"";
-  }
-
-  UB_LOG_DEBUG("wstring after filter:[%s]", w2c(ret.c_str()).c_str());
-  return ret;
-}
 
 /**
  * @brief: 剪切字符串，剪切为最大长度为unit的子串
@@ -257,7 +175,12 @@ static int rstree_server_callback()
   vector<pair<string, int> > vec;
   for (map<wstring, int>::iterator iter = ret_map.begin(); iter != ret_map.end(); iter++)
   {
-    string substr = w2c(iter->first.c_str());
+    wstring s = boost::trim_copy(iter->first);
+    if ((int)s.size() < g_rstree->get_min_substr_len())
+    {
+      continue;
+    }
+    string substr = w2c(s.c_str());
     substr = utf8_to_gbk(substr);
     if (!substr.empty())
     {
@@ -265,12 +188,11 @@ static int rstree_server_callback()
     }
 
   }
-  vector <pair<string, int> > result_vec = g_filter.filter(vec, FLAGS_max_result_count);
+  vector <pair<string, int> > result_vec = g_post_processor.process(vec);
 
   char mcpack_buf[MC_PACK_BUF_SIZE];
   mc_pack_t *ret_pack = mc_pack_open_w(2, mcpack_buf, sizeof (mcpack_buf), temp_buf, sizeof (temp_buf));
   mc_pack_t *array_pack = mc_pack_put_object(ret_pack, "substr_array");
-
 
   for (int i = 0; i < (int) result_vec.size(); i++)
   {
@@ -319,6 +241,8 @@ static void app_init()
 
   g_rstree = new DSuffixTree();
   g_rstree->init();
+  
+  g_post_processor.init();
 }
 
 /**
@@ -362,8 +286,6 @@ int main(int argc, char **argv)
   ub_svr_vec_t *svrvec = ub_svr_vec_create(); //不会返回NULL，如果没内存了，程序自动退出
   UBFW_ASSERT(svrvec != NULL, "create ub_server_vec_error");
   //加载配置
-
-  Conf::getSharedInstance()->openConfFile(fw->path, TREE_CONF_FILE);
 
   app_init();
 

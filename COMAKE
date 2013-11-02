@@ -19,26 +19,28 @@ CXX(GCC)
 CPPFLAGS('-D_GNU_SOURCE -D__STDC_LIMIT_MACROS -U_BTEST_',\
              '-D__VERSION_ID__=\\\"1.0.0\\\"',\
              '-D__REVISION__=\\\"$(shell svnversion -n .)\\\"')
-MY_FLAGS='-g -O3 -pipe -W -Wall -fPIC -DHAVE_NETINET_IN_H -Wno-unused-parameter'
+MY_FLAGS='-g -O -pipe -W -Wall -fPIC -DHAVE_NETINET_IN_H -Wno-unused-parameter'
 CFLAGS(MY_FLAGS, NOFLAGS)
 CXXFLAGS(MY_FLAGS, NOFLAGS)
 LDFLAGS(GCC_LDFLAGS, '-ldl -lpthread -lrt -rdynamic')
 CONFIGS('third-64/openssl@base') 
 CONFIGS('third-64/zlib@base')
-CONFIGS('third-64/boost')
-CONFIGS('third-64/gflags')
-CONFIGS('third-64/glog')
-#CONFIGS('com/btest/gtest')
-CONFIGS('third-64/tcmalloc')
+CONFIGS('third-64/boost@base')
+CONFIGS('third-64/gflags@base')
+CONFIGS('third-64/glog@base')
+CONFIGS('com/btest/gtest@base')
+CONFIGS('third-64/tcmalloc@base')
 CONFIGS('public/comlog-plugin@base')
 CONFIGS('public/configure@base')
 CONFIGS('public/ub')
 CONFIGS('public/gm/galileo')
+CONFIGS('lib2-64/others-ex@base')
+CONFIGS('app/search/sep/anti-spam/rsc-sender')
 INCPATHS('./include ./include/post_process ./utils')
-srcs=GLOB('./src/*.cpp')
+srcs=GLOB('./src/*.cpp','./src/post_process/*.cpp')
 
 #可执行文件
-Application('rstree',Sources(srcs))
+Application('rstree',Sources('rstree.cc',srcs))
 #静态库
 #StaticLibrary('rstree',Sources(srcs))
 #共享库
@@ -46,4 +48,5 @@ Application('rstree',Sources(srcs))
 #子目录
 #Directory('demo')
 
-
+Application('test_filter',Sources('test/test_filter.cc',srcs))
+Application('test_post_processor',Sources('test/test_post_processor.cc',srcs), OutputPath('./bin'))

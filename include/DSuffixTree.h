@@ -28,9 +28,8 @@
 #include "SuffixTree.h"
 #include "rstree_def.h"
 #include "hashmap_util.h"
-//#include "utils/string/wstring_utils.h"
 #include "log_util.h"
-#include "configure_util.h"
+#include "conf_util.h"
 
 //Generalized Suffix tree with dynamic count support
 namespace gezi
@@ -71,22 +70,22 @@ public:
   bool init(const comcfg::Configure& conf,
           const string& section = "DSuffixTree")
   {
-    CONF_SIMPLE(min_substr_len_);
-    CONF_SIMPLE(max_substr_len_);
-    CONF_SIMPLE(min_frequency_);
-    CONF_SIMPLE(max_tree_size);
-    CONF_SIMPLE(strategy_);
+    CONF(min_substr_len_);
+    CONF(max_substr_len_);
+    CONF(min_frequency_);
+    CONF(max_tree_size);
+    CONF(strategy_);
     return true;
   }
 
   bool read_config(const comcfg::Configure& conf,
           const string& section = "DSuffixTree")
   {
-    CONF_SIMPLE(min_substr_len_);
-    CONF_SIMPLE(max_substr_len_);
-    CONF_SIMPLE(min_frequency_);
-    CONF_SIMPLE(max_tree_size);
-    CONF_SIMPLE(strategy_);
+    CONF(min_substr_len_);
+    CONF(max_substr_len_);
+    CONF(min_frequency_);
+    CONF(max_tree_size);
+    CONF(strategy_);
     return true;
   }
 

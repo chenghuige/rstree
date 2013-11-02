@@ -21,10 +21,10 @@
 #include <algorithm>
 #include <glog/logging.h>
 #include <gflags/gflags.h>
-#include "common_help.h"
-#include "debug_help.h"
+#include "common_util.h"
+#include "debug_util.h"
 #include "log_util.h"
-#include "configure_util.h"
+#include "conf_util.h"
 #include "PostProcessor.h"
 using namespace std;
 DEFINE_string(type, "simple", "");
@@ -32,7 +32,6 @@ DEFINE_bool(perf,false, "");
 DEFINE_int32(num, 1, "");
 DEFINE_string(i, "", "input file");
 DEFINE_string(o, "", "output file");
-DECLARE_SHAREDCONF;
 
 void run()
 {
@@ -52,7 +51,7 @@ int main(int argc, char *argv[])
   int s = google::ParseCommandLineFlags(&argc, &argv, false);
   if (FLAGS_log_dir.empty())
     FLAGS_logtostderr = true;
-  LogHelper log_helper;
+  LogHelper log_utiler;
   
   run();
 
