@@ -41,22 +41,32 @@
 #define POST_PROCESSOR_H_
 
 #include "RstreeFilter.h"
+#include "common_util.h"
 #include "conf_util.h"
-#include "ul_dictmatch.h"
+#include "debug_util.h"
+#include "string_util.h"
 #include <glog/logging.h>
 #include "MatchDict.h"
+#include "RegexSearcher.h"
+#include <functional>
+#include <boost/bind.hpp>
 
 class PostProcessor
 {
 public:
 
   PostProcessor()
+  : max_match_count_(1000)
   {
 
   }
 
   virtual ~PostProcessor()
   {
+    if (result_)
+    {
+      dm_pack_del(result_);
+    }
   }
 
   bool init()
@@ -67,60 +77,119 @@ public:
 
   bool init(comcfg::Configure& conf, string section = "PostProcessor")
   {
-    string black_file = "./data/black.dm";
-    CONF(black_file);
-
-    dict_.init(black_file);
+    {
+      string black_file = "./data/black.dm";
+      CONF(black_file);
+      black_dict_.init(black_file);
+    }
+    {
+      CONF(max_match_count_);
+      result_ = dm_pack_create(max_match_count_);
+      CHECK_NOTNULL(result_);
+    }
+    {
+      string black_pattern_file = "./data/black.pattern.txt";
+      CONF(black_pattern_file);
+      bool ret = black_reg_searcher_.init(black_pattern_file);
+      CHECK_EQ(ret, true);
+    }
+    {
+      white_filter_.init();
+    }
+    
     return true;
   }
 
-  //对重复串进行过滤
-
-  struct Node
+  string filter(string& input)
   {
+    boost::to_lower(input);
+    return gezi::filter_str(input);
+  }
 
-    Node()
-    : black_count(0)
-    {
-
-    }
-    string substr;
-    int count;
-    int black_count;
-  };
-
-  void process(const vector<pair<string, int> >& ivec, vector<Node >& ovec)
+  int black_process(const vector<pair<string, int> >& ivec, vector<Node >& ovec)
   {
-    dm_pack_t* result = dm_pack_create(10);
+    int black_count = 0;
     for (auto &item : ivec)
     {
       Node node;
       node.substr = item.first;
+      node.filtered_str = filter(node.substr);
       node.count = item.second;
-      int ret = dict_.search(node.substr, result);
-      CHECK_EQ(ret, 0);
-      node.black_count = result->ppseg_cnt;
 
+      //--------------------黑词匹配
       Pval(node.substr);
+      Pval(node.filtered_str);
+      node.black_count = black_dict_.search_count(node.filtered_str, result_);
       Pval(node.black_count);
+
+      //--------------------黑模版匹配
+      if (black_reg_searcher_.has_match(node.substr) ||
+              black_reg_searcher_.has_match(node.filtered_str))
+      {
+        node.black_count++;
+      }
+
+      if (node.black_count > 0)
+      {
+        black_count++;
+      }
+
+      Pval(node.black_count);
+      ovec.push_back(node);
+    }
+    return black_count;
+  }
+  
+  void process(const vector<pair<string, int> >& ivec, int max_count, vector<Node>& vec)
+  {
+    int black_count = black_process(ivec, vec);
+
+    if (black_count < max_count)
+    {
+      vec = white_filter_.process(vec);
     }
 
+    if (vec.size() > max_count)
+    {
+      std::partial_sort(vec.begin(), vec.begin() + max_count, vec.end(),
+              boost::bind(&Node::black_count, _1) > 
+              boost::bind(&Node::black_count, _2));
+      vec.resize(max_count);
+    }
+    else
+    {
+      std::sort(vec.begin(), vec.end(), 
+              boost::bind(&Node::black_count, _1) >
+              boost::bind(&Node::black_count, _2));
+    }
+    
   }
 
-  vector<pair<string, int> > process(const vector<pair<string, int> >& ivec)
+  vector<pair<string, int> > process(const vector<pair<string, int> >& ivec, int max_count)
   {
     vector<pair<string, int> > ret;
 
     vector<Node> vec;
-    process(ivec, vec);
+    process(ivec, max_count, vec);
+    for (auto &item : vec)
+    {
+      ret.push_back(make_pair(item.substr, item.count));
+    }
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
-            return std::move(ret);
+    return std::move(ret);
 #else
-            return ret;
+    return ret;
 #endif
   }
 private:
-  static MatchDict dict_;
+  //--------------------------黑名单匹配 
+  static MatchDict black_dict_;
+  dm_pack_t* result_;
+  int max_match_count_; //最多可能匹配的个数
+  //--------------------------黑模式匹配
+  RegexSearcher black_reg_searcher_;
+  //--------------------------黑未匹配的情况下 匹配白名单或者白模式豁免过滤
+  RstreeFilter white_filter_;
 };
 
 

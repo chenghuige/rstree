@@ -188,7 +188,7 @@ static int rstree_server_callback()
     }
 
   }
-  vector <pair<string, int> > result_vec = g_post_processor.process(vec);
+  vector <pair<string, int> > result_vec = g_post_processor.process(vec, FLAGS_max_result_count);
 
   char mcpack_buf[MC_PACK_BUF_SIZE];
   mc_pack_t *ret_pack = mc_pack_open_w(2, mcpack_buf, sizeof (mcpack_buf), temp_buf, sizeof (temp_buf));

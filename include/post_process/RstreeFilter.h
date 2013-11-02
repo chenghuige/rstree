@@ -24,39 +24,58 @@
 #include "conf_util.h"
 #include "hashmap_util.h"
 #include "debug_util.h"
-#include "ul_dictmatch.h"
 #include "log_util.h"
+#include "MatchDict.h"
+#include "RegexSearcher.h"
 using namespace std;
 using namespace gezi;
 //TODO generic Filter
+//对重复串进行过滤
+
+struct Node
+{
+
+  Node()
+  : black_count(0)
+  {
+
+  }
+  string substr;
+  string filtered_str; // 过滤后的字串
+  int count;
+  int black_count;
+};
 
 class RstreeFilter
 {
 public:
 
   RstreeFilter()
-  :distinct_ratio_(0.4), dict_(NULL)
+  : distinct_ratio_(0.4)
   {
-      
+
   }
 
   virtual ~RstreeFilter()
   {
-    if (dict_)
-    {
-      dm_dict_del(dict_);
-    }
   }
-  
+
   void init()
   {
-    comcfg::Configure conf = SharedConf::get_conf();
+    comcfg::Configure& conf = SharedConf::get_conf();
     string section = "RstreeFilter";
     CONF(distinct_ratio_);
-    string white_file = "./data/white.dm";
-    CONF(white_file);
-    
-//    dm_dict_load(const char* fullpath, int lemma_num);
+    {
+      string white_file = "./data/white.dm";
+      CONF(white_file);
+      white_dict_.init(white_file);
+    }
+    {
+      string white_pattern_file = "./data/white.pattern.txt";
+      CONF(white_pattern_file);
+      bool ret = white_reg_searcher_.init(white_pattern_file);
+      CHECK_EQ(ret, true);
+    }
   }
 
   bool is_white_format(const string& input)
@@ -66,30 +85,30 @@ public:
       return true;
     }
     int uniq_size = distinct_count(input.begin(), input.end());
-    double ratio = (double)uniq_size / input.size();
-//    LOG_DEBUG("ratio: %f", ratio);
-//    
-//    std::tr1::unordered_map<char, int> hashmap;
-//    for (int i = 0; i < (int)input.size(); i++)
-//    {
-//      hashmap[input[i]] += 1;
-//    }
-//
-//    int len = input.size();
-//    double mi = 0.0;
-//    for(auto &item : hashmap)
-//    {
-//      double pr = item.second / (double)len;
-//      mi += -log(pr) * pr;
-//    }
-//    
-//    Pval(mi);
-//    double pr = 1.0 / len;
-//    double max_mi = len *(-log(pr) * pr);
-//
-//    Pval(max_mi);
-//    
-//    Pval((mi / max_mi));
+    double ratio = (double) uniq_size / input.size();
+    //    LOG_DEBUG("ratio: %f", ratio);
+    //    
+    //    std::tr1::unordered_map<char, int> hashmap;
+    //    for (int i = 0; i < (int)input.size(); i++)
+    //    {
+    //      hashmap[input[i]] += 1;
+    //    }
+    //
+    //    int len = input.size();
+    //    double mi = 0.0;
+    //    for(auto &item : hashmap)
+    //    {
+    //      double pr = item.second / (double)len;
+    //      mi += -log(pr) * pr;
+    //    }
+    //    
+    //    Pval(mi);
+    //    double pr = 1.0 / len;
+    //    double max_mi = len *(-log(pr) * pr);
+    //
+    //    Pval(max_mi);
+    //    
+    //    Pval((mi / max_mi));
 
     if (ratio < distinct_ratio_)
     {
@@ -100,19 +119,49 @@ public:
 
   bool contains_white_phrase(const string& input)
   {
-    return false;
+    return white_dict_.has_word(input);
   }
   
+  bool contains_white_pattern(const string& input)
+  {
+    return white_reg_searcher_.has_match(input);
+  }
+
   bool is_pass(const string& input)
   {
     if (is_white_format(input))
     {
-      LOG_DEBUG("Is white format: %s", input.c_str());
+      DLOG(INFO) << "Is white format: " << input;
       return false;
     }
     if (contains_white_phrase(input))
     {
-      LOG_DEBUG("Contains white phrase: %s", input.c_str());
+      DLOG(INFO) << "Contains white phrase: " << input;
+      return false;
+    }
+    if (contains_white_pattern(input))
+    {
+      DLOG(INFO) << "Contains white pattern: " << input;
+      return false;
+    }
+    return true;
+  }
+  
+  bool is_pass(const Node& node)
+  {
+    if (is_white_format(node.substr))
+    {
+      DLOG(INFO) << "Is white format: " << node.substr;
+      return false;
+    }
+    if (contains_white_phrase(node.filtered_str))
+    {
+      DLOG(INFO) << "Contains white phrase: " << node.filtered_str;
+      return false;
+    }
+    if (contains_white_pattern(node.substr))
+    {
+      DLOG(INFO) << "Contains white pattern: " << node.substr;
       return false;
     }
     return true;
@@ -120,34 +169,18 @@ public:
 
   //对重复串进行过滤
 
-  vector<pair<string, int> > filter(const vector<pair<string, int> >& ivec)
+  vector<Node > process(const vector<Node >& ivec)
   {
-    vector<pair<string, int> > ret;
-    for (int i = 0; i < (int) ivec.size(); i++)
+    vector<Node > ret;
+    for (auto &item : ivec)
     {
-      if (is_pass(ivec[i].first))
+      if (is_pass(item))
       {
-        ret.push_back(ivec[i]);
+        ret.push_back(item);
       }
     }
 
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
-    return std::move(ret);
-#else
-    return ret;
-#endif
-  }
-
-  vector<string> filter(const vector<string>& ivec)
-  {
-    vector<string> ret;
-    for (int i = 0; i < (int) ivec.size(); i++)
-    {
-      if (is_pass(ivec[i]))
-      {
-        ret.push_back(ivec[i]);
-      }
-    }
+    
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
     return std::move(ret);
 #else
@@ -157,7 +190,8 @@ public:
 
 private:
   double distinct_ratio_;
-  dm_dict_t* dict_;
+  static MatchDict white_dict_;
+  RegexSearcher white_reg_searcher_;
 };
 
 #endif  //----end of RSTREE_FILTER_H_

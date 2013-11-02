@@ -183,7 +183,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=371c47298e3829d5421de98c3405564f  COMAKE
+COMAKE_MD5=ed518aded20eb06735e658544a8ae3f6  COMAKE
 
 
 .PHONY:all
@@ -213,20 +213,21 @@ clean:ccpclean
 	rm -rf ./output/bin/test_filter
 	rm -rf test_post_processor
 	rm -rf ./bin/test_post_processor
+	rm -rf rstree_rstree.o
 	rm -rf src/rstree_conf.o
-	rm -rf src/rstree_rstree_main.o
 	rm -rf src/rstree_rstree_util.o
 	rm -rf src/post_process/rstree_PostProcessor.o
+	rm -rf src/post_process/rstree_RstreeFilter.o
 	rm -rf test/test_filter_test_filter.o
 	rm -rf src/test_filter_conf.o
-	rm -rf src/test_filter_rstree_main.o
 	rm -rf src/test_filter_rstree_util.o
 	rm -rf src/post_process/test_filter_PostProcessor.o
+	rm -rf src/post_process/test_filter_RstreeFilter.o
 	rm -rf test/test_post_processor_test_post_processor.o
 	rm -rf src/test_post_processor_conf.o
-	rm -rf src/test_post_processor_rstree_main.o
 	rm -rf src/test_post_processor_rstree_util.o
 	rm -rf src/post_process/test_post_processor_PostProcessor.o
+	rm -rf src/post_process/test_post_processor_RstreeFilter.o
 
 .PHONY:dist
 dist:
@@ -245,15 +246,17 @@ love:
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mlove[0m']"
 	@echo "make love done"
 
-rstree:src/rstree_conf.o \
-  src/rstree_rstree_main.o \
+rstree:rstree_rstree.o \
+  src/rstree_conf.o \
   src/rstree_rstree_util.o \
-  src/post_process/rstree_PostProcessor.o
+  src/post_process/rstree_PostProcessor.o \
+  src/post_process/rstree_RstreeFilter.o
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree[0m']"
-	$(CXX) src/rstree_conf.o \
-  src/rstree_rstree_main.o \
+	$(CXX) rstree_rstree.o \
+  src/rstree_conf.o \
   src/rstree_rstree_util.o \
-  src/post_process/rstree_PostProcessor.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  src/post_process/rstree_PostProcessor.o \
+  src/post_process/rstree_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
   ../../../../../com/btest/gtest/output/lib/libgtest.a \
   ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
@@ -366,15 +369,15 @@ rstree:src/rstree_conf.o \
 
 test_filter:test/test_filter_test_filter.o \
   src/test_filter_conf.o \
-  src/test_filter_rstree_main.o \
   src/test_filter_rstree_util.o \
-  src/post_process/test_filter_PostProcessor.o
+  src/post_process/test_filter_PostProcessor.o \
+  src/post_process/test_filter_RstreeFilter.o
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest_filter[0m']"
 	$(CXX) test/test_filter_test_filter.o \
   src/test_filter_conf.o \
-  src/test_filter_rstree_main.o \
   src/test_filter_rstree_util.o \
-  src/post_process/test_filter_PostProcessor.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  src/post_process/test_filter_PostProcessor.o \
+  src/post_process/test_filter_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
   ../../../../../com/btest/gtest/output/lib/libgtest.a \
   ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
@@ -487,15 +490,15 @@ test_filter:test/test_filter_test_filter.o \
 
 test_post_processor:test/test_post_processor_test_post_processor.o \
   src/test_post_processor_conf.o \
-  src/test_post_processor_rstree_main.o \
   src/test_post_processor_rstree_util.o \
-  src/post_process/test_post_processor_PostProcessor.o
+  src/post_process/test_post_processor_PostProcessor.o \
+  src/post_process/test_post_processor_RstreeFilter.o
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest_post_processor[0m']"
 	$(CXX) test/test_post_processor_test_post_processor.o \
   src/test_post_processor_conf.o \
-  src/test_post_processor_rstree_main.o \
   src/test_post_processor_rstree_util.o \
-  src/post_process/test_post_processor_PostProcessor.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  src/post_process/test_post_processor_PostProcessor.o \
+  src/post_process/test_post_processor_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
   ../../../../../com/btest/gtest/output/lib/libgtest.a \
   ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
@@ -606,12 +609,7 @@ test_post_processor:test/test_post_processor_test_post_processor.o \
 	mkdir -p ./bin
 	cp -f test_post_processor ./bin
 
-src/rstree_conf.o:src/conf.cpp \
-  include/conf.h
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_conf.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_conf.o src/conf.cpp
-
-src/rstree_rstree_main.o:src/rstree_main.cpp \
+rstree_rstree.o:rstree.cc \
   include/rstree_def.h \
   include/rstree_util.h \
   include/DSuffixTree.h \
@@ -620,8 +618,13 @@ src/rstree_rstree_main.o:src/rstree_main.cpp \
   include/post_process/RstreeFilter.h \
   include/post_process/PostProcessor.h \
   include/post_process/RstreeFilter.h
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_rstree_main.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_rstree_main.o src/rstree_main.cpp
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree_rstree.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o rstree_rstree.o rstree.cc
+
+src/rstree_conf.o:src/conf.cpp \
+  include/conf.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_conf.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_conf.o src/conf.cpp
 
 src/rstree_rstree_util.o:src/rstree_util.cpp \
   include/rstree_util.h \
@@ -638,6 +641,14 @@ src/post_process/rstree_PostProcessor.o:src/post_process/PostProcessor.cpp \
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/rstree_PostProcessor.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/rstree_PostProcessor.o src/post_process/PostProcessor.cpp
 
+src/post_process/rstree_RstreeFilter.o:src/post_process/RstreeFilter.cpp \
+  include/post_process/RstreeFilter.h \
+  include/DSuffixTree.h \
+  include/SuffixTree.h \
+  include/rstree_def.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/rstree_RstreeFilter.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/rstree_RstreeFilter.o src/post_process/RstreeFilter.cpp
+
 test/test_filter_test_filter.o:test/test_filter.cc \
   include/post_process/RstreeFilter.h \
   include/DSuffixTree.h \
@@ -650,18 +661,6 @@ src/test_filter_conf.o:src/conf.cpp \
   include/conf.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/test_filter_conf.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/test_filter_conf.o src/conf.cpp
-
-src/test_filter_rstree_main.o:src/rstree_main.cpp \
-  include/rstree_def.h \
-  include/rstree_util.h \
-  include/DSuffixTree.h \
-  include/SuffixTree.h \
-  include/rstree_def.h \
-  include/post_process/RstreeFilter.h \
-  include/post_process/PostProcessor.h \
-  include/post_process/RstreeFilter.h
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/test_filter_rstree_main.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/test_filter_rstree_main.o src/rstree_main.cpp
 
 src/test_filter_rstree_util.o:src/rstree_util.cpp \
   include/rstree_util.h \
@@ -678,6 +677,14 @@ src/post_process/test_filter_PostProcessor.o:src/post_process/PostProcessor.cpp 
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/test_filter_PostProcessor.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/test_filter_PostProcessor.o src/post_process/PostProcessor.cpp
 
+src/post_process/test_filter_RstreeFilter.o:src/post_process/RstreeFilter.cpp \
+  include/post_process/RstreeFilter.h \
+  include/DSuffixTree.h \
+  include/SuffixTree.h \
+  include/rstree_def.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/test_filter_RstreeFilter.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/test_filter_RstreeFilter.o src/post_process/RstreeFilter.cpp
+
 test/test_post_processor_test_post_processor.o:test/test_post_processor.cc \
   include/post_process/PostProcessor.h \
   include/post_process/RstreeFilter.h \
@@ -691,18 +698,6 @@ src/test_post_processor_conf.o:src/conf.cpp \
   include/conf.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/test_post_processor_conf.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/test_post_processor_conf.o src/conf.cpp
-
-src/test_post_processor_rstree_main.o:src/rstree_main.cpp \
-  include/rstree_def.h \
-  include/rstree_util.h \
-  include/DSuffixTree.h \
-  include/SuffixTree.h \
-  include/rstree_def.h \
-  include/post_process/RstreeFilter.h \
-  include/post_process/PostProcessor.h \
-  include/post_process/RstreeFilter.h
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/test_post_processor_rstree_main.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/test_post_processor_rstree_main.o src/rstree_main.cpp
 
 src/test_post_processor_rstree_util.o:src/rstree_util.cpp \
   include/rstree_util.h \
@@ -718,6 +713,14 @@ src/post_process/test_post_processor_PostProcessor.o:src/post_process/PostProces
   include/rstree_def.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/test_post_processor_PostProcessor.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/test_post_processor_PostProcessor.o src/post_process/PostProcessor.cpp
+
+src/post_process/test_post_processor_RstreeFilter.o:src/post_process/RstreeFilter.cpp \
+  include/post_process/RstreeFilter.h \
+  include/DSuffixTree.h \
+  include/SuffixTree.h \
+  include/rstree_def.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/test_post_processor_RstreeFilter.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/test_post_processor_RstreeFilter.o src/post_process/RstreeFilter.cpp
 
 endif #ifeq ($(shell uname -m),x86_64)
 
