@@ -16,10 +16,10 @@ CPPFLAGS('-D_GNU_SOURCE -D__STDC_LIMIT_MACROS -DVERSION=\\\"1.9.8.7\\\"')
 #CPPFLAGS_32('-D_XOPEN_SOURE=500')
 
 #C编译参数.
-CFLAGS('-g -pipe -W -Wall -fPIC')
+CFLAGS('-g -O2 -pipe -W -Wall -fPIC')
 
 #C++编译参数.
-CXXFLAGS('-g -pipe -W -Wall -fPIC')
+CXXFLAGS('-g -O2 -pipe -W -Wall -fPIC')
 
 #IDL编译参数
 IDLFLAGS('--compack')
@@ -31,10 +31,13 @@ UBRPCFLAGS('--compack')
 INCPATHS('. ./include ./output ./output/include')
 
 #使用库
-#LIBS('./librsc-sender.a')
+#LIBS('./librstree.a')
 
 #链接参数.
 LDFLAGS('-lpthread -lcrypto -lrt')
+
+#依赖模块
+#CONFIGS('lib2-64/ullib public/ub public/mcpack third-64/boost public/gm/galileo lib2-64/ccode lib2-64/string third-64/tcmalloc')
 
 #依赖模块
 CONFIGS('third-64/boost@base')
@@ -57,18 +60,14 @@ CONFIGS('public/odict@1.1.2.1')
 CONFIGS('lib2-64/postag@2.0.2.0')
 CONFIGS('app/search/sep/anti-spam/rsc-sender')
 INCPATHS('./include ./include/post_process ./utils')
+
+
+INCPATHS('./include ./include/post_process')
 srcs=GLOB('./src/*.cpp','./src/post_process/*.cpp')
 
 #可执行文件
-Application('rstree',Sources('rstree.cc',srcs))
-#静态库
-#StaticLibrary('rstree',Sources(srcs))
-#共享库
-#SharedLibrary('rstree',Sources(srcs))
-#子目录
-#Directory('demo')
-
-Application('test_filter',Sources('test/test_filter.cc',srcs))
+Application('rstree',Sources('rstree.cc',srcs), OutputPath('./bin'))
+Application('test_filter',Sources('test/test_filter.cc',srcs), OutputPath('./bin'))
 Application('test_post_processor',Sources('test/test_post_processor.cc',srcs), OutputPath('./bin'))
 Application('test_seg',Sources('test/test_seg.cc', srcs), OutputPath('./bin'))
 Application('test_suffixtree',Sources('test/test_suffixtree.cc',srcs), OutputPath('./bin'))

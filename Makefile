@@ -4,11 +4,13 @@ ifeq ($(shell uname -m),x86_64)
 CC=gcc
 CXX=g++
 CXXFLAGS=-g \
+  -O2 \
   -pipe \
   -W \
   -Wall \
   -fPIC
 CFLAGS=-g \
+  -O2 \
   -pipe \
   -W \
   -Wall \
@@ -22,7 +24,9 @@ INCPATH=-I. \
   -I./output/include \
   -I./include \
   -I./include/post_process \
-  -I./utils
+  -I./utils \
+  -I./include \
+  -I./include/post_process
 DEP_INCPATH=-I../../../../../app/search/sep/anti-spam/rsc-sender \
   -I../../../../../app/search/sep/anti-spam/rsc-sender/include \
   -I../../../../../app/search/sep/anti-spam/rsc-sender/output \
@@ -174,7 +178,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=36c2dcd2c7e6408dae3ef00c088e3952  COMAKE
+COMAKE_MD5=c96a3c149935daed09fe8934834fd132  COMAKE
 
 
 .PHONY:all
@@ -199,9 +203,9 @@ ccpclean:
 clean:ccpclean
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mclean[0m']"
 	rm -rf rstree
-	rm -rf ./output/bin/rstree
+	rm -rf ./bin/rstree
 	rm -rf test_filter
-	rm -rf ./output/bin/test_filter
+	rm -rf ./bin/test_filter
 	rm -rf test_post_processor
 	rm -rf ./bin/test_post_processor
 	rm -rf test_seg
@@ -360,8 +364,8 @@ rstree:rstree_rstree.o \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
   -lcrypto \
   -lrt -Xlinker "-)" -o rstree
-	mkdir -p ./output/bin
-	cp -f --link rstree ./output/bin
+	mkdir -p ./bin
+	cp -f --link rstree ./bin
 
 test_filter:test/test_filter_test_filter.o \
   src/test_filter_conf.o \
@@ -477,8 +481,8 @@ test_filter:test/test_filter_test_filter.o \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
   -lcrypto \
   -lrt -Xlinker "-)" -o test_filter
-	mkdir -p ./output/bin
-	cp -f --link test_filter ./output/bin
+	mkdir -p ./bin
+	cp -f --link test_filter ./bin
 
 test_post_processor:test/test_post_processor_test_post_processor.o \
   src/test_post_processor_conf.o \
