@@ -205,7 +205,7 @@ public:
   }
 private:
   //--------------------------黑名单匹配 
-  static MatchDict black_dict_;
+  static gezi::MatchDict black_dict_;
   dm_pack_t* result_;
   int max_match_count_; //最多可能匹配的个数
   //--------------------------黑模式匹配

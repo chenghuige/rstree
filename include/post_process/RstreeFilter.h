@@ -179,7 +179,7 @@ public:
 
 private:
   double distinct_ratio_;
-  static MatchDict white_dict_;
+  static gezi::MatchDict white_dict_;
   RegexSearcher white_reg_searcher_;
 };
 
