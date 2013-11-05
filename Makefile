@@ -31,10 +31,6 @@ DEP_INCPATH=-I../../../../../app/search/sep/anti-spam/rsc-sender \
   -I../../../../../app/search/sep/anti-spam/rsc-sender/include \
   -I../../../../../app/search/sep/anti-spam/rsc-sender/output \
   -I../../../../../app/search/sep/anti-spam/rsc-sender/output/include \
-  -I../../../../../com/btest/gtest \
-  -I../../../../../com/btest/gtest/include \
-  -I../../../../../com/btest/gtest/output \
-  -I../../../../../com/btest/gtest/output/include \
   -I../../../../../com/idlcompiler \
   -I../../../../../com/idlcompiler/include \
   -I../../../../../com/idlcompiler/output \
@@ -75,6 +71,10 @@ DEP_INCPATH=-I../../../../../app/search/sep/anti-spam/rsc-sender \
   -I../../../../../lib2-64/postag/include \
   -I../../../../../lib2-64/postag/output \
   -I../../../../../lib2-64/postag/output/include \
+  -I../../../../../lib2-64/string \
+  -I../../../../../lib2-64/string/include \
+  -I../../../../../lib2-64/string/output \
+  -I../../../../../lib2-64/string/output/include \
   -I../../../../../lib2-64/ullib \
   -I../../../../../lib2-64/ullib/include \
   -I../../../../../lib2-64/ullib/output \
@@ -135,10 +135,6 @@ DEP_INCPATH=-I../../../../../app/search/sep/anti-spam/rsc-sender \
   -I../../../../../public/uconv/include \
   -I../../../../../public/uconv/output \
   -I../../../../../public/uconv/output/include \
-  -I../../../../../quality/autotest/reportlib/cpp \
-  -I../../../../../quality/autotest/reportlib/cpp/include \
-  -I../../../../../quality/autotest/reportlib/cpp/output \
-  -I../../../../../quality/autotest/reportlib/cpp/output/include \
   -I../../../../../third-64/boost \
   -I../../../../../third-64/boost/include \
   -I../../../../../third-64/boost/output \
@@ -178,7 +174,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=c96a3c149935daed09fe8934834fd132  COMAKE
+COMAKE_MD5=cad5febdb2080b1708d0018c2c0baf70  COMAKE
 
 
 .PHONY:all
@@ -259,8 +255,6 @@ rstree:rstree_rstree.o \
   src/rstree_conf.o \
   src/post_process/rstree_PostProcessor.o \
   src/post_process/rstree_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
-  ../../../../../com/btest/gtest/output/lib/libgtest.a \
-  ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
@@ -284,6 +278,7 @@ rstree:rstree_rstree.o \
   ../../../../../lib2-64/libcrf/lib/libcrf.a \
   ../../../../../lib2-64/others-ex/lib/libullib_ex.a \
   ../../../../../lib2-64/postag/lib/libpostag.a \
+  ../../../../../lib2-64/string/lib/libstring.a \
   ../../../../../lib2-64/ullib/lib/libullib.a \
   ../../../../../lib2-64/wordseg/libsegment.a \
   ../../../../../op/oped/noah/webfoot/naming-lib/output/lib/libwebfoot_naming.a \
@@ -318,7 +313,6 @@ rstree:rstree_rstree.o \
   ../../../../../public/ub/output/lib/libubex.a \
   ../../../../../public/ub/output/lib/libubfw.a \
   ../../../../../public/uconv/libuconv.a \
-  ../../../../../quality/autotest/reportlib/cpp/libautotest.a \
   ../../../../../third-64/boost/lib/libboost_atomic.a \
   ../../../../../third-64/boost/lib/libboost_chrono.a \
   ../../../../../third-64/boost/lib/libboost_context.a \
@@ -376,8 +370,6 @@ test_filter:test/test_filter_test_filter.o \
   src/test_filter_conf.o \
   src/post_process/test_filter_PostProcessor.o \
   src/post_process/test_filter_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
-  ../../../../../com/btest/gtest/output/lib/libgtest.a \
-  ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
@@ -401,6 +393,7 @@ test_filter:test/test_filter_test_filter.o \
   ../../../../../lib2-64/libcrf/lib/libcrf.a \
   ../../../../../lib2-64/others-ex/lib/libullib_ex.a \
   ../../../../../lib2-64/postag/lib/libpostag.a \
+  ../../../../../lib2-64/string/lib/libstring.a \
   ../../../../../lib2-64/ullib/lib/libullib.a \
   ../../../../../lib2-64/wordseg/libsegment.a \
   ../../../../../op/oped/noah/webfoot/naming-lib/output/lib/libwebfoot_naming.a \
@@ -435,7 +428,6 @@ test_filter:test/test_filter_test_filter.o \
   ../../../../../public/ub/output/lib/libubex.a \
   ../../../../../public/ub/output/lib/libubfw.a \
   ../../../../../public/uconv/libuconv.a \
-  ../../../../../quality/autotest/reportlib/cpp/libautotest.a \
   ../../../../../third-64/boost/lib/libboost_atomic.a \
   ../../../../../third-64/boost/lib/libboost_chrono.a \
   ../../../../../third-64/boost/lib/libboost_context.a \
@@ -493,8 +485,6 @@ test_post_processor:test/test_post_processor_test_post_processor.o \
   src/test_post_processor_conf.o \
   src/post_process/test_post_processor_PostProcessor.o \
   src/post_process/test_post_processor_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
-  ../../../../../com/btest/gtest/output/lib/libgtest.a \
-  ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
@@ -518,6 +508,7 @@ test_post_processor:test/test_post_processor_test_post_processor.o \
   ../../../../../lib2-64/libcrf/lib/libcrf.a \
   ../../../../../lib2-64/others-ex/lib/libullib_ex.a \
   ../../../../../lib2-64/postag/lib/libpostag.a \
+  ../../../../../lib2-64/string/lib/libstring.a \
   ../../../../../lib2-64/ullib/lib/libullib.a \
   ../../../../../lib2-64/wordseg/libsegment.a \
   ../../../../../op/oped/noah/webfoot/naming-lib/output/lib/libwebfoot_naming.a \
@@ -552,7 +543,6 @@ test_post_processor:test/test_post_processor_test_post_processor.o \
   ../../../../../public/ub/output/lib/libubex.a \
   ../../../../../public/ub/output/lib/libubfw.a \
   ../../../../../public/uconv/libuconv.a \
-  ../../../../../quality/autotest/reportlib/cpp/libautotest.a \
   ../../../../../third-64/boost/lib/libboost_atomic.a \
   ../../../../../third-64/boost/lib/libboost_chrono.a \
   ../../../../../third-64/boost/lib/libboost_context.a \
@@ -610,8 +600,6 @@ test_seg:test/test_seg_test_seg.o \
   src/test_seg_conf.o \
   src/post_process/test_seg_PostProcessor.o \
   src/post_process/test_seg_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
-  ../../../../../com/btest/gtest/output/lib/libgtest.a \
-  ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
@@ -635,6 +623,7 @@ test_seg:test/test_seg_test_seg.o \
   ../../../../../lib2-64/libcrf/lib/libcrf.a \
   ../../../../../lib2-64/others-ex/lib/libullib_ex.a \
   ../../../../../lib2-64/postag/lib/libpostag.a \
+  ../../../../../lib2-64/string/lib/libstring.a \
   ../../../../../lib2-64/ullib/lib/libullib.a \
   ../../../../../lib2-64/wordseg/libsegment.a \
   ../../../../../op/oped/noah/webfoot/naming-lib/output/lib/libwebfoot_naming.a \
@@ -669,7 +658,6 @@ test_seg:test/test_seg_test_seg.o \
   ../../../../../public/ub/output/lib/libubex.a \
   ../../../../../public/ub/output/lib/libubfw.a \
   ../../../../../public/uconv/libuconv.a \
-  ../../../../../quality/autotest/reportlib/cpp/libautotest.a \
   ../../../../../third-64/boost/lib/libboost_atomic.a \
   ../../../../../third-64/boost/lib/libboost_chrono.a \
   ../../../../../third-64/boost/lib/libboost_context.a \
@@ -727,8 +715,6 @@ test_suffixtree:test/test_suffixtree_test_suffixtree.o \
   src/test_suffixtree_conf.o \
   src/post_process/test_suffixtree_PostProcessor.o \
   src/post_process/test_suffixtree_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
-  ../../../../../com/btest/gtest/output/lib/libgtest.a \
-  ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
@@ -752,6 +738,7 @@ test_suffixtree:test/test_suffixtree_test_suffixtree.o \
   ../../../../../lib2-64/libcrf/lib/libcrf.a \
   ../../../../../lib2-64/others-ex/lib/libullib_ex.a \
   ../../../../../lib2-64/postag/lib/libpostag.a \
+  ../../../../../lib2-64/string/lib/libstring.a \
   ../../../../../lib2-64/ullib/lib/libullib.a \
   ../../../../../lib2-64/wordseg/libsegment.a \
   ../../../../../op/oped/noah/webfoot/naming-lib/output/lib/libwebfoot_naming.a \
@@ -786,7 +773,6 @@ test_suffixtree:test/test_suffixtree_test_suffixtree.o \
   ../../../../../public/ub/output/lib/libubex.a \
   ../../../../../public/ub/output/lib/libubfw.a \
   ../../../../../public/uconv/libuconv.a \
-  ../../../../../quality/autotest/reportlib/cpp/libautotest.a \
   ../../../../../third-64/boost/lib/libboost_atomic.a \
   ../../../../../third-64/boost/lib/libboost_chrono.a \
   ../../../../../third-64/boost/lib/libboost_context.a \
