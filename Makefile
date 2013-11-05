@@ -24,13 +24,16 @@ INCPATH=-I. \
   -I./output/include \
   -I./include \
   -I./include/post_process \
-  -I./utils \
   -I./include \
   -I./include/post_process
 DEP_INCPATH=-I../../../../../app/search/sep/anti-spam/rsc-sender \
   -I../../../../../app/search/sep/anti-spam/rsc-sender/include \
   -I../../../../../app/search/sep/anti-spam/rsc-sender/output \
   -I../../../../../app/search/sep/anti-spam/rsc-sender/output/include \
+  -I../../../../../com/btest/gtest \
+  -I../../../../../com/btest/gtest/include \
+  -I../../../../../com/btest/gtest/output \
+  -I../../../../../com/btest/gtest/output/include \
   -I../../../../../com/idlcompiler \
   -I../../../../../com/idlcompiler/include \
   -I../../../../../com/idlcompiler/output \
@@ -135,6 +138,10 @@ DEP_INCPATH=-I../../../../../app/search/sep/anti-spam/rsc-sender \
   -I../../../../../public/uconv/include \
   -I../../../../../public/uconv/output \
   -I../../../../../public/uconv/output/include \
+  -I../../../../../quality/autotest/reportlib/cpp \
+  -I../../../../../quality/autotest/reportlib/cpp/include \
+  -I../../../../../quality/autotest/reportlib/cpp/output \
+  -I../../../../../quality/autotest/reportlib/cpp/output/include \
   -I../../../../../third-64/boost \
   -I../../../../../third-64/boost/include \
   -I../../../../../third-64/boost/output \
@@ -174,7 +181,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=cad5febdb2080b1708d0018c2c0baf70  COMAKE
+COMAKE_MD5=9d5980077bb61e26b4050ca4c7cebe18  COMAKE
 
 
 .PHONY:all
@@ -210,14 +217,24 @@ clean:ccpclean
 	rm -rf ./bin/test_suffixtree
 	rm -rf rstree_rstree.o
 	rm -rf src/rstree_conf.o
+	rm -rf src/post_process/rstree_PostProcessor.o
+	rm -rf src/post_process/rstree_RstreeFilter.o
 	rm -rf test/test_filter_test_filter.o
 	rm -rf src/test_filter_conf.o
+	rm -rf src/post_process/test_filter_PostProcessor.o
+	rm -rf src/post_process/test_filter_RstreeFilter.o
 	rm -rf test/test_post_processor_test_post_processor.o
 	rm -rf src/test_post_processor_conf.o
+	rm -rf src/post_process/test_post_processor_PostProcessor.o
+	rm -rf src/post_process/test_post_processor_RstreeFilter.o
 	rm -rf test/test_seg_test_seg.o
 	rm -rf src/test_seg_conf.o
+	rm -rf src/post_process/test_seg_PostProcessor.o
+	rm -rf src/post_process/test_seg_RstreeFilter.o
 	rm -rf test/test_suffixtree_test_suffixtree.o
 	rm -rf src/test_suffixtree_conf.o
+	rm -rf src/post_process/test_suffixtree_PostProcessor.o
+	rm -rf src/post_process/test_suffixtree_RstreeFilter.o
 
 .PHONY:dist
 dist:
@@ -237,10 +254,16 @@ love:
 	@echo "make love done"
 
 rstree:rstree_rstree.o \
-  src/rstree_conf.o
+  src/rstree_conf.o \
+  src/post_process/rstree_PostProcessor.o \
+  src/post_process/rstree_RstreeFilter.o
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree[0m']"
 	$(CXX) rstree_rstree.o \
-  src/rstree_conf.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  src/rstree_conf.o \
+  src/post_process/rstree_PostProcessor.o \
+  src/post_process/rstree_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  ../../../../../com/btest/gtest/output/lib/libgtest.a \
+  ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
@@ -299,6 +322,7 @@ rstree:rstree_rstree.o \
   ../../../../../public/ub/output/lib/libubex.a \
   ../../../../../public/ub/output/lib/libubfw.a \
   ../../../../../public/uconv/libuconv.a \
+  ../../../../../quality/autotest/reportlib/cpp/libautotest.a \
   ../../../../../third-64/boost/lib/libboost_atomic.a \
   ../../../../../third-64/boost/lib/libboost_chrono.a \
   ../../../../../third-64/boost/lib/libboost_context.a \
@@ -348,10 +372,16 @@ rstree:rstree_rstree.o \
 	cp -f --link rstree ./bin
 
 test_filter:test/test_filter_test_filter.o \
-  src/test_filter_conf.o
+  src/test_filter_conf.o \
+  src/post_process/test_filter_PostProcessor.o \
+  src/post_process/test_filter_RstreeFilter.o
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest_filter[0m']"
 	$(CXX) test/test_filter_test_filter.o \
-  src/test_filter_conf.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  src/test_filter_conf.o \
+  src/post_process/test_filter_PostProcessor.o \
+  src/post_process/test_filter_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  ../../../../../com/btest/gtest/output/lib/libgtest.a \
+  ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
@@ -410,6 +440,7 @@ test_filter:test/test_filter_test_filter.o \
   ../../../../../public/ub/output/lib/libubex.a \
   ../../../../../public/ub/output/lib/libubfw.a \
   ../../../../../public/uconv/libuconv.a \
+  ../../../../../quality/autotest/reportlib/cpp/libautotest.a \
   ../../../../../third-64/boost/lib/libboost_atomic.a \
   ../../../../../third-64/boost/lib/libboost_chrono.a \
   ../../../../../third-64/boost/lib/libboost_context.a \
@@ -459,10 +490,16 @@ test_filter:test/test_filter_test_filter.o \
 	cp -f --link test_filter ./bin
 
 test_post_processor:test/test_post_processor_test_post_processor.o \
-  src/test_post_processor_conf.o
+  src/test_post_processor_conf.o \
+  src/post_process/test_post_processor_PostProcessor.o \
+  src/post_process/test_post_processor_RstreeFilter.o
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest_post_processor[0m']"
 	$(CXX) test/test_post_processor_test_post_processor.o \
-  src/test_post_processor_conf.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  src/test_post_processor_conf.o \
+  src/post_process/test_post_processor_PostProcessor.o \
+  src/post_process/test_post_processor_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  ../../../../../com/btest/gtest/output/lib/libgtest.a \
+  ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
@@ -521,6 +558,7 @@ test_post_processor:test/test_post_processor_test_post_processor.o \
   ../../../../../public/ub/output/lib/libubex.a \
   ../../../../../public/ub/output/lib/libubfw.a \
   ../../../../../public/uconv/libuconv.a \
+  ../../../../../quality/autotest/reportlib/cpp/libautotest.a \
   ../../../../../third-64/boost/lib/libboost_atomic.a \
   ../../../../../third-64/boost/lib/libboost_chrono.a \
   ../../../../../third-64/boost/lib/libboost_context.a \
@@ -570,10 +608,16 @@ test_post_processor:test/test_post_processor_test_post_processor.o \
 	cp -f --link test_post_processor ./bin
 
 test_seg:test/test_seg_test_seg.o \
-  src/test_seg_conf.o
+  src/test_seg_conf.o \
+  src/post_process/test_seg_PostProcessor.o \
+  src/post_process/test_seg_RstreeFilter.o
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest_seg[0m']"
 	$(CXX) test/test_seg_test_seg.o \
-  src/test_seg_conf.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  src/test_seg_conf.o \
+  src/post_process/test_seg_PostProcessor.o \
+  src/post_process/test_seg_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  ../../../../../com/btest/gtest/output/lib/libgtest.a \
+  ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
@@ -632,6 +676,7 @@ test_seg:test/test_seg_test_seg.o \
   ../../../../../public/ub/output/lib/libubex.a \
   ../../../../../public/ub/output/lib/libubfw.a \
   ../../../../../public/uconv/libuconv.a \
+  ../../../../../quality/autotest/reportlib/cpp/libautotest.a \
   ../../../../../third-64/boost/lib/libboost_atomic.a \
   ../../../../../third-64/boost/lib/libboost_chrono.a \
   ../../../../../third-64/boost/lib/libboost_context.a \
@@ -681,10 +726,16 @@ test_seg:test/test_seg_test_seg.o \
 	cp -f --link test_seg ./bin
 
 test_suffixtree:test/test_suffixtree_test_suffixtree.o \
-  src/test_suffixtree_conf.o
+  src/test_suffixtree_conf.o \
+  src/post_process/test_suffixtree_PostProcessor.o \
+  src/post_process/test_suffixtree_RstreeFilter.o
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest_suffixtree[0m']"
 	$(CXX) test/test_suffixtree_test_suffixtree.o \
-  src/test_suffixtree_conf.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  src/test_suffixtree_conf.o \
+  src/post_process/test_suffixtree_PostProcessor.o \
+  src/post_process/test_suffixtree_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  ../../../../../com/btest/gtest/output/lib/libgtest.a \
+  ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
@@ -743,6 +794,7 @@ test_suffixtree:test/test_suffixtree_test_suffixtree.o \
   ../../../../../public/ub/output/lib/libubex.a \
   ../../../../../public/ub/output/lib/libubfw.a \
   ../../../../../public/uconv/libuconv.a \
+  ../../../../../quality/autotest/reportlib/cpp/libautotest.a \
   ../../../../../third-64/boost/lib/libboost_atomic.a \
   ../../../../../third-64/boost/lib/libboost_chrono.a \
   ../../../../../third-64/boost/lib/libboost_context.a \
@@ -792,23 +844,15 @@ test_suffixtree:test/test_suffixtree_test_suffixtree.o \
 	cp -f --link test_suffixtree ./bin
 
 rstree_rstree.o:rstree.cc \
-  utils/string_util.h \
-  utils/log_util.h \
   include/rstree_def.h \
   include/Rstree.h \
   include/SuffixTree.h \
-  utils/hashmap_util.h \
   include/post_process/RstreeFilter.h \
   include/DSuffixTree.h \
   include/rstree_def.h \
-  utils/log_util.h \
-  utils/hashmap_util.h \
-  utils/log_util.h \
-  utils/MatchDict.h \
   include/rstree_def.h \
   include/post_process/PostProcessor.h \
   include/post_process/RstreeFilter.h \
-  utils/string_util.h \
   include/post_process/PostAdjustor.h \
   include/RstreeWorker.h \
   include/Rstree.h \
@@ -821,17 +865,30 @@ src/rstree_conf.o:src/conf.cpp \
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_conf.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_conf.o src/conf.cpp
 
-test/test_filter_test_filter.o:test/test_filter.cc \
-  utils/log_util.h \
+src/post_process/rstree_PostProcessor.o:src/post_process/PostProcessor.cpp \
+  include/post_process/PostProcessor.h \
   include/post_process/RstreeFilter.h \
   include/DSuffixTree.h \
   include/SuffixTree.h \
-  utils/hashmap_util.h \
   include/rstree_def.h \
-  utils/log_util.h \
-  utils/hashmap_util.h \
-  utils/log_util.h \
-  utils/MatchDict.h \
+  include/rstree_def.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/rstree_PostProcessor.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/rstree_PostProcessor.o src/post_process/PostProcessor.cpp
+
+src/post_process/rstree_RstreeFilter.o:src/post_process/RstreeFilter.cpp \
+  include/post_process/RstreeFilter.h \
+  include/DSuffixTree.h \
+  include/SuffixTree.h \
+  include/rstree_def.h \
+  include/rstree_def.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/rstree_RstreeFilter.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/rstree_RstreeFilter.o src/post_process/RstreeFilter.cpp
+
+test/test_filter_test_filter.o:test/test_filter.cc \
+  include/post_process/RstreeFilter.h \
+  include/DSuffixTree.h \
+  include/SuffixTree.h \
+  include/rstree_def.h \
   include/rstree_def.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest/test_filter_test_filter.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o test/test_filter_test_filter.o test/test_filter.cc
@@ -841,20 +898,32 @@ src/test_filter_conf.o:src/conf.cpp \
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/test_filter_conf.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/test_filter_conf.o src/conf.cpp
 
-test/test_post_processor_test_post_processor.o:test/test_post_processor.cc \
-  utils/log_util.h \
+src/post_process/test_filter_PostProcessor.o:src/post_process/PostProcessor.cpp \
   include/post_process/PostProcessor.h \
   include/post_process/RstreeFilter.h \
   include/DSuffixTree.h \
   include/SuffixTree.h \
-  utils/hashmap_util.h \
   include/rstree_def.h \
-  utils/log_util.h \
-  utils/hashmap_util.h \
-  utils/log_util.h \
-  utils/MatchDict.h \
+  include/rstree_def.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/test_filter_PostProcessor.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/test_filter_PostProcessor.o src/post_process/PostProcessor.cpp
+
+src/post_process/test_filter_RstreeFilter.o:src/post_process/RstreeFilter.cpp \
+  include/post_process/RstreeFilter.h \
+  include/DSuffixTree.h \
+  include/SuffixTree.h \
   include/rstree_def.h \
-  utils/string_util.h
+  include/rstree_def.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/test_filter_RstreeFilter.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/test_filter_RstreeFilter.o src/post_process/RstreeFilter.cpp
+
+test/test_post_processor_test_post_processor.o:test/test_post_processor.cc \
+  include/post_process/PostProcessor.h \
+  include/post_process/RstreeFilter.h \
+  include/DSuffixTree.h \
+  include/SuffixTree.h \
+  include/rstree_def.h \
+  include/rstree_def.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest/test_post_processor_test_post_processor.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o test/test_post_processor_test_post_processor.o test/test_post_processor.cc
 
@@ -863,8 +932,26 @@ src/test_post_processor_conf.o:src/conf.cpp \
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/test_post_processor_conf.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/test_post_processor_conf.o src/conf.cpp
 
-test/test_seg_test_seg.o:test/test_seg.cc \
-  utils/log_util.h
+src/post_process/test_post_processor_PostProcessor.o:src/post_process/PostProcessor.cpp \
+  include/post_process/PostProcessor.h \
+  include/post_process/RstreeFilter.h \
+  include/DSuffixTree.h \
+  include/SuffixTree.h \
+  include/rstree_def.h \
+  include/rstree_def.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/test_post_processor_PostProcessor.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/test_post_processor_PostProcessor.o src/post_process/PostProcessor.cpp
+
+src/post_process/test_post_processor_RstreeFilter.o:src/post_process/RstreeFilter.cpp \
+  include/post_process/RstreeFilter.h \
+  include/DSuffixTree.h \
+  include/SuffixTree.h \
+  include/rstree_def.h \
+  include/rstree_def.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/test_post_processor_RstreeFilter.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/test_post_processor_RstreeFilter.o src/post_process/RstreeFilter.cpp
+
+test/test_seg_test_seg.o:test/test_seg.cc
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest/test_seg_test_seg.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o test/test_seg_test_seg.o test/test_seg.cc
 
@@ -873,12 +960,27 @@ src/test_seg_conf.o:src/conf.cpp \
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/test_seg_conf.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/test_seg_conf.o src/conf.cpp
 
-test/test_suffixtree_test_suffixtree.o:test/test_suffixtree.cc \
-  utils/log_util.h \
+src/post_process/test_seg_PostProcessor.o:src/post_process/PostProcessor.cpp \
+  include/post_process/PostProcessor.h \
+  include/post_process/RstreeFilter.h \
+  include/DSuffixTree.h \
   include/SuffixTree.h \
-  utils/hashmap_util.h \
-  utils/string_util.h \
-  utils/log_util.h
+  include/rstree_def.h \
+  include/rstree_def.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/test_seg_PostProcessor.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/test_seg_PostProcessor.o src/post_process/PostProcessor.cpp
+
+src/post_process/test_seg_RstreeFilter.o:src/post_process/RstreeFilter.cpp \
+  include/post_process/RstreeFilter.h \
+  include/DSuffixTree.h \
+  include/SuffixTree.h \
+  include/rstree_def.h \
+  include/rstree_def.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/test_seg_RstreeFilter.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/test_seg_RstreeFilter.o src/post_process/RstreeFilter.cpp
+
+test/test_suffixtree_test_suffixtree.o:test/test_suffixtree.cc \
+  include/SuffixTree.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest/test_suffixtree_test_suffixtree.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o test/test_suffixtree_test_suffixtree.o test/test_suffixtree.cc
 
@@ -886,6 +988,25 @@ src/test_suffixtree_conf.o:src/conf.cpp \
   include/conf.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/test_suffixtree_conf.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/test_suffixtree_conf.o src/conf.cpp
+
+src/post_process/test_suffixtree_PostProcessor.o:src/post_process/PostProcessor.cpp \
+  include/post_process/PostProcessor.h \
+  include/post_process/RstreeFilter.h \
+  include/DSuffixTree.h \
+  include/SuffixTree.h \
+  include/rstree_def.h \
+  include/rstree_def.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/test_suffixtree_PostProcessor.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/test_suffixtree_PostProcessor.o src/post_process/PostProcessor.cpp
+
+src/post_process/test_suffixtree_RstreeFilter.o:src/post_process/RstreeFilter.cpp \
+  include/post_process/RstreeFilter.h \
+  include/DSuffixTree.h \
+  include/SuffixTree.h \
+  include/rstree_def.h \
+  include/rstree_def.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/test_suffixtree_RstreeFilter.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/test_suffixtree_RstreeFilter.o src/post_process/RstreeFilter.cpp
 
 endif #ifeq ($(shell uname -m),x86_64)
 
