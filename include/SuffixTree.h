@@ -161,16 +161,16 @@ public:
     }
   }
 
-  int get_tree_size()
+  inline int tree_size()
   {
     return texts_.size();
   }
 
-
 protected:
+  typedef unsigned long long uint64;
   Node* root_;
-  long long current_text_id_;
-  long long oldest_text_id_;
+  uint64 current_text_id_;
+  uint64 oldest_text_id_;
   std::deque<wstring> texts_;
   std::deque<Node*> first_leafs_;
   wstring end_mark_;
@@ -194,6 +194,8 @@ public:
     add_(s);
     current_text_id_++;
   }
+  
+  //remove the oldest one
 
   void remove()
   {
@@ -209,10 +211,11 @@ public:
 
     oldest_text_id_++;
   }
-
-  void remove_text()
+  
+  //删除指定位置的文本 TODO 如果这样 需要将 texts_ first_leafs_存储为 map<int,..>格式方便删除任意位置
+  void remove(int id)
   {
-    remove();
+    
   }
 
   //查找从一个字符串指定位置(start)开始 在后缀树中最长匹配的串
@@ -806,7 +809,7 @@ protected:
       pre_node = node;
     }
   }
-
+  
 public:
   //假设使用map作为边 顺序输出遍历的各个节点 (text_id, start point, end point, edge length node freq, node depth)
   //输出到文本 方便对比测试是否结果正确
@@ -886,12 +889,11 @@ public:
       wstring edge = this->texts_[iter->second->text_id - oldest_text_id_].
               substr(iter->second->start, iter->second->end - iter->second->start);
       wcout << "|-" << edge << "[" << iter->second->text_id << " " << iter->second->start << ":"
-              << iter->second->end << "] " << " " << iter->second->freq << " "
+              << iter->second->end << "] " << " (" << iter->second->freq << " " << iter->second->length << ") "
               << iter->second << "->" << iter->second->suffix_link
               //                    << " " << (iter->second->next == NULL) 
               << endl;
-
-
+      
       //              wcout << "|-"  << " "<< "[" << iter->second->id << " " << iter->second->start << ":"
       //                    << iter->second->end << "] " << iter->second << "->" << iter->second->suffix_link
       //                    << " " << (iter->second->next==NULL) << endl;

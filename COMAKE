@@ -1,30 +1,42 @@
 #edit-mode: -*- python -*-
 #coding:gbk
+
+#工作路径.
 WORKROOT('../../../../../')
-TOOLCHAIN_ROOT='../../../../../ps/se/toolchain'
 
-#IDLFLAGS('--compack')
- 
-#UBRPCFLAGS('--compack')
+#使用硬链接copy.
+CopyUsingHardLink(True)
 
-#execfile('GCC3_COMAKE_DEF')
-#execfile('GCC4_COMAKE_DEF')
-execfile('GCC4_COMAKE_DEF.STATIC')
-#execfile('GCC4_COMAKE_DEF.DYNAMIC')
-#execfile('GCC4_COMAKE_DEF.OPENMP')
-#execfile('GCC4_COMAKE_DEF.LOCAL')
-CC(GCC)
-CXX(GCC)
+#支持32位/64位平台编译
+#ENABLE_MULTI_LIBS(True)
 
-CPPFLAGS('-D_GNU_SOURCE -D__STDC_LIMIT_MACROS -U_BTEST_',\
-             '-D__VERSION_ID__=\\\"1.0.0\\\"',\
-             '-D__REVISION__=\\\"$(shell svnversion -n .)\\\"')
-MY_FLAGS='-g -O -pipe -W -Wall -fPIC -DHAVE_NETINET_IN_H -Wno-unused-parameter'
-CFLAGS(MY_FLAGS, NOFLAGS)
-CXXFLAGS(MY_FLAGS, NOFLAGS)
-LDFLAGS(GCC_LDFLAGS, '-ldl -lpthread -lrt -rdynamic')
-CONFIGS('third-64/openssl@base') 
-CONFIGS('third-64/zlib@base')
+#C预处理器参数.
+CPPFLAGS('-D_GNU_SOURCE -D__STDC_LIMIT_MACROS -DVERSION=\\\"1.9.8.7\\\"')
+#为32位目标编译指定额外的预处理参数
+#CPPFLAGS_32('-D_XOPEN_SOURE=500')
+
+#C编译参数.
+CFLAGS('-g -pipe -W -Wall -fPIC')
+
+#C++编译参数.
+CXXFLAGS('-g -pipe -W -Wall -fPIC')
+
+#IDL编译参数
+IDLFLAGS('--compack')
+
+#UBRPC编译参数
+UBRPCFLAGS('--compack')
+
+#头文件路径.
+INCPATHS('. ./include ./output ./output/include')
+
+#使用库
+#LIBS('./librsc-sender.a')
+
+#链接参数.
+LDFLAGS('-lpthread -lcrypto -lrt')
+
+#依赖模块
 CONFIGS('third-64/boost@base')
 CONFIGS('third-64/gflags@base')
 CONFIGS('third-64/glog@base')
@@ -34,7 +46,15 @@ CONFIGS('public/comlog-plugin@base')
 CONFIGS('public/configure@base')
 CONFIGS('public/ub')
 CONFIGS('public/gm/galileo')
-CONFIGS('lib2-64/others-ex@base')
+#CONFIGS('lib2-64/others-ex@base')
+CONFIGS('lib2-64/wordseg@3.0.12.2')
+CONFIGS('lib2-64/ullib@3.1.40.0')
+CONFIGS('lib2-64/ccode@3.2.3.2')
+CONFIGS('lib2-64/dict@3.1.12.0')
+CONFIGS('lib2-64/others-ex@3.1.14.2')
+CONFIGS('lib2-64/libcrf@2.1.3.0')
+CONFIGS('public/odict@1.1.2.1')
+CONFIGS('lib2-64/postag@2.0.2.0')
 CONFIGS('app/search/sep/anti-spam/rsc-sender')
 INCPATHS('./include ./include/post_process ./utils')
 srcs=GLOB('./src/*.cpp','./src/post_process/*.cpp')
@@ -50,3 +70,8 @@ Application('rstree',Sources('rstree.cc',srcs))
 
 Application('test_filter',Sources('test/test_filter.cc',srcs))
 Application('test_post_processor',Sources('test/test_post_processor.cc',srcs), OutputPath('./bin'))
+Application('test_seg',Sources('test/test_seg.cc', srcs), OutputPath('./bin'))
+Application('test_suffixtree',Sources('test/test_suffixtree.cc',srcs), OutputPath('./bin'))
+
+
+

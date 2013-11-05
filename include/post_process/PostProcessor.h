@@ -50,6 +50,7 @@
 #include "RegexSearcher.h"
 #include <functional>
 #include <boost/bind.hpp>
+#include "rstree_def.h"
 
 class PostProcessor
 {
@@ -71,17 +72,25 @@ public:
 
   bool init()
   {
-    comcfg::Configure& conf = SharedConf::get_conf();
-    return init(conf);
+    return init(SharedConf::conf());
+  }
+
+  //如果是同一个类 多个线程只读 如果内存占用不大 就是成员变量 如果内存占用大 就用static init_static,如果是多个类都需要访问的
+  //用指针 或者 全局 或者 单例子
+  static bool init_static()
+  {
+    return init_static(SharedConf::conf());
+  }
+  //进程加载公共资源  TODO多线程环境需要2个init分开 init 线程级别 init_dict(or init_static()) 进程级别
+  static bool init_static(comcfg::Configure& conf, string section = "PostProcessor")
+  {
+    string black_file = "./data/black.dm";
+    CONF(black_file);
+    black_dict_.init(black_file);
   }
 
   bool init(comcfg::Configure& conf, string section = "PostProcessor")
   {
-    {
-      string black_file = "./data/black.dm";
-      CONF(black_file);
-      black_dict_.init(black_file);
-    }
     {
       CONF(max_match_count_);
       result_ = dm_pack_create(max_match_count_);
@@ -90,13 +99,12 @@ public:
     {
       string black_pattern_file = "./data/black.pattern.txt";
       CONF(black_pattern_file);
-      bool ret = black_reg_searcher_.init(black_pattern_file);
-      CHECK_EQ(ret, true);
+      black_reg_searcher_.init2(black_pattern_file);
     }
     {
       white_filter_.init();
     }
-    
+
     return true;
   }
 
@@ -106,25 +114,23 @@ public:
     return gezi::filter_str(input);
   }
 
-  int black_process(const vector<pair<string, int> >& ivec, vector<Node >& ovec)
+  int black_process(const vector<INode>& ivec, vector<Node>& ovec)
   {
     int black_count = 0;
-    for (auto &item : ivec)
+    //for (auto &item : ivec)
+    for(int i = 0; i < (int)ivec.size(); i++)
     {
-      Node node;
-      node.substr = item.first;
-      node.filtered_str = filter(node.substr);
-      node.count = item.second;
-
+      const INode& item = ivec[i];
+      Node node(item.str, item.wstr, item.count);
+      node.filtered_str = filter(node.str);
       //--------------------黑词匹配
-      Pval(node.substr);
+      Pval(node.str);
       Pval(node.filtered_str);
       node.black_count = black_dict_.search_count(node.filtered_str, result_);
       Pval(node.black_count);
 
       //--------------------黑模版匹配
-      if (black_reg_searcher_.has_match(node.substr) ||
-              black_reg_searcher_.has_match(node.filtered_str))
+      if (black_reg_searcher_.has_match(node.wstr))
       {
         node.black_count++;
       }
@@ -139,8 +145,8 @@ public:
     }
     return black_count;
   }
-  
-  void process(const vector<pair<string, int> >& ivec, int max_count, vector<Node>& vec)
+
+  void process(const vector<INode>& ivec, int max_count, vector<Node>& vec)
   {
     int black_count = black_process(ivec, vec);
 
@@ -152,28 +158,44 @@ public:
     if (vec.size() > max_count)
     {
       std::partial_sort(vec.begin(), vec.begin() + max_count, vec.end(),
-              boost::bind(&Node::black_count, _1) > 
+              boost::bind(&Node::black_count, _1) >
               boost::bind(&Node::black_count, _2));
       vec.resize(max_count);
     }
     else
     {
-      std::sort(vec.begin(), vec.end(), 
+      std::sort(vec.begin(), vec.end(),
               boost::bind(&Node::black_count, _1) >
               boost::bind(&Node::black_count, _2));
     }
-    
+
   }
 
-  vector<pair<string, int> > process(const vector<pair<string, int> >& ivec, int max_count)
+  //for test
+
+  void process(const vector<Pair>& ivec, int max_count, vector<Node>& vec)
   {
-    vector<pair<string, int> > ret;
+    vector<INode> rvec;
+//    for (auto &item : ivec)
+    for(int i = 0; i < (int)ivec.size(); i++)
+    {
+      const Pair& item = ivec[i];
+      rvec.push_back(INode(item.first, str_to_wstr(item.first), item.second));
+    }
+    process(rvec, max_count, vec);
+  }
+
+  vector<Pair> process(const vector<INode>& ivec, int max_count)
+  {
+    vector<Pair> ret;
 
     vector<Node> vec;
     process(ivec, max_count, vec);
-    for (auto &item : vec)
+    //for (auto &item : vec)
+    for(int i = 0; i < (int)vec.size(); i++)
     {
-      ret.push_back(make_pair(item.substr, item.count));
+      Node& item = vec[i];
+      ret.push_back(make_pair(item.str, item.count));
     }
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
     return std::move(ret);

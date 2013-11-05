@@ -27,24 +27,11 @@
 #include "log_util.h"
 #include "MatchDict.h"
 #include "RegexSearcher.h"
+#include "rstree_def.h"
 using namespace std;
 using namespace gezi;
 //TODO generic Filter
 //对重复串进行过滤
-
-struct Node
-{
-
-  Node()
-  : black_count(0)
-  {
-
-  }
-  string substr;
-  string filtered_str; // 过滤后的字串
-  int count;
-  int black_count;
-};
 
 class RstreeFilter
 {
@@ -73,8 +60,7 @@ public:
     {
       string white_pattern_file = "./data/white.pattern.txt";
       CONF(white_pattern_file);
-      bool ret = white_reg_searcher_.init(white_pattern_file);
-      CHECK_EQ(ret, true);
+      white_reg_searcher_.init2(white_pattern_file);
     }
   }
 
@@ -121,8 +107,9 @@ public:
   {
     return white_dict_.has_word(input);
   }
-  
-  bool contains_white_pattern(const string& input)
+
+  template<typename String>
+  bool contains_white_pattern(const String& input)
   {
     return white_reg_searcher_.has_match(input);
   }
@@ -146,12 +133,12 @@ public:
     }
     return true;
   }
-  
+
   bool is_pass(const Node& node)
   {
-    if (is_white_format(node.substr))
+    if (is_white_format(node.str))
     {
-      DLOG(INFO) << "Is white format: " << node.substr;
+      DLOG(INFO) << "Is white format: " << node.str;
       return false;
     }
     if (contains_white_phrase(node.filtered_str))
@@ -159,9 +146,9 @@ public:
       DLOG(INFO) << "Contains white phrase: " << node.filtered_str;
       return false;
     }
-    if (contains_white_pattern(node.substr))
+    if (contains_white_pattern(node.wstr))
     {
-      DLOG(INFO) << "Contains white pattern: " << node.substr;
+      DLOG(INFO) << "Contains white pattern: " << node.str;
       return false;
     }
     return true;
@@ -172,15 +159,17 @@ public:
   vector<Node > process(const vector<Node >& ivec)
   {
     vector<Node > ret;
-    for (auto &item : ivec)
+    //for (auto &item : ivec)
+    for(int i = 0; i < (int)ivec.size(); i++)
     {
+      const Node& item = ivec[i];
       if (is_pass(item))
       {
         ret.push_back(item);
       }
     }
 
-    
+
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
     return std::move(ret);
 #else

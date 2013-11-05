@@ -16,25 +16,24 @@
 #include "string_util.h"
 
 #include "rstree_def.h"
-#include "rstree_util.h"
 
-#include "DSuffixTree.h"
+#include "Rstree.h"
 #include "RstreeFilter.h"
 #include "PostProcessor.h"
+#include "PostAdjustor.h"
+//#include "Seg.h"
+#include "word_seg.h"
+#include "RstreeWorker.h"
 
 
 using namespace std;
 using namespace gezi;
 bsl::var::Ref g_monitor_info;
 char g_proc_name[1024];
-//rstree_t *g_rstree;
-DSuffixTree* g_rstree;
-PostProcessor g_post_processor;
+
+RstreeWorker g_worker;
 
 DEFINE_int32(level, 0, "min log level");
-DEFINE_int32(min_text_length, 8, "");
-DEFINE_int32(max_text_length, 200, "");
-DEFINE_int32(max_result_count, 5, "max return substring num");
 
 extern void merge_map(map<wstring, int> &, const map<wstring, int> &);
 
@@ -55,40 +54,6 @@ void get_proc_name()
   char *p = strrchr(proc_name, '/');
   snprintf(g_proc_name, sizeof (g_proc_name), "%s", p + 1);
 }
-
-
-/**
- * @brief: 剪切字符串，剪切为最大长度为unit的子串
- *
- *
- */
-static vector<wstring> cut_wstring(const wstring & s, int unit)
-{
-  vector<wstring> ret;
-  for (int i = 0; i <= (int) s.size() / unit; i++)
-  {
-    ret.push_back(s.substr(max(0, i * unit - 10), unit + 10));
-  }
-  return ret;
-}
-
-/*
- * @brief: 合并map，将m2中的key-value对合并入m1，当m2中不包含这个key，或者对应的value值比m1中的大时
- *
- */
-void merge_map(map<wstring, int> & m1, const map<wstring, int> & m2)
-{
-  for (map<wstring, int>::const_iterator iter = m2.begin(); iter != m2.end(); iter++)
-  {
-    map<wstring, int>::iterator iter1 = m1.find(iter->first);
-    if (iter1 == m1.end() || iter1->second < iter->second)
-    {
-      m1[iter->first] = iter->second;
-    }
-  }
-}
-
-
 /**
  *@rstree server 回调函数
  **/
@@ -118,11 +83,9 @@ static int rstree_server_callback()
     error_no = -1;
   }
 
-  UB_LOG_DEBUG("logid[%d] get content[%s]", res_head->log_id, content);
-
-  int freq, min_len, max_len;
+  int min_freq, min_len, max_len;
   int ret_no = 0;
-  ret_no |= mc_pack_get_int32(req_pack, "freq", &freq);
+  ret_no |= mc_pack_get_int32(req_pack, "min_freq", &min_freq);
   ret_no |= mc_pack_get_int32(req_pack, "min_len", &min_len);
   ret_no |= mc_pack_get_int32(req_pack, "max_len", &max_len);
 
@@ -134,61 +97,15 @@ static int rstree_server_callback()
 
   mc_pack_close(req_pack);
 
-  map<wstring, int> ret_map;
-
+  
+  //-----------------------------real work here
+  vector<Pair> result_vec;
   if (error_no == 0)
   {
-    g_rstree->set_min_frequency(freq);
-    g_rstree->set_min_substr_len(min_len);
-    g_rstree->set_max_substr_len(max_len);
-
-    wstring wc = c2w(content);
-
-    if ((int) wc.size() < FLAGS_min_text_length)
-    {
-      error_no = -3;
-    } else
-    {
-      vector<wstring> svec = cut_wstring(wc, FLAGS_max_text_length);
-
-      for (int i = 0; i < (int) svec.size(); i++)
-      {
-        wstring &sub_wc = svec[i];
-        if ((int) sub_wc.size() < FLAGS_min_text_length)
-        {
-          break;
-        }
-
-        vector<pair<wstring, int> > rvec = g_rstree->add_text(sub_wc);
-        map<wstring, int> t_ret_map(rvec.begin(), rvec.end());
-        merge_map(ret_map, t_ret_map);
-
-        if (g_rstree->get_tree_size() >= g_rstree->get_max_tree_size())
-        {
-          g_rstree->remove_text();
-        }
-      }
-
-    }
+    UB_LOG_DEBUG("logid[%d] get content[%s], min_freq %d, min_len %d, max_len %d", res_head->log_id, 
+            content, min_freq, min_len, max_len);
+    result_vec = g_worker.get_substrs(content, min_freq, min_len, max_len);
   }
-
-  vector<pair<string, int> > vec;
-  for (map<wstring, int>::iterator iter = ret_map.begin(); iter != ret_map.end(); iter++)
-  {
-    wstring s = boost::trim_copy(iter->first);
-    if ((int)s.size() < g_rstree->get_min_substr_len())
-    {
-      continue;
-    }
-    string substr = w2c(s.c_str());
-    substr = utf8_to_gbk(substr);
-    if (!substr.empty())
-    {
-      vec.push_back(make_pair(substr, iter->second));
-    }
-
-  }
-  vector <pair<string, int> > result_vec = g_post_processor.process(vec, FLAGS_max_result_count);
 
   char mcpack_buf[MC_PACK_BUF_SIZE];
   mc_pack_t *ret_pack = mc_pack_open_w(2, mcpack_buf, sizeof (mcpack_buf), temp_buf, sizeof (temp_buf));
@@ -209,8 +126,8 @@ static int rstree_server_callback()
   mc_pack_close(ret_pack);
 
   ub_log_setbasic(UB_LOG_ERRNO, "%d", error_no);
-  ub_log_pushnotice("ret_cnt", "%d", ret_map.size());
-  ub_log_pushnotice("tree_size", "%d", g_rstree->get_tree_size());
+  ub_log_pushnotice("ret_cnt", "%d", result_vec.size());
+  ub_log_pushnotice("tree_size", "%d", g_worker.tree_size());
 
   char *res_buf = (char*) (res_head + 1);
 
@@ -236,13 +153,9 @@ static int monitor_timer(void *)
  */
 static void app_init()
 {
-  setlocale(LC_ALL, "zh_CN.UTF-8");
-  SharedConf::init();
-
-  g_rstree = new DSuffixTree();
-  g_rstree->init();
+  RstreeWorker::init_static();
   
-  g_post_processor.init();
+  g_worker.init(); //rstree环境是单线程 也在全局init
 }
 
 /**
@@ -251,7 +164,6 @@ static void app_init()
  */
 static void app_close()
 {
-  delete g_rstree;
 }
 
 /**

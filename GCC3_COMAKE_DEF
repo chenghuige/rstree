@@ -2,4 +2,4 @@
 #coding:gbk
 GCC='g++'
 NOFLAGS=""
-GCC_LDFLAGS=''
+GCC_LDFLAGS='-lcrypto -lssl'

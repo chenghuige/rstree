@@ -3,9 +3,9 @@
  * Copyright (c) 2013 Baidu.com, Inc. All Rights Reserved
  * 
  **************************************************************************/
- 
- 
- 
+
+
+
 /**
  * @file include/rstree_def.h
  * @author weizheng(com@baidu.com)
@@ -20,9 +20,60 @@
 #ifndef  __RSTREE_DEF_H_
 #define  __RSTREE_DEF_H_
 
+#include <string>
+#include <vector>
+using namespace std;
+const int MC_PACK_BUF_SIZE = 100000;
+#define RSTREE_CONF_DIR "./conf"
+#define RSTREE_CONF "rstree_strategy.conf"
+#define LOCALE "zh_CN.GB18030"
 
-#define MAX_CONTENT_LENGTH 30000
-#define MC_PACK_BUF_SIZE 100000
+enum SEG_POS
+{
+  SINGLE,
+  LEFT,
+  MIDDLE,
+  RIGHT
+};
+
+
+typedef pair<string, int> Pair;
+typedef pair<wstring, int> WPair;
+
+struct INode
+{
+
+  INode()
+  {
+  }
+
+  INode(string _str, wstring _wstr, int _count)
+  : str(_str), wstr(_wstr), count(_count)
+  {
+
+  }
+  string str;
+  wstring wstr;
+  int count;
+};
+
+struct Node : public INode
+{
+
+  Node()
+  : black_count(0)
+  {
+
+  }
+
+  Node(string _str, wstring _wstr, int _count)
+  : INode(_str, _wstr, _count), black_count(0)
+  {
+
+  }
+  string filtered_str; // ¹ýÂËºóµÄ×Ö´®
+  int black_count;
+};
 
 
 #endif  //__INCLUDE/RSTREE_DEF_H_
