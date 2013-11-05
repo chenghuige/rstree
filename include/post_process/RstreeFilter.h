@@ -19,7 +19,6 @@
 #include <set>
 #include <glog/logging.h>
 
-#include "DSuffixTree.h"
 #include "common_util.h"
 #include "conf_util.h"
 #include "hashmap_util.h"

@@ -126,16 +126,15 @@ public:
 
   typedef std::pair<wstring, int> Pair; //first is substring, second is freq
 
-  vector<Pair> add(const wstring& text, const vector<int>* pos_types = NULL)
+  
+  void add(const wstring& text, vector<Pair>& result_vec,const vector<int>* pos_types = NULL)
   {
-    vector<Pair> result_vec;
     wstring s = text;
-//    boost::trim(s);
-    boost::replace_all(s, end_mark_, L"");
+    //    boost::trim(s);
+    //    boost::replace_all(s, end_mark_, L""); //will casue core?
+    wstr_replace_all(s, end_mark_, L"");
     s = s + end_mark_;
-    
-    wcout << s << endl;
-    
+
     texts_.push_back(s);
     add_(s);
     find_substrs(s, result_vec, pos_types);
@@ -144,14 +143,7 @@ public:
     {
       remove();
     }
-    
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
-    return std::move(result_vec);
-#else
-    return result_vec;
-#endif
   }
-
 
   //TODO 提供search功能 查询给定文本在后缀树中有哪些满足长度和频次要求的子串,不影响当前后缀树
   //可以按照加入 然后删除最新文本 进行， 其它方法？ 如果提供search 可否多线程查询？ 
@@ -208,7 +200,7 @@ public:
       {
         LOG_DEBUG("Trim with seg fail");
         return text.substr(node->end - node->length,
-              node->length);
+                node->length);
       }
     }
   }
@@ -271,7 +263,7 @@ public:
       }
     }
   }
-  
+
 };
 
 } //----end of namespace gezi

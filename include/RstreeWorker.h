@@ -14,6 +14,7 @@
 #ifndef RSTREE_WORKER_H_
 #define RSTREE_WORKER_H_
 #include "Rstree.h"
+//#include "dsuffix_tree.h"
 #include "post_process/PostProcessor.h"
 #include "word_seg.h"
 #include "all_util.h"
@@ -65,7 +66,7 @@ public:
    */
   void merge_map(map<wstring, int> & m1, const map<wstring, int> & m2)
   {
-    for (map<wstring, int>::const_iterator iter = m2.begin(); iter != m2.end(); iter++)
+    for (map<wstring, int>::const_iterator iter = m2.begin(); iter != m2.end(); ++iter)
     {
       map<wstring, int>::iterator iter1 = m1.find(iter->first);
       if (iter1 == m1.end() || iter1->second < iter->second)
@@ -103,11 +104,12 @@ public:
     }
   }
 
-  inline void print_seg_result(token_t tokens[], int count)
+  inline void print_seg_result(const SegHandle& handle)
   {
-    for (int i = 0; i < count; i++)
+    Pval(handle.nresult);
+    for (int i = 0; i < handle.nresult; i++)
     {
-      cout << tokens[i].buffer << " ";
+      cout << handle.tokens[i].buffer << " " << handle.tokens[i].length << endl;
     }
     cout << std::endl;
   }
@@ -118,7 +120,6 @@ public:
     if (sub_c.empty())
     {
       LOG_WARNING("Get postype to wstr to str fail");
-      wcout << sub_wc << endl;
       return false;
     }
     bool ret = segment(sub_c, _seg_handle);
@@ -167,7 +168,7 @@ public:
 
       LOG_DEBUG("Cut to %d parts", (int) svec.size());
       //for (auto &sub_wc : svec)
-      for(int i = 0; i < (int)svec.size(); i++)
+      for (int i = 0; i < (int) svec.size(); i++)
       {
         wstring& sub_wc = svec[i];
         if ((int) sub_wc.size() < _min_text_length)
@@ -176,34 +177,45 @@ public:
         }
 
         vector<int> splits;
-        bool sucess;
-        if (svec.size() == 1)
-        {//不需要再转换回gbk了
-          sucess = get_postype(content, sub_wc.size(), splits);
-        }
-        else
-        {
-          sucess = get_postype(sub_wc, splits);
-        }
+        //        bool sucess;
+        //        if (svec.size() == 1)
+        //        {//不需要再转换回gbk了
+        //          sucess = get_postype(content, sub_wc.size(), splits);
+        //        }
+        //        else
+        //        {
+        //          sucess = get_postype(sub_wc, splits);
+        //        }
         vector<WPair > rvec;
-        if (sucess)
-        {
-          rvec = _rstree.add(sub_wc, &splits);
-        }
-        else
-        {
-          LOG_WARNING("Fail in get segment split");
-        }
-        LOG_DEBUG("After add got %d result", (int) rvec.size());
+        //        if (sucess)
+        //        {
+        //          rvec = _rstree.add(sub_wc, &splits);
+        //        }
+        //        else
+        //        {
+        //          LOG_WARNING("Fail in get segment split");
+        //          rvec = _rstree.add(sub_wc);
+        //        }
+
+        _rstree.add(sub_wc, rvec);
+        //        rvec = _rstree.add(sub_wc);
+        //        LOG_DEBUG("After add got %d result", (int) rvec.size());
         //PostAdjustor::filter(rvec, _rstree.min_substr_len()); //why can core..
         map<wstring, int> t_ret_map(rvec.begin(), rvec.end());
+
+        //        map<wstring, int> t_ret_map;
+        //        _rstree.add_text(sub_wc, t_ret_map);
+        //        if(_rstree.get_tree_size() >= _rstree.get_max_tree_size())
+        //				{
+        //					_rstree.remove_text();
+        //        }
         merge_map(ret_map, t_ret_map);
       }
     }
 
     //-----------------post deal trim filter
     vector <INode> vec;
-    for(map<wstring, int>::iterator iter = ret_map.begin(); iter != ret_map.end(); ++iter)
+    for (map<wstring, int>::iterator iter = ret_map.begin(); iter != ret_map.end(); ++iter)
     {
       string substr = wstr_to_str(iter->first);
       if (!substr.empty())
@@ -222,11 +234,6 @@ public:
 #endif
   }
 
-  inline Rstree& rstree()
-  {
-    return _rstree;
-  }
-
   inline int tree_size()
   {
     return _rstree.tree_size();
@@ -238,6 +245,7 @@ private:
   int _max_result_count;
 
   Rstree _rstree;
+  //  DSuffixTree _rstree;
   PostProcessor _post_processor;
   SegHandle _seg_handle;
 };

@@ -17,7 +17,6 @@
 
 #include "rstree_def.h"
 
-#include "Rstree.h"
 #include "RstreeFilter.h"
 #include "PostProcessor.h"
 #include "PostAdjustor.h"
