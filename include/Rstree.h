@@ -14,6 +14,7 @@
 #ifndef RSTREE_H_
 #define RSTREE_H_
 #include "SuffixTree.h"
+#include "rstree_def.h"
 #include "debug_util.h"
 namespace gezi
 {
@@ -21,18 +22,18 @@ namespace gezi
 class Rstree : public SuffixTree
 {
 public:
-  int min_substr_len_; //重复子串最短长度
-  int max_substr_len_; //重复子串最大长度
-  int min_frequency_; //满足的最低频次限制
-  int max_tree_size_; //树的大小限制
+  int _min_substr_len; //重复子串最短长度
+  int _max_substr_len; //重复子串最大长度
+  int _min_frequency; //满足的最低频次限制
+  int _max_tree_size; //树的大小限制
 
   Rstree(const wstring& end_mark = L"\n")
   : SuffixTree(end_mark)
   {
-    min_substr_len_ = 8;
-    max_substr_len_ = 20;
-    min_frequency_ = 15;
-    max_tree_size_ = 300000;
+    _min_substr_len = 8;
+    _max_substr_len = 20;
+    _min_frequency = 15;
+    _max_tree_size = 300000;
   }
 
   bool init()
@@ -43,20 +44,20 @@ public:
   bool init(const comcfg::Configure& conf,
           const string& section = "Rstree")
   {
-    CONF(min_substr_len_);
-    CONF(max_substr_len_);
-    CONF(min_frequency_);
-    CONF(max_tree_size_);
+    CONF(_min_substr_len);
+    CONF(_max_substr_len);
+    CONF(_min_frequency);
+    CONF(_max_tree_size);
     return true;
   }
 
   bool read_config(const comcfg::Configure& conf,
           const string& section = "Rstree")
   {
-    CONF(min_substr_len_);
-    CONF(max_substr_len_);
-    CONF(min_frequency_);
-    CONF(max_tree_size_);
+    CONF(_min_substr_len);
+    CONF(_max_substr_len);
+    CONF(_min_frequency);
+    CONF(_max_tree_size);
     return true;
   }
 
@@ -86,63 +87,82 @@ public:
 
   inline void set_min_frequency(int freq)
   {
-    min_frequency_ = freq;
+    _min_frequency = freq;
   }
 
   inline int min_frequency()
   {
-    return min_frequency_;
+    return _min_frequency;
   }
 
   inline void set_min_substr_len(int len)
   {
-    min_substr_len_ = len;
+    _min_substr_len = len;
   }
 
   inline int min_substr_len()
   {
-    return min_substr_len_;
+    return _min_substr_len;
   }
 
   inline void set_max_substr_len(int len)
   {
-    max_substr_len_ = len;
+    _max_substr_len = len;
   }
 
   inline int max_substr_len()
   {
-    return max_substr_len_;
+    return _max_substr_len;
   }
 
   void set_tree_size(int size)
   {
-    max_tree_size_ = size;
+    _max_tree_size = size;
   }
 
   inline int max_tree_size()
   {
-    return max_tree_size_;
+    return _max_tree_size;
   }
 
   typedef std::pair<wstring, int> Pair; //first is substring, second is freq
 
-  
-  void add(const wstring& text, vector<Pair>& result_vec,const vector<int>* pos_types = NULL)
+  void add(const wstring& text, vector<Pair>& result_vec, const vector<int>* pos_types = NULL)
   {
     wstring s = text;
-    //    boost::trim(s);
-    //    boost::replace_all(s, end_mark_, L""); //will casue core?
-    wstr_replace_all(s, end_mark_, L"");
-    s = s + end_mark_;
-
-    texts_.push_back(s);
+    boost::trim(s);
+    //    boost::replace_all(s, _end_mark, L"");  //转string之前已经去掉换行
+    s = s + _end_mark;
+    _texts.push_back(s);
     add_(s);
     find_substrs(s, result_vec, pos_types);
-    current_text_id_++;
-    if (tree_size() >= max_tree_size_)
+    _current_text_id++;
+    if (tree_size() >= _max_tree_size)
     {
       remove();
     }
+  }
+
+  vector<Pair> add(const wstring& text, const vector<int>* pos_types = NULL)
+  {
+    vector<Pair> result_vec;
+    wstring s = text;
+    boost::trim(s);
+    //    boost::replace_all(s, _end_mark, L"");  //转string之前已经去掉换行
+    s = s + _end_mark;
+    _texts.push_back(s);
+    add_(s);
+    find_substrs(s, result_vec, pos_types);
+    _current_text_id++;
+    if (tree_size() >= _max_tree_size)
+    {
+      remove();
+    }
+#ifdef __GXX_EXPERIMENTAL_CXX0X__
+    return std::move(result_vec);
+#else
+    return result_vec;
+#endif
   }
 
   //TODO 提供search功能 查询给定文本在后缀树中有哪些满足长度和频次要求的子串,不影响当前后缀树
@@ -154,41 +174,69 @@ public:
 
   bool is_node_ok(const Node* node)
   {
-    return node->freq >= min_frequency_
-            && node->length >= min_substr_len_
-            && node->length <= max_substr_len_;
+    if (node->next == NULL)
+    { //叶子节点
+      return node->freq >= _min_frequency
+              && node->length >= _min_substr_len + 1
+              && node->length <= _max_substr_len + 1;
+    }
+    else
+    {
+      return node->freq >= _min_frequency
+              && node->length >= _min_substr_len
+              && node->length <= _max_substr_len;
+    }
   }
 
   bool is_node_ok(const Node* node, bool& need_up)
   {
-    if (node->length <= min_substr_len_)
+    if (node->next == NULL)
     {
-      need_up = false;
-    }
-
-    return node->freq >= min_frequency_
-            && node->length >= min_substr_len_
-            && node->length <= max_substr_len_;
-  }
-
-  inline wstring trim(const wstring& text, const Node* node, const vector<int>* pos_types)
-  {
-    if (!pos_types)
-    {
-      return text.substr(node->end - node->length,
-              node->length);
+      if (node->length <= _min_substr_len + 1)
+      {
+        need_up = false;
+      }
+      return node->freq >= _min_frequency
+              && node->length >= _min_substr_len + 1
+              && node->length <= _max_substr_len + 1;
     }
     else
     {
-      LOG_DEBUG("Need trim with seg");
+      if (node->length <= _min_substr_len)
+      {
+        need_up = false;
+      }
+      return node->freq >= _min_frequency
+              && node->length >= _min_substr_len
+              && node->length <= _max_substr_len;
+    }
+  }
+
+  inline wstring trim(const Node* node, const wstring& text, const vector<int>* pos_types = NULL)
+  {
+    if (!pos_types)
+    {
+      if (node->next == NULL)
+      {
+        return text.substr(node->end - node->length,
+                node->length - 1);
+      }
+      else
+      {
+        return text.substr(node->end - node->length,
+                node->length);
+      }
+    }
+    else
+    {
       int start = node->end - node->length;
-      int end = start + node->length - 1;
+      int end = node->next == NULL ? node->end - 1 : node->end;
       const vector<int>& vec = *pos_types;
-      while (vec[start] != LEFT && vec[start] != SINGLE)
+      while (start < end && vec[start] != LEFT && vec[start] != SINGLE)
       {
         start++;
       }
-      while (vec[end] != RIGHT && vec[end] != SINGLE)
+      while (start < end && vec[end - 1] != RIGHT && vec[end - 1] != SINGLE)
       {
         end--;
       }
@@ -198,7 +246,7 @@ public:
       }
       else
       {
-        LOG_DEBUG("Trim with seg fail");
+        LOG_WARNING("Trim with seg fail");
         return text.substr(node->end - node->length,
                 node->length);
       }
@@ -209,28 +257,94 @@ public:
   //极端情况下 限制长度不超过某个阈值 选取 可能会取不到 比如abcdefghigk...重复n次 但是大语料中概率极小
   //如果不限制最长 最后再截取  可能无法截取到黑词部分的串 综合权衡 采用下面策略
 
+  //  void find_substrs(const wstring& text, vector<Pair>& result_vec,
+  //          const vector<int>* pos_types = NULL)
+  //  {
+  //    Node* leaf_node;
+  //    std::tr1::unordered_map < Node*, bool> internal_nodes;
+  //    typedef std::tr1::unordered_map < Node*, bool>::iterator Iter;
+  //    for (leaf_node = _first_leafs[_current_text_id - _oldest_text_id]; leaf_node != NULL;
+  //            leaf_node = leaf_node->suffix_link)
+  //    {
+  //      for (Node* node = leaf_node->parent; node != _root; node = node->parent)
+  //      {
+  //        if (internal_nodes.find(node) == internal_nodes.end())
+  //        {
+  //          if (is_node_ok(node))
+  //          {
+  //            internal_nodes[node] = true;
+  //            break;
+  //          }
+  //        }
+  //        else
+  //        {
+  //          break;
+  //        }
+  //      }
+  //    }
+  //
+  //    for (Iter iter = internal_nodes.begin(); iter != internal_nodes.end(); ++iter)
+  //    {
+  //      Node* node = iter->first;
+  //      Node* shorter_node = node->suffix_link;
+  //
+  //      if (shorter_node != _root)
+  //      {
+  //        Iter iter = internal_nodes.find(shorter_node);
+  //        if (iter != internal_nodes.end())
+  //        {
+  //          iter->second = false;
+  //        }
+  //      }
+  //    }
+  //
+  //    for (Iter iter = internal_nodes.begin(); iter != internal_nodes.end(); ++iter)
+  //    {
+  //      if (iter->second == true)
+  //      {
+  //        Node* node = iter->first;
+  //        wstring substr = trim(text, node, pos_types);
+  //        if (substr.length() >= _min_substr_len)
+  //        {
+  //          result_vec.push_back(Pair(substr, node->freq));
+  //        }
+  //      }
+  //    }
+  //  }
+
   void find_substrs(const wstring& text, vector<Pair>& result_vec,
           const vector<int>* pos_types = NULL)
   {
     Node* leaf_node;
     std::tr1::unordered_map < Node*, bool> internal_nodes;
     typedef std::tr1::unordered_map < Node*, bool>::iterator Iter;
-    for (leaf_node = first_leafs_[current_text_id_ - oldest_text_id_]; leaf_node != NULL;
+
+    //    Pval(wstr_to_str(text));
+    //    Pval(text.length());
+    int i = 0;
+    for (leaf_node = _first_leafs[_current_text_id - _oldest_text_id]; leaf_node != NULL;
             leaf_node = leaf_node->suffix_link)
     {
-      for (Node* node = leaf_node->parent; node != root_; node = node->parent)
+//      DLOG(INFO) << "Leaf begin " << i++;
+      for (Node* node = leaf_node; node != _root; node = node->parent)
       {
         if (internal_nodes.find(node) == internal_nodes.end())
         {
+//#ifndef NDEBUG
+//          {
+//            Pval(wstr_to_str(trim(node, text)));
+//            DLOG(INFO) << "frq:" << node->freq << " length:" << node->length;
+//          }
+//#endif
           if (is_node_ok(node))
           {
             internal_nodes[node] = true;
-            break;
+            //            break;
           }
         }
         else
         {
-          break;
+          //          break;
         }
       }
     }
@@ -240,7 +354,7 @@ public:
       Node* node = iter->first;
       Node* shorter_node = node->suffix_link;
 
-      if (shorter_node != root_)
+      if (shorter_node != _root)
       {
         Iter iter = internal_nodes.find(shorter_node);
         if (iter != internal_nodes.end())
@@ -255,14 +369,15 @@ public:
       if (iter->second == true)
       {
         Node* node = iter->first;
-        wstring substr = trim(text, node, pos_types);
-        if (substr.length() >= min_substr_len_)
+        wstring substr = trim(node, text, pos_types);
+        if (substr.length() >= _min_substr_len)
         {
           result_vec.push_back(Pair(substr, node->freq));
         }
       }
     }
   }
+
 
 };
 

@@ -114,14 +114,14 @@ public:
     return gezi::filter_str(input);
   }
 
-  int black_process(const vector<INode>& ivec, vector<Node>& ovec)
+  int black_process(const vector<INode>& ivec, vector<ONode>& ovec)
   {
     int black_count = 0;
     //for (auto &item : ivec)
     for(int i = 0; i < (int)ivec.size(); i++)
     {
       const INode& item = ivec[i];
-      Node node(item.str, item.wstr, item.count);
+      ONode node(item.str, item.wstr, item.count);
       node.filtered_str = filter(node.str);
       //--------------------ºÚ´ÊÆ¥Åä
       Pval(node.str);
@@ -146,7 +146,21 @@ public:
     return black_count;
   }
 
-  void process(const vector<INode>& ivec, int max_count, vector<Node>& vec)
+  struct Cmp
+  {
+    bool operator() (const ONode& left, const ONode& right)
+    {
+      if (left.black_count == right.black_count)
+      {
+        return left.str.length() > right.str.length();
+      }
+      else
+      {
+        return left.black_count > right.black_count;
+      }
+    }
+  };
+  void process(const vector<INode>& ivec, vector<ONode>& vec, int max_count)
   {
     int black_count = black_process(ivec, vec);
 
@@ -157,23 +171,19 @@ public:
 
     if (vec.size() > max_count)
     {
-      std::partial_sort(vec.begin(), vec.begin() + max_count, vec.end(),
-              boost::bind(&Node::black_count, _1) >
-              boost::bind(&Node::black_count, _2));
+      std::partial_sort(vec.begin(), vec.begin() + max_count, vec.end(), Cmp());
       vec.resize(max_count);
     }
     else
     {
-      std::sort(vec.begin(), vec.end(),
-              boost::bind(&Node::black_count, _1) >
-              boost::bind(&Node::black_count, _2));
+      std::sort(vec.begin(), vec.end(),Cmp());
     }
 
   }
 
   //for test
 
-  void process(const vector<Pair>& ivec, int max_count, vector<Node>& vec)
+  void process(const vector<Pair>& ivec, int max_count, vector<ONode>& vec)
   {
     vector<INode> rvec;
 //    for (auto &item : ivec)
@@ -182,27 +192,9 @@ public:
       const Pair& item = ivec[i];
       rvec.push_back(INode(item.first, str_to_wstr(item.first), item.second));
     }
-    process(rvec, max_count, vec);
+    process(rvec, vec, max_count);
   }
 
-  vector<Pair> process(const vector<INode>& ivec, int max_count)
-  {
-    vector<Pair> ret;
-
-    vector<Node> vec;
-    process(ivec, max_count, vec);
-    //for (auto &item : vec)
-    for(int i = 0; i < (int)vec.size(); i++)
-    {
-      Node& item = vec[i];
-      ret.push_back(make_pair(item.str, item.count));
-    }
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
-    return std::move(ret);
-#else
-    return ret;
-#endif
-  }
 private:
   //--------------------------ºÚÃûµ¥Æ¥Åä 
   static gezi::MatchDict black_dict_;

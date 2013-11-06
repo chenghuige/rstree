@@ -106,7 +106,7 @@ public:
 
   void init()
   {
-    _root = new Node();
+    _root = new ONode();
     _root->next = new Edges;
     reset_status();
   }
@@ -511,7 +511,7 @@ protected:
           else
           { //3. 第二种叶子结点加入方式，内部边分裂，产生一个新的内部节点，并且指向新生成的叶子节点
             int remaining_len = edge_length - active_length;
-            mid_node = new Node(active_node, next_node->start, pos,
+            mid_node = new ONode(active_node, next_node->start, pos,
                     next_node->length - remaining_len, _current_text_id, next_node->freq);
             (*(active_node->next))[text[next_node->start]] = mid_node;
 
@@ -525,7 +525,7 @@ protected:
         }
         //生成新叶(内部节点插入,内部边分裂两种情形的生成新叶统一放到这里处理)
         //叶子结点始终是叶子节点结束位置问输入文本结束位置
-        Node* leaf_node = new Node(mid_node, end_idx, text_length, mid_node->length + (text_length - end_idx), _current_text_id, 1);
+        Node* leaf_node = new ONode(mid_node, end_idx, text_length, mid_node->length + (text_length - end_idx), _current_text_id, 1);
         mid_node->next->insert(Edges::value_type(text[end_idx], leaf_node));
         //对于连续生成新点的情况，创建suffix link
         if (old_node != _root)
@@ -627,7 +627,7 @@ protected:
   {
     int remaining_len = edge_length - active_length;
 
-    Node* mid_node = new Node(active_node, next_node->start, split_pos,
+    Node* mid_node = new ONode(active_node, next_node->start, split_pos,
             next_node->length - remaining_len, next_node->text_id, next_node->freq);
 
     (*(active_node->next))[first_char] = mid_node;
@@ -722,7 +722,7 @@ protected:
         {
           //生成新叶(内部节点插入,内部边分裂两种情形的生成新叶统一放到这里处理)
           //叶子节点始终会是叶子节点,所以结束位置问输入文本结束位置
-          leaf_node = new Node(mid_node, end_idx, text_length, mid_node->length + (text_length - end_idx), _current_text_id, 0);
+          leaf_node = new ONode(mid_node, end_idx, text_length, mid_node->length + (text_length - end_idx), _current_text_id, 0);
           mid_node->next->insert(Edges::value_type(text[end_idx], leaf_node));
         }
         else

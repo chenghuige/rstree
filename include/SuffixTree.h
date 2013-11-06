@@ -38,7 +38,7 @@ public:
   //测试一般用#作为结束便于显示，实际一般选用\n等作为结束符号
 
   SuffixTree(const wstring& end_mark = L"#")
-  : end_mark_(end_mark)
+  : _end_mark(end_mark)
   {
     init();
   }
@@ -91,11 +91,11 @@ public:
       freq = _freq;
     }
 
-    bool is_leaf()
+    inline bool is_leaf()
     {
       return next == NULL;
     }
-
+    
     int length; //从root到当前点的总边长
     int start; //在输入text中的起始位置
     int end; //在输入text中的pass 1 结束位置 end-start表示边的长度
@@ -110,15 +110,15 @@ public:
 
   void init()
   {
-    root_ = new Node();
-    root_->next = new Edges;
+    _root = new Node;
+    _root->next = new Edges;
     reset_status();
   }
 
   void reset_status()
   {
-    current_text_id_ = 0;
-    oldest_text_id_ = 0;
+    _current_text_id = 0;
+    _oldest_text_id = 0;
   }
 
   //清空一个后缀树保留头节点数据，数据清零，用于多次clear add操作
@@ -132,18 +132,18 @@ public:
 
   void free()
   {
-    clear(root_);
-    root_ = NULL;
+    clear(_root);
+    _root = NULL;
   }
 
   void clear()
   {
-    for (NIter iter = root_->next->begin(); iter != root_->next->end(); ++iter)
+    for (NIter iter = _root->next->begin(); iter != _root->next->end(); ++iter)
     {
       clear(iter->second);
     }
-    delete root_->next;
-    root_->next = NULL;
+    delete _root->next;
+    _root->next = NULL;
   }
 
   void clear(Node* node)
@@ -164,55 +164,53 @@ public:
 
   inline int tree_size()
   {
-    return texts_.size();
+    return _texts.size();
   }
 
 protected:
   typedef unsigned long long uint64;
-  Node* root_;
-  uint64 current_text_id_;
-  uint64 oldest_text_id_;
-  std::deque<wstring> texts_;
-  std::deque<Node*> first_leafs_;
-  wstring end_mark_;
+  Node* _root;
+  uint64 _current_text_id;
+  uint64 _oldest_text_id;
+  std::deque<wstring> _texts;
+  std::deque<Node*> _first_leafs;
+  wstring _end_mark;
 public:
 
   void build(const wstring& text)
   {
-    wstring s = text + end_mark_;
-//    boost::replace_all(s, end_mark_, L"");
-    wstr_replace_all(s, end_mark_, L"");
-    texts_.push_back(s);
+    wstring s = text + _end_mark;
+    boost::replace_all(s, _end_mark, L"");
+    _texts.push_back(s);
     build_(s);
-    current_text_id_++;
+    _current_text_id++;
   }
 
   void add(const wstring& text)
   {
     wstring s = text;
-//    boost::replace_all(s, end_mark_, L"");
-    wstr_replace_all(s, end_mark_, L"");
-    s = s + end_mark_;
-    texts_.push_back(s);
+    boost::replace_all(s, _end_mark, L"");
+    s = s + _end_mark;
+    _texts.push_back(s);
     add_(s);
-    current_text_id_++;
+    _current_text_id++;
   }
   
   //remove the oldest one
 
   void remove()
   {
-    if (texts_.size() == 0)
+    if (_texts.size() == 0)
     {
       return;
     }
 
     remove_();
 
-    texts_.pop_front();
-    first_leafs_.pop_front();
+    _texts.pop_front();
+    _first_leafs.pop_front();
 
-    oldest_text_id_++;
+    _oldest_text_id++;
   }
   
   //删除指定位置的文本 TODO 如果这样 需要将 texts_ first_leafs_存储为 map<int,..>格式方便删除任意位置
@@ -228,10 +226,10 @@ public:
     int text_length = text.length() - start;
     if (text_length <= 0)
     {
-      return root_;
+      return _root;
     }
 
-    Node* active_node = root_;
+    Node* active_node = _root;
     int cur = start;
 
     while (cur < text_length)
@@ -246,7 +244,7 @@ public:
       int j;
       for (j = cur + 1; j < end && j < text_length; j++)
       {
-        if (texts_[active_node->text_id][active_node->start + j] != text[j])
+        if (_texts[active_node->text_id][active_node->start + j] != text[j])
         {//找到不匹配
           return active_node;
         }
@@ -278,7 +276,7 @@ public:
   int find_longest(const wstring& text, int start, int & freq)
   {
     Node* node = find_longest_node(text, start);
-    if (node == root_)
+    if (node == _root)
     { //root_->freq 记录了后缀树一共有多少个叶子节点 = 总文本长度
       freq = 0;
     }
@@ -296,7 +294,7 @@ public:
       return NULL;
     }
 
-    Node* active_node = root_;
+    Node* active_node = _root;
     int cur = start;
 
     while (cur < text_length)
@@ -311,7 +309,7 @@ public:
       int j;
       for (j = cur + 1; j < end && j < text_length; j++)
       {
-        if (texts_[active_node->text_id][active_node->start + j] != text[j])
+        if (_texts[active_node->text_id][active_node->start + j] != text[j])
         {//找到不匹配
           return NULL;
         }
@@ -358,7 +356,7 @@ public:
 
   void remove_()
   {
-    for (Node* leaf_node = first_leafs_[0]; leaf_node != NULL; leaf_node = leaf_node->suffix_link)
+    for (Node* leaf_node = _first_leafs[0]; leaf_node != NULL; leaf_node = leaf_node->suffix_link)
     {
       dec_freq(leaf_node);
     }
@@ -372,12 +370,12 @@ public:
     if (node->freq == 1)
     { //需要删除叶子
       Node* active_node = node->parent;
-      wchar_t key = texts_[node->text_id - oldest_text_id_][node->start];
+      wchar_t key = _texts[node->text_id - _oldest_text_id][node->start];
       delete node;
       active_node->next->erase(key);
-      if (active_node != root_ && active_node->next->size() == 1) //root_结点不能收缩单边
+      if (active_node != _root && active_node->next->size() == 1) //root_结点不能收缩单边
       { //收缩单边情况, active_node被删除 up -- active -- low  -> up -- low
-        key = texts_[active_node->text_id - oldest_text_id_][active_node->start];
+        key = _texts[active_node->text_id - _oldest_text_id][active_node->start];
         NIter iter = active_node->next->begin();
         Node* low_node = iter->second;
         Node* up_node = active_node->parent;
@@ -412,7 +410,7 @@ protected:
   void build_(const wstring& text)
   {
     int text_length = text.length();
-    Node* active_node = root_; //active_node记录要考虑插入的节点
+    Node* active_node = _root; //active_node记录要考虑插入的节点
     Node* next_node = NULL; //由于没有显示的边数据结构，active_node -> next_node 表示当前active edge
     int active_length = 0; //相对于active_node的length
     int remainder = 1; //需要处理的后缀数目
@@ -425,7 +423,7 @@ protected:
       //只需要考虑[end_idx - remainder + 1, end_idx]..[end_idx,end_idx])
       //remainder >= 1  remainder == 1意味着active_node == root 从头开始插入
       Node* mid_node; //当前指向新建叶子节点的时候 in_node 通过边长为1的边指向该叶子节点 即分裂边上的新生节点  a -- mid_node -- b
-      Node* old_node = root_; //记录循环中前一次的in_node位置，第一次设置为root_
+      Node* old_node = _root; //记录循环中前一次的in_node位置，第一次设置为root_
       for (; remainder > 0; remainder--)
       {
         int edge_length;
@@ -489,7 +487,7 @@ protected:
           { //3. 第二种叶子结点加入方式，内部边分裂，产生一个新的内部节点，并且指向新生成的叶子节点
             int remaining_len = edge_length - active_length;
             mid_node = new Node(active_node, next_node->start, pos,
-                    next_node->length - remaining_len, current_text_id_, next_node->freq);
+                    next_node->length - remaining_len, _current_text_id, next_node->freq);
             (*(active_node->next))[text[next_node->start]] = mid_node;
 
             next_node->parent = mid_node;
@@ -501,17 +499,17 @@ protected:
           }
         }
         //生成新叶(内部节点插入,内部边分裂两种情形的生成新叶统一放到这里处理)
-        //叶子结点始终是叶子节点结束位置问输入文本结束位置
-        Node* leaf_node = new Node(mid_node, end_idx, text_length, mid_node->length + (text_length - end_idx), current_text_id_, 1);
+        //叶子结点始终是叶子节点结束位置问输入文本结束位置  
+        Node* leaf_node = new Node(mid_node, end_idx, text_length, mid_node->length + (text_length - end_idx), _current_text_id, 1);
         mid_node->next->insert(Edges::value_type(text[end_idx], leaf_node));
         //对于连续生成新点的情况，创建suffix link
-        if (old_node != root_)
+        if (old_node != _root)
         {
           old_node->suffix_link = mid_node;
         }
         old_node = mid_node;
 
-        if (active_node != root_)
+        if (active_node != _root)
         { //active_node->suffix_link == NULL 即是root
           active_node = active_node->suffix_link;
         }
@@ -535,7 +533,7 @@ protected:
       //... --ab -- d  
       //           -- d
       //因为active_length == edge_legnth 所以 active_node会继续向下走到  --d 因此 old_node->suffix_link = active_node 即可
-      if (old_node != root_)
+      if (old_node != _root)
       {
         old_node->suffix_link = active_node;
       }
@@ -621,7 +619,7 @@ protected:
   void add_(const wstring & text)
   {
     int text_length = text.length();
-    Node* active_node = root_; //active_node记录要考虑插入的节点
+    Node* active_node = _root; //active_node记录要考虑插入的节点
     Node* next_node = NULL; //由于没有显示的边数据结构，active_node -> next_node 表示当前active edge
     Node* pre_leaf = NULL;
     int active_length = 0; //相对于active_node的length
@@ -635,7 +633,7 @@ protected:
       //只需要考虑[end_idx - remainder + 1, end_idx]..[end_idx,end_idx])
       //remainder >= 1  remainder == 1意味着active_node == root 从头开始插入
       Node* mid_node; //当前指向新建叶子节点时 in_node 通过边长为1的边指向该叶子节点 即分裂边上的新生节点  a -- mid_node -- b
-      Node* old_node = root_; //记录循环中前一次的in_node位置，第一次设置为root_
+      Node* old_node = _root; //记录循环中前一次的in_node位置，第一次设置为root_
 
       for (; remainder > 0; remainder--)
       {
@@ -672,7 +670,7 @@ protected:
         {
           int test_pos = next_node->start + active_length;
 
-          wchar_t test_char = texts_[next_node->text_id - oldest_text_id_][test_pos]; //边对应的text id由 next node 决定
+          wchar_t test_char = _texts[next_node->text_id - _oldest_text_id][test_pos]; //边对应的text id由 next node 决定
 
           if (test_char == text[end_idx])
           {
@@ -688,7 +686,7 @@ protected:
           }
           else
           { //3. 第二种叶子结点加入方式，内部边分裂，产生一个新的内部节点，并且指向新生成的叶子节点
-            wchar_t first_char = texts_[next_node->text_id - oldest_text_id_][next_node->start];
+            wchar_t first_char = _texts[next_node->text_id - _oldest_text_id][next_node->start];
             mid_node = split_edge(active_node, next_node, first_char, test_char, test_pos, edge_length, active_length);
           }
         }
@@ -699,13 +697,13 @@ protected:
         {
           //生成新叶(内部节点插入,内部边分裂两种情形的生成新叶统一放到这里处理)
           //叶子节点始终会是叶子节点,所以结束位置问输入文本结束位置
-          leaf_node = new Node(mid_node, end_idx, text_length, mid_node->length + (text_length - end_idx), current_text_id_, 0);
+          leaf_node = new Node(mid_node, end_idx, text_length, mid_node->length + (text_length - end_idx), _current_text_id, 0);
           mid_node->next->insert(Edges::value_type(text[end_idx], leaf_node));
         }
         else
         {
           is_leaf_match = true;
-          leaf_node->text_id = current_text_id_; //更新节点信息为最新文本中的位置
+          leaf_node->text_id = _current_text_id; //更新节点信息为最新文本中的位置
           int edge_length = leaf_node->end - leaf_node->start;
           leaf_node->start = text_length - edge_length;
           leaf_node->end = text_length;
@@ -719,7 +717,7 @@ protected:
         }
         else
         {
-          first_leafs_.push_back(leaf_node);
+          _first_leafs.push_back(leaf_node);
         }
         pre_leaf = leaf_node;
 
@@ -728,7 +726,7 @@ protected:
         if (!is_leaf_match)
         { //注意如果是最后两个不同text 叶子匹配 这种 不要修改影响到正常的suffix link
           //对于连续生成新点的情况，创建suffix link
-          if (old_node != root_)
+          if (old_node != _root)
           {
             old_node->suffix_link = mid_node;
           }
@@ -736,14 +734,14 @@ protected:
         }
         else
         { //如果上次分裂 当前匹配到最后结束符都相同 注意suffix link要连上,再后续循环 必然都完全匹配后缀 suffix link已经配置好
-          if (old_node != root_)
+          if (old_node != _root)
           {
             old_node->suffix_link = active_node;
-            old_node = root_;
+            old_node = _root;
           }
         }
 
-        if (active_node != root_)
+        if (active_node != _root)
         { //active_node->suffix_link == NULL 即是root
           active_node = active_node->suffix_link;
         }
@@ -766,7 +764,7 @@ protected:
       //... --ab -- d  
       //           -- d
       //因为active_length == edge_legnth 所以 active_node会继续向下走到  --d 因此 old_node->suffix_link = active_node 即可
-      if (old_node != root_)
+      if (old_node != _root)
       {
         old_node->suffix_link = active_node;
       }
@@ -775,7 +773,7 @@ protected:
 
   void calc_freq()
   {
-    root_->freq = get_leaf_num(root_);
+    _root->freq = get_leaf_num(_root);
   }
 
   int get_leaf_num(Node * node)
@@ -802,10 +800,10 @@ protected:
     for (; node != NULL; node = node->parent)
     {
       node->freq++;
-      if (node->text_id != current_text_id_)
+      if (node->text_id != _current_text_id)
       { //更新边信息为新文本的索引位置
         int edge_length = node->end - node->start;
-        node->text_id = current_text_id_;
+        node->text_id = _current_text_id;
         node->end = pre_node->start;
         node->start = node->end - edge_length;
       }
@@ -820,7 +818,7 @@ public:
   void write_result(const string & file)
   {
     wofstream ofs(file.c_str());
-    write_result(root_, 0, ofs);
+    write_result(_root, 0, ofs);
     wcout << "Writed result" << endl;
   }
 
@@ -835,7 +833,7 @@ public:
     for (NIter iter = node->next->begin(); iter != node->next->end(); ++iter)
     {
       //iter->second->freq = 0;
-      wstring edge = this->texts_[iter->second->text_id - oldest_text_id_].
+      wstring edge = this->_texts[iter->second->text_id - _oldest_text_id].
               substr(iter->second->start, iter->second->end - iter->second->start);
       ofs << iter->second->text_id << " " << iter->second->start << " " << iter->second->end << " " << edge << " "
               << (!iter->second->next) << " " << iter->second->freq << "  " << depth << endl;
@@ -849,11 +847,11 @@ public:
 
   void print()
   {
-    wcout << "The string is: " << texts_[texts_.size() - 1] << endl;
-    wcout << "Current text id: " << current_text_id_ << "  Oldest text id: " << oldest_text_id_ << " texts_.size: " << texts_.size() << endl;
-    wcout << L"root_ " << root_ << endl;
+    wcout << "The string is: " << _texts[_texts.size() - 1] << endl;
+    wcout << "Current text id: " << _current_text_id << "  Oldest text id: " << _oldest_text_id << " texts_.size: " << _texts.size() << endl;
+    wcout << L"root_ " << _root << endl;
     int leaf_freq = 0;
-    print(root_, 0, leaf_freq);
+    print(_root, 0, leaf_freq);
 
     //        wcout << "The string length is " << texts_[0].length() << endl;
     wcout << "The total leaf freq is " << leaf_freq << endl;
@@ -889,7 +887,7 @@ public:
       //                wcout << iter->second->start << endl;
       //                wcout << (iter->second->end - iter->second->start) << endl;
       //                wcout << iter ->first << endl;
-      wstring edge = this->texts_[iter->second->text_id - oldest_text_id_].
+      wstring edge = this->_texts[iter->second->text_id - _oldest_text_id].
               substr(iter->second->start, iter->second->end - iter->second->start);
       wcout << "|-" << edge << "[" << iter->second->text_id << " " << iter->second->start << ":"
               << iter->second->end << "] " << " (" << iter->second->freq << " " << iter->second->length << ") "

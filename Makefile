@@ -4,13 +4,13 @@ ifeq ($(shell uname -m),x86_64)
 CC=gcc
 CXX=g++
 CXXFLAGS=-g \
-  -O2 \
+  -O3 \
   -pipe \
   -W \
   -Wall \
   -fPIC
 CFLAGS=-g \
-  -O2 \
+  -O3 \
   -pipe \
   -W \
   -Wall \
@@ -181,7 +181,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=9d5980077bb61e26b4050ca4c7cebe18  COMAKE
+COMAKE_MD5=97d08ecada30e17e9773ffc1dec40d85  COMAKE
 
 
 .PHONY:all
@@ -851,10 +851,10 @@ rstree_rstree.o:rstree.cc \
   include/post_process/RstreeFilter.h \
   include/post_process/PostAdjustor.h \
   include/RstreeWorker.h \
-  include/dsuffix_tree.h \
-  include/suffix_tree.h \
-  include/rstree_def.h \
-  include/post_process/PostProcessor.h
+  include/Rstree.h \
+  include/SuffixTree.h \
+  include/post_process/PostProcessor.h \
+  include/rstree_def.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree_rstree.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o rstree_rstree.o rstree.cc
 

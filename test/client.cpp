@@ -76,6 +76,7 @@ void *thread_nshead_simple_singletalk(void *param)
 
     mc_pack_t * req_pack = mc_pack_open_w(2, pack_buf, sizeof (pack_buf), temp_buf, sizeof (pack_buf));
     mc_pack_put_str(req_pack, "content", line.c_str());
+   
     mc_pack_put_int32(req_pack, "min_freq", min_freq);
     mc_pack_put_int32(req_pack, "min_len", min_len);
     mc_pack_put_int32(req_pack, "max_len", max_len);

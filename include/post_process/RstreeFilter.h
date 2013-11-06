@@ -133,7 +133,7 @@ public:
     return true;
   }
 
-  bool is_pass(const Node& node)
+  bool is_pass(const ONode& node)
   {
     if (is_white_format(node.str))
     {
@@ -155,13 +155,13 @@ public:
 
   //对重复串进行过滤
 
-  vector<Node > process(const vector<Node >& ivec)
+  vector<ONode > process(const vector<ONode >& ivec)
   {
-    vector<Node > ret;
+    vector<ONode > ret;
     //for (auto &item : ivec)
     for(int i = 0; i < (int)ivec.size(); i++)
     {
-      const Node& item = ivec[i];
+      const ONode& item = ivec[i];
       if (is_pass(item))
       {
         ret.push_back(item);

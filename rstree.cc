@@ -91,14 +91,17 @@ static int rstree_server_callback()
   if (ret_no != 0)
   {
     UB_LOG_WARNING("request format is wrong log id [%d]", res_head->log_id);
-    error_no = -1;
+    error_no = 3;
+    min_freq = 15;
+    min_len = 8;
+    max_len = 20;
   }
 
   mc_pack_close(req_pack);
 
   
   //-----------------------------real work here
-  vector<Pair> result_vec;
+  vector<ONode> result_vec;
   if (error_no == 0)
   {
     UB_LOG_DEBUG("logid[%d] get content[%s], min_freq %d, min_len %d, max_len %d", res_head->log_id, 
@@ -108,18 +111,22 @@ static int rstree_server_callback()
 
   char mcpack_buf[MC_PACK_BUF_SIZE];
   mc_pack_t *ret_pack = mc_pack_open_w(2, mcpack_buf, sizeof (mcpack_buf), temp_buf, sizeof (temp_buf));
-  mc_pack_t *array_pack = mc_pack_put_object(ret_pack, "substr_array");
-
+  mc_pack_t * ret_array = mc_pack_put_array(ret_pack, "substr_array");
   for (int i = 0; i < (int) result_vec.size(); i++)
   {
-    int ret_no = mc_pack_put_int32(array_pack, result_vec[i].first.c_str(), result_vec[i].second);
-    UB_LOG_TRACE("result substring[%s] freq[%d] ret_no[%d]", result_vec[i].first.c_str(), result_vec[i].second, ret_no);
-
-    if (mc_pack_get_size(ret_pack) + 50000 > (int) ub_server_get_write_size())
+    int ret_no = 0;
+    mc_pack_t * item_pack = mc_pack_put_object(ret_array, NULL);
+    ret_no |= mc_pack_put_str(item_pack, "str", result_vec[i].str.c_str());
+    ret_no |= mc_pack_put_int32(item_pack, "count", result_vec[i].count);
+    ret_no |= mc_pack_put_int32(item_pack, "black_count", result_vec[i].black_count);
+    UB_LOG_TRACE("result substring[%s] freq[%d] bcount[%d] ret_no[%d]", result_vec[i].str.c_str(), 
+            result_vec[i].count, result_vec[i].black_count, ret_no);
+     if (mc_pack_get_size(ret_pack) + 50000 > (int) ub_server_get_write_size())
     {
       break;
     }
   }
+  
 
   mc_pack_put_int32(ret_pack, "error_no", error_no);
   mc_pack_close(ret_pack);

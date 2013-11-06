@@ -46,6 +46,12 @@ struct INode
   INode()
   {
   }
+  
+  INode(string str_, int count_)
+  :str(str_), count(count_)
+  {
+    
+  }
 
   INode(string _str, wstring _wstr, int _count)
   : str(_str), wstr(_wstr), count(_count)
@@ -57,16 +63,21 @@ struct INode
   int count;
 };
 
-struct Node : public INode
+struct ONode : public INode
 {
 
-  Node()
+  ONode()
   : black_count(0)
   {
 
   }
+  ONode(string str_, int count_)
+  :INode(str_, count_)
+  {
+    
+  }
 
-  Node(string _str, wstring _wstr, int _count)
+  ONode(string _str, wstring _wstr, int _count)
   : INode(_str, _wstr, _count), black_count(0)
   {
 

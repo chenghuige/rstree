@@ -30,7 +30,9 @@ public:
   RstreeWorker()
   : _min_text_length(8),
   _max_text_length(200),
-  _max_result_count(5)
+  _max_result_count(5),
+  _use_seg(true),
+  _simple_sort(false)
   {
 
   }
@@ -58,6 +60,8 @@ public:
     SCONF(_min_text_length);
     SCONF(_max_text_length);
     SCONF(_max_result_count);
+    SCONF(_use_seg);
+    SCONF(_simple_sort);
   }
 
   /*
@@ -83,6 +87,10 @@ public:
     for (int i = 0; i < handle.nresult; i++)
     {
       int end = start + wchar_count(handle.tokens[i].buffer, handle.tokens[i].length);
+      if (end > len)
+      {
+        return false;
+      }
       if (end - start > 1)
       {
         vec[start] = LEFT;
@@ -153,7 +161,16 @@ public:
   }
   //0 
 
-  vector<Pair> get_substrs(const string& content, int min_freq, int min_len, int max_len)
+  struct Cmp
+  {
+
+    bool operator() (const ONode& left, const ONode& right)
+    {
+      return left.str.length() > right.str.length();
+    }
+  };
+
+  vector<ONode> get_substrs(const string& content, int min_freq, int min_len, int max_len)
   {
 
     _rstree.set_min_frequency(min_freq);
@@ -176,38 +193,42 @@ public:
           break;
         }
 
-        vector<int> splits;
-        //        bool sucess;
-        //        if (svec.size() == 1)
-        //        {//不需要再转换回gbk了
-        //          sucess = get_postype(content, sub_wc.size(), splits);
-        //        }
-        //        else
-        //        {
-        //          sucess = get_postype(sub_wc, splits);
-        //        }
         vector<WPair > rvec;
-        //        if (sucess)
-        //        {
-        //          rvec = _rstree.add(sub_wc, &splits);
-        //        }
-        //        else
-        //        {
-        //          LOG_WARNING("Fail in get segment split");
-        //          rvec = _rstree.add(sub_wc);
-        //        }
-
-        _rstree.add(sub_wc, rvec);
-        //        rvec = _rstree.add(sub_wc);
-        //        LOG_DEBUG("After add got %d result", (int) rvec.size());
-        //PostAdjustor::filter(rvec, _rstree.min_substr_len()); //why can core..
+        if (_use_seg)
+        {
+          vector<int> splits;
+          bool sucess;
+          if (svec.size() == 1)
+          {//不需要再转换回gbk了
+            sucess = get_postype(content, sub_wc.size(), splits);
+          }
+          else
+          {
+            sucess = get_postype(sub_wc, splits);
+          }
+          if (sucess)
+          {
+            _rstree.add(sub_wc, rvec, &splits);
+          }
+          else
+          {
+            LOG_WARNING("Fail in get segment split");
+            _rstree.add(sub_wc, rvec);
+          }
+        }
+        else
+        {
+          _rstree.add(sub_wc, rvec);
+        }
+        LOG_DEBUG("After add got %d result", (int) rvec.size());
+        PostAdjustor::filter(rvec, _rstree.min_substr_len());
         map<wstring, int> t_ret_map(rvec.begin(), rvec.end());
 
         //        map<wstring, int> t_ret_map;
         //        _rstree.add_text(sub_wc, t_ret_map);
-        //        if(_rstree.get_tree_size() >= _rstree.get_max_tree_size())
-        //				{
-        //					_rstree.remove_text();
+        //        if (_rstree.get_tree_size() >= _rstree.get_max_tree_size())
+        //        {
+        //          _rstree.remove_text();
         //        }
         merge_map(ret_map, t_ret_map);
       }
@@ -225,7 +246,28 @@ public:
     }
 
     //-----------------post black white deal filter and sort choose top max_result_count
-    vector<Pair> result_vec = _post_processor.process(vec, _max_result_count);
+    vector<ONode> result_vec;
+    if (!_simple_sort)
+    {
+      _post_processor.process(vec, result_vec, _max_result_count);
+    }
+    else
+    {
+      for (int i = 0; i < (int)vec.size(); i++)
+      {
+        result_vec.push_back(ONode(vec[i].str, vec[i].count));
+      }
+      if (result_vec.size() <= _max_result_count)
+      {
+        std::sort(result_vec.begin(),result_vec.end(), Cmp());
+      }
+      else
+      {
+        std::partial_sort(result_vec.begin(), result_vec.begin() + _max_result_count,
+                result_vec.end(), Cmp());
+        result_vec.resize(_max_result_count);
+      }
+    }
 
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
     return std::move(result_vec);
@@ -243,6 +285,8 @@ private:
   int _min_text_length;
   int _max_text_length;
   int _max_result_count;
+  bool _use_seg;
+  bool _simple_sort;
 
   Rstree _rstree;
   //  DSuffixTree _rstree;
