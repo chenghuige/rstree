@@ -67,7 +67,7 @@ INCPATHS('./include ./include/post_process')
 srcs=GLOB('./src/*.cpp','./src/post_process/*.cpp')
 
 #可执行文件
-Application('rstree',Sources('rstree.cc',srcs), OutputPath('./bin'))
+Application('rstree',Sources('rstree.cc',srcs))
 Application('test_filter',Sources('test/test_filter.cc',srcs), OutputPath('./bin'))
 Application('test_post_processor',Sources('test/test_post_processor.cc',srcs), OutputPath('./bin'))
 Application('test_seg',Sources('test/test_seg.cc', srcs), OutputPath('./bin'))

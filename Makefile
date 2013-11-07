@@ -181,7 +181,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=97d08ecada30e17e9773ffc1dec40d85  COMAKE
+COMAKE_MD5=4e925e57b46f55543ec8e78a0c809f59  COMAKE
 
 
 .PHONY:all
@@ -206,7 +206,7 @@ ccpclean:
 clean:ccpclean
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mclean[0m']"
 	rm -rf rstree
-	rm -rf ./bin/rstree
+	rm -rf ./output/bin/rstree
 	rm -rf test_filter
 	rm -rf ./bin/test_filter
 	rm -rf test_post_processor
@@ -368,8 +368,8 @@ rstree:rstree_rstree.o \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
   -lcrypto \
   -lrt -Xlinker "-)" -o rstree
-	mkdir -p ./bin
-	cp -f --link rstree ./bin
+	mkdir -p ./output/bin
+	cp -f --link rstree ./output/bin
 
 test_filter:test/test_filter_test_filter.o \
   src/test_filter_conf.o \
