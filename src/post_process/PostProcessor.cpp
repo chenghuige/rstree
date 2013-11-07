@@ -1,3 +1,3 @@
 #include "PostProcessor.h"
-MatchDict PostProcessor::black_dict_;
+MatchDict PostProcessor::_black_dict;
 

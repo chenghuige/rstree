@@ -37,7 +37,7 @@ class RstreeFilter
 public:
 
   RstreeFilter()
-  : distinct_ratio_(0.4)
+  : _distinct_ratio(0.4)
   {
 
   }
@@ -50,16 +50,16 @@ public:
   {
     comcfg::Configure& conf = SharedConf::get_conf();
     string section = "RstreeFilter";
-    CONF(distinct_ratio_);
+    CONF(_distinct_ratio);
     {
       string white_file = "./data/white.dm";
       CONF(white_file);
-      white_dict_.init(white_file);
+      _white_dict.init(white_file);
     }
     {
       string white_pattern_file = "./data/white.pattern.txt";
       CONF(white_pattern_file);
-      white_reg_searcher_.init2(white_pattern_file);
+      _white_reg_searcher.init2(white_pattern_file);
     }
   }
 
@@ -95,7 +95,7 @@ public:
     //    
     //    Pval((mi / max_mi));
 
-    if (ratio < distinct_ratio_)
+    if (ratio < _distinct_ratio)
     {
       return true;
     }
@@ -104,13 +104,13 @@ public:
 
   bool contains_white_phrase(const string& input)
   {
-    return white_dict_.has_word(input);
+    return _white_dict.has_word(input);
   }
 
   template<typename String>
   bool contains_white_pattern(const String& input)
   {
-    return white_reg_searcher_.has_match(input);
+    return _white_reg_searcher.has_match(input);
   }
 
   bool is_pass(const string& input)
@@ -177,9 +177,9 @@ public:
   }
 
 private:
-  double distinct_ratio_;
-  static gezi::MatchDict white_dict_;
-  RegexSearcher white_reg_searcher_;
+  double _distinct_ratio;
+  static gezi::MatchDict _white_dict;
+  RegexSearcher _white_reg_searcher;
 };
 
 #endif  //----end of RSTREE_FILTER_H_

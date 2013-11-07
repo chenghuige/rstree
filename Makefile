@@ -853,8 +853,8 @@ rstree_rstree.o:rstree.cc \
   include/RstreeWorker.h \
   include/Rstree.h \
   include/SuffixTree.h \
-  include/post_process/PostProcessor.h \
-  include/rstree_def.h
+  include/rstree_def.h \
+  include/post_process/PostProcessor.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree_rstree.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o rstree_rstree.o rstree.cc
 
@@ -948,7 +948,10 @@ src/post_process/test_seg_RstreeFilter.o:src/post_process/RstreeFilter.cpp \
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/test_seg_RstreeFilter.o src/post_process/RstreeFilter.cpp
 
 test/test_suffixtree_test_suffixtree.o:test/test_suffixtree.cc \
-  include/SuffixTree.h
+  include/SuffixTree.h \
+  include/Rstree.h \
+  include/SuffixTree.h \
+  include/rstree_def.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest/test_suffixtree_test_suffixtree.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o test/test_suffixtree_test_suffixtree.o test/test_suffixtree.cc
 

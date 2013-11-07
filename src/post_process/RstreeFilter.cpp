@@ -1,4 +1,4 @@
 #include "RstreeFilter.h"
 
-MatchDict RstreeFilter::white_dict_;
+MatchDict RstreeFilter::_white_dict;
 

@@ -130,8 +130,6 @@ public:
   void add(const wstring& text, vector<Pair>& result_vec, const vector<int>* pos_types = NULL)
   {
     wstring s = text;
-    boost::trim(s);
-    //    boost::replace_all(s, _end_mark, L"");  //转string之前已经去掉换行
     s = s + _end_mark;
     _texts.push_back(s);
     add_(s);
@@ -176,6 +174,10 @@ public:
   {
     if (node->next == NULL)
     { //叶子节点
+      if (node->end - node->start == 1)
+      {//只有末尾填充字符的情况
+        return false;
+      }
       return node->freq >= _min_frequency
               && node->length >= _min_substr_len + 1
               && node->length <= _max_substr_len + 1;
@@ -192,10 +194,17 @@ public:
   {
     if (node->next == NULL)
     {
+
       if (node->length <= _min_substr_len + 1)
       {
         need_up = false;
       }
+
+      if (node->end - node->start == 1)
+      {//只有末尾填充字符的情况
+        return false;
+      }
+
       return node->freq >= _min_frequency
               && node->length >= _min_substr_len + 1
               && node->length <= _max_substr_len + 1;
@@ -212,9 +221,65 @@ public:
     }
   }
 
+  inline wstring trim(const wstring& text, const vector<int>& splits, int start, int end)
+  {
+    if (start == 0)
+    {
+      for (int i = 0; start < end && splits[start] == SINGLE && i < 3; i++)
+      {
+        start++;
+      }
+    }
+    while (start < end && splits[start] != LEFT && splits[start] != SINGLE)
+    {
+      start++;
+    }
+    if (end == (text.length() - 1))
+    {
+      for (int i = 0; start < end && splits[end - 1] == SINGLE && i < 3; i++)
+      {
+        end--;
+      }
+    }
+    while (start < end && splits[end - 1] != RIGHT && splits[end - 1] != SINGLE)
+    {
+      end--;
+    }
+    if (start < end)
+    {
+      return text.substr(start, end - start);
+    }
+    else
+    {
+      return L"";
+    }
+  }
+
   inline wstring trim(const Node* node, const wstring& text, const vector<int>* pos_types = NULL)
   {
-    if (!pos_types)
+    if (pos_types)
+    {
+      int start = node->end - node->length;
+      int end = node->next == NULL ? node->end - 1 : node->end;
+      const vector<int>& vec = *pos_types;
+      wstring ret = trim(text, vec, start, end);
+      if (ret.empty())
+      {
+        LOG_WARNING("Trim with seg fail");
+        if (node->next == NULL)
+        {
+          return text.substr(node->end - node->length,
+                  node->length - 1);
+        }
+        else
+        {
+          return text.substr(node->end - node->length,
+                  node->length);
+        }
+      }
+      return ret;
+    }
+    else
     {
       if (node->next == NULL)
       {
@@ -227,90 +292,11 @@ public:
                 node->length);
       }
     }
-    else
-    {
-      int start = node->end - node->length;
-      int end = node->next == NULL ? node->end - 1 : node->end;
-      const vector<int>& vec = *pos_types;
-      while (start < end && vec[start] != LEFT && vec[start] != SINGLE)
-      {
-        start++;
-      }
-      while (start < end && vec[end - 1] != RIGHT && vec[end - 1] != SINGLE)
-      {
-        end--;
-      }
-      if (start < end)
-      {
-        return text.substr(start, end - start);
-      }
-      else
-      {
-        LOG_WARNING("Trim with seg fail");
-        return text.substr(node->end - node->length,
-                node->length);
-      }
-    }
   }
 
   //满足长度 频次要求 情况下 长度优先   长度要求包括最长限制
   //极端情况下 限制长度不超过某个阈值 选取 可能会取不到 比如abcdefghigk...重复n次 但是大语料中概率极小
   //如果不限制最长 最后再截取  可能无法截取到黑词部分的串 综合权衡 采用下面策略
-
-  //  void find_substrs(const wstring& text, vector<Pair>& result_vec,
-  //          const vector<int>* pos_types = NULL)
-  //  {
-  //    Node* leaf_node;
-  //    std::tr1::unordered_map < Node*, bool> internal_nodes;
-  //    typedef std::tr1::unordered_map < Node*, bool>::iterator Iter;
-  //    for (leaf_node = _first_leafs[_current_text_id - _oldest_text_id]; leaf_node != NULL;
-  //            leaf_node = leaf_node->suffix_link)
-  //    {
-  //      for (Node* node = leaf_node->parent; node != _root; node = node->parent)
-  //      {
-  //        if (internal_nodes.find(node) == internal_nodes.end())
-  //        {
-  //          if (is_node_ok(node))
-  //          {
-  //            internal_nodes[node] = true;
-  //            break;
-  //          }
-  //        }
-  //        else
-  //        {
-  //          break;
-  //        }
-  //      }
-  //    }
-  //
-  //    for (Iter iter = internal_nodes.begin(); iter != internal_nodes.end(); ++iter)
-  //    {
-  //      Node* node = iter->first;
-  //      Node* shorter_node = node->suffix_link;
-  //
-  //      if (shorter_node != _root)
-  //      {
-  //        Iter iter = internal_nodes.find(shorter_node);
-  //        if (iter != internal_nodes.end())
-  //        {
-  //          iter->second = false;
-  //        }
-  //      }
-  //    }
-  //
-  //    for (Iter iter = internal_nodes.begin(); iter != internal_nodes.end(); ++iter)
-  //    {
-  //      if (iter->second == true)
-  //      {
-  //        Node* node = iter->first;
-  //        wstring substr = trim(text, node, pos_types);
-  //        if (substr.length() >= _min_substr_len)
-  //        {
-  //          result_vec.push_back(Pair(substr, node->freq));
-  //        }
-  //      }
-  //    }
-  //  }
 
   void find_substrs(const wstring& text, vector<Pair>& result_vec,
           const vector<int>* pos_types = NULL)
@@ -319,47 +305,31 @@ public:
     std::tr1::unordered_map < Node*, bool> internal_nodes;
     typedef std::tr1::unordered_map < Node*, bool>::iterator Iter;
 
-    //    Pval(wstr_to_str(text));
-    //    Pval(text.length());
-    int i = 0;
-    for (leaf_node = _first_leafs[_current_text_id - _oldest_text_id]; leaf_node != NULL;
-            leaf_node = leaf_node->suffix_link)
+    int idx = _current_text_id - _oldest_text_id;
+    for (leaf_node = _first_leafs[idx]; leaf_node != NULL; leaf_node = leaf_node->suffix_link)
     {
-//      DLOG(INFO) << "Leaf begin " << i++;
+      bool need_up = true;
       for (Node* node = leaf_node; node != _root; node = node->parent)
       {
         if (internal_nodes.find(node) == internal_nodes.end())
         {
-//#ifndef NDEBUG
-//          {
-//            Pval(wstr_to_str(trim(node, text)));
-//            DLOG(INFO) << "frq:" << node->freq << " length:" << node->length;
-//          }
-//#endif
-          if (is_node_ok(node))
+          if (is_node_ok(node, need_up))
           {
             internal_nodes[node] = true;
-            //            break;
+            internal_nodes[node->suffix_link] = false;
+            break;
+          }
+          else if (!need_up)
+          {
+            internal_nodes[node] = false;
+            internal_nodes[node->suffix_link] = false;
+            break;
           }
         }
         else
         {
-          //          break;
-        }
-      }
-    }
-
-    for (Iter iter = internal_nodes.begin(); iter != internal_nodes.end(); ++iter)
-    {
-      Node* node = iter->first;
-      Node* shorter_node = node->suffix_link;
-
-      if (shorter_node != _root)
-      {
-        Iter iter = internal_nodes.find(shorter_node);
-        if (iter != internal_nodes.end())
-        {
-          iter->second = false;
+          internal_nodes[node->suffix_link] = false;
+          break;
         }
       }
     }
@@ -376,6 +346,8 @@ public:
         }
       }
     }
+
+
   }
 
 

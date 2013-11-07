@@ -95,7 +95,7 @@ public:
     {
       return next == NULL;
     }
-    
+
     int length; //从root到当前点的总边长
     int start; //在输入text中的起始位置
     int end; //在输入text中的pass 1 结束位置 end-start表示边的长度
@@ -162,6 +162,11 @@ public:
     }
   }
 
+  inline wstring& end_mark()
+  {
+    return _end_mark;
+  }
+
   inline int tree_size()
   {
     return _texts.size();
@@ -195,7 +200,7 @@ public:
     add_(s);
     _current_text_id++;
   }
-  
+
   //remove the oldest one
 
   void remove()
@@ -212,11 +217,12 @@ public:
 
     _oldest_text_id++;
   }
-  
+
   //删除指定位置的文本 TODO 如果这样 需要将 texts_ first_leafs_存储为 map<int,..>格式方便删除任意位置
+
   void remove(int id)
   {
-    
+
   }
 
   //查找从一个字符串指定位置(start)开始 在后缀树中最长匹配的串
@@ -306,10 +312,10 @@ public:
       }
       active_node = iter->second;
       int end = cur + (active_node->end - active_node->start);
-      int j;
-      for (j = cur + 1; j < end && j < text_length; j++)
+      int j, idx = 1;
+      for (j = cur + 1; j < end && j < text_length; j++, idx++)
       {
-        if (_texts[active_node->text_id][active_node->start + j] != text[j])
+        if (_texts[active_node->text_id][active_node->start + idx] != text[j])
         {//找到不匹配
           return NULL;
         }
@@ -810,7 +816,7 @@ protected:
       pre_node = node;
     }
   }
-  
+
 public:
   //假设使用map作为边 顺序输出遍历的各个节点 (text_id, start point, end point, edge length node freq, node depth)
   //输出到文本 方便对比测试是否结果正确
@@ -894,7 +900,7 @@ public:
               << iter->second << "->" << iter->second->suffix_link
               //                    << " " << (iter->second->next == NULL) 
               << endl;
-      
+
       //              wcout << "|-"  << " "<< "[" << iter->second->id << " " << iter->second->start << ":"
       //                    << iter->second->end << "] " << iter->second << "->" << iter->second->suffix_link
       //                    << " " << (iter->second->next==NULL) << endl;

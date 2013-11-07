@@ -19,7 +19,7 @@
 #include "word_seg.h"
 #include "all_util.h"
 #include "rstree_def.h"
-
+#include "hashmap_util.h"
 namespace gezi
 {
 
@@ -37,6 +37,20 @@ public:
 
   }
 
+private:
+  int _min_text_length;
+  int _max_text_length;
+  int _max_result_count;
+  bool _use_seg;
+  bool _simple_sort;
+  static const int MAX_SEG_BUFSIZE = 15000;
+
+  Rstree _rstree;
+  PostProcessor _post_processor;
+  SegHandle _seg_handle;
+
+public:
+
   static void init_static()
   {
     setlocale(LC_ALL, LOCALE);
@@ -46,7 +60,6 @@ public:
     string seg_data_dir = "./data/wordseg";
     string section = "";
     SCONF(seg_data_dir);
-    //  Seg::instance()->init(seg_data_dir);
     seg_init(seg_data_dir);
   }
 
@@ -54,7 +67,7 @@ public:
   {
     _rstree.init();
     _post_processor.init();
-    _seg_handle.init();
+    _seg_handle.init(MAX_SEG_BUFSIZE); //
 
     string section = "RstreeWorker";
     SCONF(_min_text_length);
@@ -68,11 +81,11 @@ public:
    * @brief: 合并map，将m2中的key-value对合并入m1，当m2中不包含这个key，或者对应的value值比m1中的大时
    *
    */
-  void merge_map(map<wstring, int> & m1, const map<wstring, int> & m2)
+  void merge_map(std::tr1::unordered_map<wstring, int> & m1, const std::tr1::unordered_map<wstring, int> & m2)
   {
-    for (map<wstring, int>::const_iterator iter = m2.begin(); iter != m2.end(); ++iter)
+    for (std::tr1::unordered_map<wstring, int>::const_iterator iter = m2.begin(); iter != m2.end(); ++iter)
     {
-      map<wstring, int>::iterator iter1 = m1.find(iter->first);
+      std::tr1::unordered_map<wstring, int>::iterator iter1 = m1.find(iter->first);
       if (iter1 == m1.end() || iter1->second < iter->second)
       {
         m1[iter->first] = iter->second;
@@ -108,6 +121,7 @@ public:
     }
     else
     {
+      vec.clear();
       return false;
     }
   }
@@ -120,28 +134,6 @@ public:
       cout << handle.tokens[i].buffer << " " << handle.tokens[i].length << endl;
     }
     cout << std::endl;
-  }
-
-  bool get_postype(const wstring& sub_wc, vector<int>& splits)
-  {
-    string sub_c = wstr_to_str(sub_wc);
-    if (sub_c.empty())
-    {
-      LOG_WARNING("Get postype to wstr to str fail");
-      return false;
-    }
-    bool ret = segment(sub_c, _seg_handle);
-    if (!ret)
-    {
-      LOG_WARNING("Seg fail %s", sub_c.c_str());
-      return false;
-    }
-    ret = get_postype(_seg_handle, sub_wc.size(), splits);
-    if (!ret)
-    {
-      LOG_WARNING("getpos fail for %s %d", sub_c.c_str(), sub_wc.size());
-    }
-    return ret;
   }
 
   bool get_postype(const string& sub_c, int len, vector<int>& splits)
@@ -159,7 +151,6 @@ public:
     }
     return ret;
   }
-  //0 
 
   struct Cmp
   {
@@ -172,94 +163,97 @@ public:
 
   vector<ONode> get_substrs(const string& content, int min_freq, int min_len, int max_len)
   {
-
     _rstree.set_min_frequency(min_freq);
     _rstree.set_min_substr_len(min_len);
     _rstree.set_max_substr_len(max_len);
 
     wstring wc = str_to_wstr(content);
-    map<wstring, int> ret_map;
-    if ((int) wc.size() >= _min_text_length)
+    vector<ONode> result_vec;
+    if ((int) wc.size() < _min_text_length)
     {
-      vector<wstring> svec = cut_wstring(wc, _max_text_length, max_len);
+      return result_vec;
+    }
 
-      LOG_DEBUG("Cut to %d parts", (int) svec.size());
-      //for (auto &sub_wc : svec)
-      for (int i = 0; i < (int) svec.size(); i++)
+    std::tr1::unordered_map<wstring, int> ret_map;
+    vector<wstring> svec = cut_wstring(wc, _max_text_length, max_len + 1);
+
+    vector<string> subc_vec;
+    vector<vector<int> > splits_vec;
+    LOG_DEBUG("Cut to %d parts", (int) svec.size());
+    //for (auto &sub_wc : svec)
+    for (int i = 0; i < (int) svec.size(); i++)
+    {
+      wstring& sub_wc = svec[i];
+
+      boost::trim(sub_wc);
+      boost::replace_all(sub_wc, _rstree.end_mark(), L""); //转string之前已经去掉换行
+
+      if ((int) sub_wc.size() < _min_text_length)
       {
-        wstring& sub_wc = svec[i];
-        if ((int) sub_wc.size() < _min_text_length)
-        {
-          break;
-        }
+        break;
+      }
 
-        vector<WPair > rvec;
-        if (_use_seg)
+      string sub_c = svec.size() == 1 ? content : wstr_to_str(sub_wc);
+
+      if (sub_c.empty())
+      {
+        continue;
+      }
+
+      vector<WPair > rvec;
+      vector<int> splits;
+      if (_use_seg)
+      {
+        bool sucess = get_postype(sub_c, sub_wc.size(), splits);
+        if (sucess)
         {
-          vector<int> splits;
-          bool sucess;
-          if (svec.size() == 1)
-          {//不需要再转换回gbk了
-            sucess = get_postype(content, sub_wc.size(), splits);
-          }
-          else
-          {
-            sucess = get_postype(sub_wc, splits);
-          }
-          if (sucess)
-          {
-            _rstree.add(sub_wc, rvec, &splits);
-          }
-          else
-          {
-            LOG_WARNING("Fail in get segment split");
-            _rstree.add(sub_wc, rvec);
-          }
+          _rstree.add(sub_wc, rvec, &splits);
         }
         else
         {
+          LOG_WARNING("Fail in get segment split");
           _rstree.add(sub_wc, rvec);
         }
-        LOG_DEBUG("After add got %d result", (int) rvec.size());
-        PostAdjustor::filter(rvec, _rstree.min_substr_len());
-        map<wstring, int> t_ret_map(rvec.begin(), rvec.end());
-
-        //        map<wstring, int> t_ret_map;
-        //        _rstree.add_text(sub_wc, t_ret_map);
-        //        if (_rstree.get_tree_size() >= _rstree.get_max_tree_size())
-        //        {
-        //          _rstree.remove_text();
-        //        }
-        merge_map(ret_map, t_ret_map);
       }
+      else
+      {
+        _rstree.add(sub_wc, rvec);
+      }
+      LOG_DEBUG("After add got %d result", (int) rvec.size());
+      PostAdjustor::filter(rvec, _rstree.min_substr_len());
+      std::tr1::unordered_map<wstring, int> t_ret_map(rvec.begin(), rvec.end());
+      merge_map(ret_map, t_ret_map);
+
+      subc_vec.push_back(sub_c);
+      splits_vec.push_back(splits);
     }
 
     //-----------------post deal trim filter
-    vector <INode> vec;
-    for (map<wstring, int>::iterator iter = ret_map.begin(); iter != ret_map.end(); ++iter)
+    vector<INode> ivec;
+    for (std::tr1::unordered_map<wstring, int>::iterator iter = ret_map.begin(); iter != ret_map.end(); ++iter)
     {
       string substr = wstr_to_str(iter->first);
       if (!substr.empty())
       {
-        vec.push_back(INode(substr, iter->first, iter->second));
+        ivec.push_back(INode(substr, iter->first, iter->second));
       }
     }
 
     //-----------------post black white deal filter and sort choose top max_result_count
-    vector<ONode> result_vec;
+
     if (!_simple_sort)
     {
-      _post_processor.process(vec, result_vec, _max_result_count);
+      _post_processor.process(ivec, result_vec, _max_result_count);
     }
     else
     {
-      for (int i = 0; i < (int)vec.size(); i++)
+      for (int i = 0; i < (int) ivec.size(); i++)
       {
-        result_vec.push_back(ONode(vec[i].str, vec[i].count));
+        result_vec.push_back(ONode(ivec[i].str, ivec[i].count));
       }
       if (result_vec.size() <= _max_result_count)
       {
-        std::sort(result_vec.begin(),result_vec.end(), Cmp());
+        std::sort(result_vec.begin(), result_vec.end(), Cmp());
       }
       else
       {
@@ -268,6 +262,87 @@ public:
         result_vec.resize(_max_result_count);
       }
     }
+
+//    //当前采用最简单补充策略 尝试补充一个黑载体匹配的串
+//    //当返回结果为空 或者不为空 但是第一个black_count == 0的时候 
+//    //对整个文本 content 查询黑载体 并且对于第一个匹配位置 前后扩展 凑成一个长度约为max_len的串 
+//    //转成wstring 去后缀树查询频次 如果满足最低频次 就替换掉result_vec最后一个 然后和第一个交换
+//    if (result_vec.size() == 0 || result_vec[0].black_count == 0)
+//      //    if (result_vec.size() == 0 || result_vec[result_vec.size() - 1].black_count == 0)
+//    {
+//      for (int i = 0; i < (int) subc_vec.size(); i++)
+//      {
+//        if (svec[i].length() > max_len)
+//        {
+//          string spam = _post_processor.get_spam(subc_vec[i]);
+//          if (spam.empty())
+//          {
+//            continue;
+//          }
+//          wstring wspam = str_to_wstr(spam);
+//          if (wspam.empty())
+//          {
+//            continue;
+//          }
+//          size_t idx = svec[i].find(wspam);
+//          if (idx == wstring::npos)
+//          {
+//            continue;
+//          }
+//          int start = idx;
+//          if (start >= 4 && wspam.length() + 4 <= max_len)
+//          {
+//            start -= 4;
+//          }
+//          int end = idx + wspam.length();
+//          if (splits_vec[i].size() == svec[i].length())
+//          {
+//            while (start > 0 && splits_vec[i][start] != LEFT && splits_vec[i][start] != SINGLE)
+//            {
+//              start--;
+//            }
+//          }
+//
+//          while (end < svec[i].length() && end - start < max_len)
+//          {
+//            end++;
+//          }
+//
+//          if (splits_vec[i].size() == svec[i].length())
+//          {
+//            while (end > start && splits_vec[i][end - 1] != RIGHT && splits_vec[i][end - 1] != SINGLE)
+//            {
+//              end--;
+//            }
+//          }
+//
+//          int len = end - start;
+//          if (len >= min_len && len <= max_len)
+//          {
+//            wstring spam_phrase = svec[i].substr(start, len);
+//            int freq = _rstree.find_freq(spam_phrase);
+//            if (freq >= min_freq)
+//            {
+//              ONode node;
+//              node.count = freq;
+//              node.wstr = spam_phrase;
+//              node.str = wstr_to_str(spam_phrase);
+//              node.black_count = 1;
+//              if (!node.str.empty())
+//              {
+//                DLOG(INFO) << "Add spam candiate " << node.str;
+//                Pval(content);
+//                ONode temp = result_vec[0];
+//                result_vec[0] = node;
+//                result_vec[result_vec.size() - 1] = temp;
+//                break;
+//              }
+//            }
+//          }
+//        }
+//      }
+//    }
+
 
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
     return std::move(result_vec);
@@ -281,17 +356,6 @@ public:
     return _rstree.tree_size();
   }
 
-private:
-  int _min_text_length;
-  int _max_text_length;
-  int _max_result_count;
-  bool _use_seg;
-  bool _simple_sort;
-
-  Rstree _rstree;
-  //  DSuffixTree _rstree;
-  PostProcessor _post_processor;
-  SegHandle _seg_handle;
 };
 
 } //----end of namespace gezi

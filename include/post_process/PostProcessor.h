@@ -57,16 +57,16 @@ class PostProcessor
 public:
 
   PostProcessor()
-  : max_match_count_(1000)
+  : _max_match_count(1000)
   {
 
   }
 
   virtual ~PostProcessor()
   {
-    if (result_)
+    if (_result)
     {
-      dm_pack_del(result_);
+      dm_pack_del(_result);
     }
   }
 
@@ -77,32 +77,34 @@ public:
 
   //如果是同一个类 多个线程只读 如果内存占用不大 就是成员变量 如果内存占用大 就用static init_static,如果是多个类都需要访问的
   //用指针 或者 全局 或者 单例子
+
   static bool init_static()
   {
     return init_static(SharedConf::conf());
   }
   //进程加载公共资源  TODO多线程环境需要2个init分开 init 线程级别 init_dict(or init_static()) 进程级别
+
   static bool init_static(comcfg::Configure& conf, string section = "PostProcessor")
   {
     string black_file = "./data/black.dm";
     CONF(black_file);
-    black_dict_.init(black_file);
+    _black_dict.init(black_file);
   }
 
   bool init(comcfg::Configure& conf, string section = "PostProcessor")
   {
     {
-      CONF(max_match_count_);
-      result_ = dm_pack_create(max_match_count_);
-      CHECK_NOTNULL(result_);
+      CONF(_max_match_count);
+      _result = dm_pack_create(_max_match_count);
+      CHECK_NOTNULL(_result);
     }
     {
       string black_pattern_file = "./data/black.pattern.txt";
       CONF(black_pattern_file);
-      black_reg_searcher_.init2(black_pattern_file);
+      _black_reg_searcher.init2(black_pattern_file);
     }
     {
-      white_filter_.init();
+      _white_filter.init();
     }
 
     return true;
@@ -118,19 +120,27 @@ public:
   {
     int black_count = 0;
     //for (auto &item : ivec)
-    for(int i = 0; i < (int)ivec.size(); i++)
+    for (int i = 0; i < (int) ivec.size(); i++)
     {
       const INode& item = ivec[i];
       ONode node(item.str, item.wstr, item.count);
       node.filtered_str = filter(node.str);
       //--------------------黑词匹配
-      Pval(node.str);
-      Pval(node.filtered_str);
-      node.black_count = black_dict_.search_count(node.filtered_str, result_);
-      Pval(node.black_count);
+      //      Pval(node.str);
+      //      Pval(node.filtered_str);
+      node.black_count = _black_dict.search_count(node.filtered_str, _result);
+      //      Pval(node.black_count);
+//      if (node.black_count > 0)
+//      {
+//        Pval(node.str);
+//        Pval(_result->ppseg_cnt);
+//        Pval(_result->poff[0]);
+//        Pval(_result->ppseg[0]->len);
+//        Pval(_result->ppseg[0]->pstr);
+//      }
 
       //--------------------黑模版匹配
-      if (black_reg_searcher_.has_match(node.wstr))
+      if (_black_reg_searcher.has_match(node.wstr))
       {
         node.black_count++;
       }
@@ -140,7 +150,7 @@ public:
         black_count++;
       }
 
-      Pval(node.black_count);
+      //      Pval(node.black_count);
       ovec.push_back(node);
     }
     return black_count;
@@ -148,11 +158,33 @@ public:
 
   struct Cmp
   {
+
     bool operator() (const ONode& left, const ONode& right)
     {
       if (left.black_count == right.black_count)
       {
-        return left.str.length() > right.str.length();
+        if (left.str.length() >= MIN_GOOD_LENGTH && right.str.length() >= MIN_GOOD_LENGTH)
+        {
+          if (left.count == right.count)
+          {
+            return left.str.length() > right.str.length();
+          }
+          else
+          {
+            return left.count > right.count;
+          }
+        }
+        else
+        {
+          if (left.str.length() == right.str.length())
+          {
+            return left.count > right.count;
+          }
+          else
+          {
+            return left.str.length() > right.str.length();
+          }
+        }
       }
       else
       {
@@ -160,13 +192,14 @@ public:
       }
     }
   };
+
   void process(const vector<INode>& ivec, vector<ONode>& vec, int max_count)
   {
     int black_count = black_process(ivec, vec);
 
     if (black_count < max_count)
     {
-      vec = white_filter_.process(vec);
+      vec = _white_filter.process(vec);
     }
 
     if (vec.size() > max_count)
@@ -176,7 +209,7 @@ public:
     }
     else
     {
-      std::sort(vec.begin(), vec.end(),Cmp());
+      std::sort(vec.begin(), vec.end(), Cmp());
     }
 
   }
@@ -186,8 +219,8 @@ public:
   void process(const vector<Pair>& ivec, int max_count, vector<ONode>& vec)
   {
     vector<INode> rvec;
-//    for (auto &item : ivec)
-    for(int i = 0; i < (int)ivec.size(); i++)
+    //    for (auto &item : ivec)
+    for (int i = 0; i < (int) ivec.size(); i++)
     {
       const Pair& item = ivec[i];
       rvec.push_back(INode(item.first, str_to_wstr(item.first), item.second));
@@ -195,15 +228,38 @@ public:
     process(rvec, vec, max_count);
   }
 
+  //获取第一个spam
+  string get_spam(const string&input)
+  {
+    int count = _black_dict.search_count(input, _result);
+    if (count > 0)
+    {
+      return _result->ppseg[0]->pstr;
+    }
+    
+    return "";
+  }
+  
+////  //获取覆盖最多spam的区间对应的string
+// string get_spampart(const string& input, int max_length)
+// {
+//   
+// }
+
+  static gezi::MatchDict& black_dict()
+  {
+    return _black_dict;
+  }
 private:
   //--------------------------黑名单匹配 
-  static gezi::MatchDict black_dict_;
-  dm_pack_t* result_;
-  int max_match_count_; //最多可能匹配的个数
+  static gezi::MatchDict _black_dict;
+  dm_pack_t* _result;
+  int _max_match_count; //最多可能匹配的个数
   //--------------------------黑模式匹配
-  RegexSearcher black_reg_searcher_;
+  RegexSearcher _black_reg_searcher;
   //--------------------------黑未匹配的情况下 匹配白名单或者白模式豁免过滤
-  RstreeFilter white_filter_;
+  RstreeFilter _white_filter;
+  static const int MIN_GOOD_LENGTH = 16;
 };
 
 
