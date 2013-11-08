@@ -135,7 +135,7 @@ public:
 
   bool is_pass(const ONode& node)
   {
-    if (is_white_format(node.str))
+    if (is_white_format(node.filtered_str))
     {
       DLOG(INFO) << "Is white format: " << node.str;
       return false;
