@@ -132,6 +132,7 @@ static int rstree_server_callback()
   mc_pack_close(ret_pack);
 
   ub_log_setbasic(UB_LOG_ERRNO, "%d", error_no);
+  ub_log_pushnotice("min_freq", "%d", min_freq);
   ub_log_pushnotice("ret_cnt", "%d", result_vec.size());
   ub_log_pushnotice("tree_size", "%d", g_worker.tree_size());
 

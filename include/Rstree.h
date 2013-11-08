@@ -223,13 +223,13 @@ public:
 
   inline wstring trim(const wstring& text, const vector<int>& splits, int start, int end)
   {
-    if (start == 0)
-    {
-      for (int i = 0; start < end && splits[start] == SINGLE && i < 3; i++)
-      {
-        start++;
-      }
-    }
+//    if (start == 0)
+//    {
+//      for (int i = 0; start < end && splits[start] == SINGLE && i < 3; i++)
+//      {
+//        start++;
+//      }
+//    }
     while (start < end && splits[start] != LEFT && splits[start] != SINGLE)
     {
       start++;
