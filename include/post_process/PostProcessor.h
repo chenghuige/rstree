@@ -259,7 +259,7 @@ private:
   RegexSearcher _black_reg_searcher;
   //--------------------------黑未匹配的情况下 匹配白名单或者白模式豁免过滤
   RstreeFilter _white_filter;
-  static const int MIN_GOOD_LENGTH = 16;
+  static const int MIN_GOOD_LENGTH = 20;
 };
 
 
