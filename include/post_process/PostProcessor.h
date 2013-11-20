@@ -110,10 +110,11 @@ public:
     return true;
   }
 
-  string filter(string& input)
+  string filter(const string& input)
   {
-    boost::to_lower(input);
-    return gezi::filter_str(input);
+    string s = input;
+    boost::to_lower(s);
+    return gezi::filter_str(s);
   }
 
   int black_process(const vector<INode>& ivec, vector<ONode>& ovec)
@@ -130,14 +131,14 @@ public:
       //      Pval(node.filtered_str);
       node.black_count = _black_dict.search_count(node.filtered_str, _result);
       //      Pval(node.black_count);
-//      if (node.black_count > 0)
-//      {
-//        Pval(node.str);
-//        Pval(_result->ppseg_cnt);
-//        Pval(_result->poff[0]);
-//        Pval(_result->ppseg[0]->len);
-//        Pval(_result->ppseg[0]->pstr);
-//      }
+      //      if (node.black_count > 0)
+      //      {
+      //        Pval(node.str);
+      //        Pval(_result->ppseg_cnt);
+      //        Pval(_result->poff[0]);
+      //        Pval(_result->ppseg[0]->len);
+      //        Pval(_result->ppseg[0]->pstr);
+      //      }
 
       //--------------------黑模版匹配
       if (_black_reg_searcher.has_match(node.wstr))
@@ -202,6 +203,7 @@ public:
       vec = _white_filter.process(vec);
     }
 
+    PrintVec(vec, str);
     if (vec.size() > max_count)
     {
       std::partial_sort(vec.begin(), vec.begin() + max_count, vec.end(), Cmp());
@@ -211,7 +213,6 @@ public:
     {
       std::sort(vec.begin(), vec.end(), Cmp());
     }
-
   }
 
   //for test
@@ -229,6 +230,7 @@ public:
   }
 
   //获取第一个spam
+
   string get_spam(const string&input)
   {
     int count = _black_dict.search_count(input, _result);
@@ -236,15 +238,15 @@ public:
     {
       return _result->ppseg[0]->pstr;
     }
-    
+
     return "";
   }
-  
-////  //获取覆盖最多spam的区间对应的string
-// string get_spampart(const string& input, int max_length)
-// {
-//   
-// }
+
+  ////  //获取覆盖最多spam的区间对应的string
+  // string get_spampart(const string& input, int max_length)
+  // {
+  //   
+  // }
 
   static gezi::MatchDict& black_dict()
   {

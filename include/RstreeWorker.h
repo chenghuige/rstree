@@ -177,8 +177,8 @@ public:
     std::tr1::unordered_map<wstring, int> ret_map;
     vector<wstring> svec = cut_wstring(wc, _max_text_length, max_len + 1);
 
-    vector<string> subc_vec;
-    vector<vector<int> > splits_vec;
+    //    vector<string> subc_vec;  //黑模式区域识别查询频次用 暂时有bug未用 TODO
+    //    vector<vector<int> > splits_vec;
     LOG_DEBUG("Cut to %d parts", (int) svec.size());
     //for (auto &sub_wc : svec)
     for (int i = 0; i < (int) svec.size(); i++)
@@ -224,8 +224,8 @@ public:
       std::tr1::unordered_map<wstring, int> t_ret_map(rvec.begin(), rvec.end());
       merge_map(ret_map, t_ret_map);
 
-      subc_vec.push_back(sub_c);
-      splits_vec.push_back(splits);
+      //      subc_vec.push_back(sub_c);
+      //      splits_vec.push_back(splits);
     }
 
     //-----------------post deal trim filter
@@ -263,85 +263,85 @@ public:
       }
     }
 
-//    //当前采用最简单补充策略 尝试补充一个黑载体匹配的串
-//    //当返回结果为空 或者不为空 但是第一个black_count == 0的时候 
-//    //对整个文本 content 查询黑载体 并且对于第一个匹配位置 前后扩展 凑成一个长度约为max_len的串 
-//    //转成wstring 去后缀树查询频次 如果满足最低频次 就替换掉result_vec最后一个 然后和第一个交换
-//    if (result_vec.size() == 0 || result_vec[0].black_count == 0)
-//      //    if (result_vec.size() == 0 || result_vec[result_vec.size() - 1].black_count == 0)
-//    {
-//      for (int i = 0; i < (int) subc_vec.size(); i++)
-//      {
-//        if (svec[i].length() > max_len)
-//        {
-//          string spam = _post_processor.get_spam(subc_vec[i]);
-//          if (spam.empty())
-//          {
-//            continue;
-//          }
-//          wstring wspam = str_to_wstr(spam);
-//          if (wspam.empty())
-//          {
-//            continue;
-//          }
-//          size_t idx = svec[i].find(wspam);
-//          if (idx == wstring::npos)
-//          {
-//            continue;
-//          }
-//          int start = idx;
-//          if (start >= 4 && wspam.length() + 4 <= max_len)
-//          {
-//            start -= 4;
-//          }
-//          int end = idx + wspam.length();
-//          if (splits_vec[i].size() == svec[i].length())
-//          {
-//            while (start > 0 && splits_vec[i][start] != LEFT && splits_vec[i][start] != SINGLE)
-//            {
-//              start--;
-//            }
-//          }
-//
-//          while (end < svec[i].length() && end - start < max_len)
-//          {
-//            end++;
-//          }
-//
-//          if (splits_vec[i].size() == svec[i].length())
-//          {
-//            while (end > start && splits_vec[i][end - 1] != RIGHT && splits_vec[i][end - 1] != SINGLE)
-//            {
-//              end--;
-//            }
-//          }
-//
-//          int len = end - start;
-//          if (len >= min_len && len <= max_len)
-//          {
-//            wstring spam_phrase = svec[i].substr(start, len);
-//            int freq = _rstree.find_freq(spam_phrase);
-//            if (freq >= min_freq)
-//            {
-//              ONode node;
-//              node.count = freq;
-//              node.wstr = spam_phrase;
-//              node.str = wstr_to_str(spam_phrase);
-//              node.black_count = 1;
-//              if (!node.str.empty())
-//              {
-//                DLOG(INFO) << "Add spam candiate " << node.str;
-//                Pval(content);
-//                ONode temp = result_vec[0];
-//                result_vec[0] = node;
-//                result_vec[result_vec.size() - 1] = temp;
-//                break;
-//              }
-//            }
-//          }
-//        }
-//      }
-//    }
+    //    //当前采用最简单补充策略 尝试补充一个黑载体匹配的串
+    //    //当返回结果为空 或者不为空 但是第一个black_count == 0的时候 
+    //    //对整个文本 content 查询黑载体 并且对于第一个匹配位置 前后扩展 凑成一个长度约为max_len的串 
+    //    //转成wstring 去后缀树查询频次 如果满足最低频次 就替换掉result_vec最后一个 然后和第一个交换
+    //    if (result_vec.size() == 0 || result_vec[0].black_count == 0)
+    //      //    if (result_vec.size() == 0 || result_vec[result_vec.size() - 1].black_count == 0)
+    //    {
+    //      for (int i = 0; i < (int) subc_vec.size(); i++)
+    //      {
+    //        if (svec[i].length() > max_len)
+    //        {
+    //          string spam = _post_processor.get_spam(subc_vec[i]);
+    //          if (spam.empty())
+    //          {
+    //            continue;
+    //          }
+    //          wstring wspam = str_to_wstr(spam);
+    //          if (wspam.empty())
+    //          {
+    //            continue;
+    //          }
+    //          size_t idx = svec[i].find(wspam);
+    //          if (idx == wstring::npos)
+    //          {
+    //            continue;
+    //          }
+    //          int start = idx;
+    //          if (start >= 4 && wspam.length() + 4 <= max_len)
+    //          {
+    //            start -= 4;
+    //          }
+    //          int end = idx + wspam.length();
+    //          if (splits_vec[i].size() == svec[i].length())
+    //          {
+    //            while (start > 0 && splits_vec[i][start] != LEFT && splits_vec[i][start] != SINGLE)
+    //            {
+    //              start--;
+    //            }
+    //          }
+    //
+    //          while (end < svec[i].length() && end - start < max_len)
+    //          {
+    //            end++;
+    //          }
+    //
+    //          if (splits_vec[i].size() == svec[i].length())
+    //          {
+    //            while (end > start && splits_vec[i][end - 1] != RIGHT && splits_vec[i][end - 1] != SINGLE)
+    //            {
+    //              end--;
+    //            }
+    //          }
+    //
+    //          int len = end - start;
+    //          if (len >= min_len && len <= max_len)
+    //          {
+    //            wstring spam_phrase = svec[i].substr(start, len);
+    //            int freq = _rstree.find_freq(spam_phrase);
+    //            if (freq >= min_freq)
+    //            {
+    //              ONode node;
+    //              node.count = freq;
+    //              node.wstr = spam_phrase;
+    //              node.str = wstr_to_str(spam_phrase);
+    //              node.black_count = 1;
+    //              if (!node.str.empty())
+    //              {
+    //                DLOG(INFO) << "Add spam candiate " << node.str;
+    //                Pval(content);
+    //                ONode temp = result_vec[0];
+    //                result_vec[0] = node;
+    //                result_vec[result_vec.size() - 1] = temp;
+    //                break;
+    //              }
+    //            }
+    //          }
+    //        }
+    //      }
+    //    }
 
 
 #ifdef __GXX_EXPERIMENTAL_CXX0X__

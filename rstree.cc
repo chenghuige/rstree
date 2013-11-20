@@ -119,7 +119,7 @@ static int rstree_server_callback()
     ret_no |= mc_pack_put_str(item_pack, "str", result_vec[i].str.c_str());
     ret_no |= mc_pack_put_int32(item_pack, "count", result_vec[i].count);
     ret_no |= mc_pack_put_int32(item_pack, "black_count", result_vec[i].black_count);
-    UB_LOG_TRACE("result substring[%s] freq[%d] bcount[%d] ret_no[%d]", result_vec[i].str.c_str(), 
+    LOG_TRACE("result substring[%s] freq[%d] bcount[%d] ret_no[%d]", result_vec[i].str.c_str(), 
             result_vec[i].count, result_vec[i].black_count, ret_no);
      if (mc_pack_get_size(ret_pack) + 50000 > (int) ub_server_get_write_size())
     {

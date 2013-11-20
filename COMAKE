@@ -20,7 +20,7 @@ CPPFLAGS('-D_GNU_SOURCE -D__STDC_LIMIT_MACROS -DVERSION=\\\"1.9.8.7\\\"')
 CFLAGS('-g -O3 -pipe -W -Wall -fPIC')
 
 #C++编译参数.
-CXXFLAGS('-g -O3 -pipe -W -Wall -fPIC')
+CXXFLAGS('-g -O -pipe -W -Wall -fPIC')
 
 #IDL编译参数
 IDLFLAGS('--compack')
@@ -49,7 +49,7 @@ CONFIGS('third-64/tcmalloc@base')
 CONFIGS('public/comlog-plugin@base')
 CONFIGS('public/configure@base')
 CONFIGS('public/ub@1.2.36.0')
-CONFIGS('public/gm/galileo@base')
+#CONFIGS('public/gm/galileo@base')
 #CONFIGS('lib2-64/others-ex@base')
 CONFIGS('lib2-64/wordseg@3.0.12.2')
 CONFIGS('lib2-64/ullib@3.1.40.0')
