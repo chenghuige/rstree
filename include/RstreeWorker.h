@@ -48,12 +48,12 @@ private:
   Rstree _rstree;
   PostProcessor _post_processor;
   SegHandle _seg_handle;
+  PostAdjustor _post_adjustor;
 
 public:
 
   static void init_static()
   {
-    setlocale(LC_ALL, LOCALE);
     SharedConf::init(RSTREE_CONF_DIR, RSTREE_CONF);
     PostProcessor::init_static();
 
@@ -126,28 +126,19 @@ public:
     }
   }
 
-  inline void print_seg_result(const SegHandle& handle)
-  {
-    Pval(handle.nresult);
-    for (int i = 0; i < handle.nresult; i++)
-    {
-      cout << handle.tokens[i].buffer << " " << handle.tokens[i].length << endl;
-    }
-    cout << std::endl;
-  }
-
   bool get_postype(const string& sub_c, int len, vector<int>& splits)
   {
     bool ret = segment(sub_c, _seg_handle);
     if (!ret)
     {
-      LOG_WARNING("Seg fail %s", sub_c.c_str());
+      LOG_WARNING("seg fail %s", sub_c.c_str());
       return false;
     }
+    //    print_seg_result(_seg_handle);
     ret = get_postype(_seg_handle, len, splits);
     if (!ret)
     {
-      LOG_WARNING("getpos fail for %s %d", sub_c.c_str(), len);
+      LOG_WARNING("getpos fail for [%s] %d", sub_c.c_str(), len);
     }
     return ret;
   }
@@ -161,12 +152,14 @@ public:
     }
   };
 
-  vector<ONode> get_substrs(const string& content, int min_freq, int min_len, int max_len)
+  vector<ONode> get_substrs(const string& content_, int min_freq, int min_len, int max_len)
   {
     _rstree.set_min_frequency(min_freq);
     _rstree.set_min_substr_len(min_len);
     _rstree.set_max_substr_len(max_len);
 
+    string content = boost::trim_copy(content_);
+    boost::replace_all(content, "\n", ""); //rstree的默认结尾填充符号是换行
     wstring wc = str_to_wstr(content);
     vector<ONode> result_vec;
     if ((int) wc.size() < _min_text_length)
@@ -184,9 +177,6 @@ public:
     for (int i = 0; i < (int) svec.size(); i++)
     {
       wstring& sub_wc = svec[i];
-
-      boost::trim(sub_wc);
-      boost::replace_all(sub_wc, _rstree.end_mark(), L""); //转string之前已经去掉换行
 
       if ((int) sub_wc.size() < _min_text_length)
       {
@@ -211,7 +201,6 @@ public:
         }
         else
         {
-          LOG_WARNING("Fail in get segment split");
           _rstree.add(sub_wc, rvec);
         }
       }
@@ -219,8 +208,14 @@ public:
       {
         _rstree.add(sub_wc, rvec);
       }
-      LOG_DEBUG("After add got %d result", (int) rvec.size());
-      PostAdjustor::filter(rvec, _rstree.min_substr_len());
+#ifndef NDEBUG
+
+      foreach(WPair& item, rvec)
+      {
+        wcout << item.first << " " << item.first.size() << L"\n";
+      }
+#endif
+      _post_adjustor.filter(rvec, _rstree.min_substr_len());
       std::tr1::unordered_map<wstring, int> t_ret_map(rvec.begin(), rvec.end());
       merge_map(ret_map, t_ret_map);
 
@@ -238,7 +233,7 @@ public:
         ivec.push_back(INode(substr, iter->first, iter->second));
       }
     }
-
+    PrintVec2(ivec, str, count);
     //-----------------post black white deal filter and sort choose top max_result_count
 
     if (!_simple_sort)
@@ -262,6 +257,7 @@ public:
         result_vec.resize(_max_result_count);
       }
     }
+    PrintVec4(result_vec, str, filtered_str, count, black_count);
 
     //    //当前采用最简单补充策略 尝试补充一个黑载体匹配的串
     //    //当返回结果为空 或者不为空 但是第一个black_count == 0的时候 

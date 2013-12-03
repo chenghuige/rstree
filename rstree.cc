@@ -30,7 +30,7 @@ using namespace gezi;
 bsl::var::Ref g_monitor_info;
 char g_proc_name[1024];
 
-RstreeWorker g_worker;
+RstreeWorker* g_worker = NULL;
 
 DEFINE_int32(level, 0, "min log level");
 
@@ -106,7 +106,7 @@ static int rstree_server_callback()
   {
     UB_LOG_DEBUG("logid[%d] get content[%s], min_freq %d, min_len %d, max_len %d", res_head->log_id, 
             content, min_freq, min_len, max_len);
-    result_vec = g_worker.get_substrs(content, min_freq, min_len, max_len);
+    result_vec = g_worker->get_substrs(content, min_freq, min_len, max_len);
   }
 
   char mcpack_buf[MC_PACK_BUF_SIZE];
@@ -134,7 +134,7 @@ static int rstree_server_callback()
   ub_log_setbasic(UB_LOG_ERRNO, "%d", error_no);
   ub_log_pushnotice("min_freq", "%d", min_freq);
   ub_log_pushnotice("ret_cnt", "%d", result_vec.size());
-  ub_log_pushnotice("tree_size", "%d", g_worker.tree_size());
+  ub_log_pushnotice("tree_size", "%d", g_worker->tree_size());
 
   char *res_buf = (char*) (res_head + 1);
 
@@ -160,9 +160,12 @@ static int monitor_timer(void *)
  */
 static void app_init()
 {
+  setlocale(LC_ALL, LOCALE);
   RstreeWorker::init_static();
   
-  g_worker.init(); //rstree环境是单线程 也在全局init
+  g_worker = new RstreeWorker();
+  CHECK_NOTNULL(g_worker);
+  g_worker->init(); //rstree环境是单线程 也在全局init
 }
 
 /**
@@ -171,6 +174,10 @@ static void app_init()
  */
 static void app_close()
 {
+  if(g_worker)
+  {
+    delete g_worker;
+  }
 }
 
 /**

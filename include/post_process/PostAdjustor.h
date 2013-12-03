@@ -17,16 +17,24 @@ using namespace std;
 
 class PostAdjustor
 {
+private:
+  wstring _puncs;
 public:
 
-  static void filter(vector<WPair >& vec, int min_len)
+  PostAdjustor()
+  {
+    _puncs = str_to_wstr("。？！，,?!");
+  }
+
+  void filter(vector<WPair >& vec, int min_len)
   {
     vector<WPair > temp;
     //for(auto &itme: vec)
-    for(int i = 0; i < (int)vec.size(); i++)
+    for (int i = 0; i < (int) vec.size(); i++)
     {
       WPair& item = vec[i];
       boost::trim(item.first);
+      boost::trim_if(item.first, is_any_of(_puncs));
       if ((int) item.first.size() < min_len)
       {
         continue;
@@ -35,9 +43,6 @@ public:
     }
     vec.swap(temp);
   }
-  
-private:
-//  string content; //rsc传递过来的 原始gbk编码文本 用于分词
 };
 }
 

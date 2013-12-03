@@ -23,17 +23,21 @@ class Rstree : public SuffixTree
 {
 public:
   int _min_substr_len; //重复子串最短长度
+  int _min_substr_len2; //重复子串最短长度
   int _max_substr_len; //重复子串最大长度
   int _min_frequency; //满足的最低频次限制
   int _max_tree_size; //树的大小限制
+  double _max_jump;
 
   Rstree(const wstring& end_mark = L"\n")
   : SuffixTree(end_mark)
   {
     _min_substr_len = 8;
-    _max_substr_len = 20;
+    _min_substr_len2 = 16;
+    _max_substr_len = 40;
     _min_frequency = 15;
     _max_tree_size = 300000;
+    _max_jump = 5; //平均多于5个分支的时候取上面的 也就是说频次n 下降到 < n/_max_jump 那么取上面的
   }
 
   bool init()
@@ -48,6 +52,7 @@ public:
     CONF(_max_substr_len);
     CONF(_min_frequency);
     CONF(_max_tree_size);
+    CONF(_max_jump);
     return true;
   }
 
@@ -223,23 +228,9 @@ public:
 
   inline wstring trim(const wstring& text, const vector<int>& splits, int start, int end)
   {
-//    if (start == 0)
-//    {
-//      for (int i = 0; start < end && splits[start] == SINGLE && i < 3; i++)
-//      {
-//        start++;
-//      }
-//    }
     while (start < end && splits[start] != LEFT && splits[start] != SINGLE)
     {
       start++;
-    }
-    if (end == (text.length() - 1))
-    {
-      for (int i = 0; start < end && splits[end - 1] == SINGLE && i < 3; i++)
-      {
-        end--;
-      }
     }
     while (start < end && splits[end - 1] != RIGHT && splits[end - 1] != SINGLE)
     {
@@ -294,6 +285,22 @@ public:
     }
   }
 
+  inline Node* get_node(Node* node)
+  {
+    Node* rnode = node;
+    Node* node2 = node->parent;
+    while(node2 != _root && node2->length >= _min_substr_len2)
+    {
+      if (node2->freq / (double)node->freq > _max_jump)
+      {
+        rnode = node2;
+      }
+      node = node2;
+      node2 = node->parent;
+    }
+    return rnode;
+  }
+  
   //满足长度 频次要求 情况下 长度优先   长度要求包括最长限制
   //极端情况下 限制长度不超过某个阈值 选取 可能会取不到 比如abcdefghigk...重复n次 但是大语料中概率极小
   //如果不限制最长 最后再截取  可能无法截取到黑词部分的串 综合权衡 采用下面策略
@@ -339,18 +346,17 @@ public:
       if (iter->second == true)
       {
         Node* node = iter->first;
+        node = get_node(node);
         wstring substr = trim(node, text, pos_types);
+        Pval(wstr_to_str(trim(node, text)));
+        Pval(wstr_to_str(substr));
         if (substr.length() >= _min_substr_len)
         {
           result_vec.push_back(Pair(substr, node->freq));
         }
       }
     }
-
-
   }
-
-
 };
 
 } //----end of namespace gezi

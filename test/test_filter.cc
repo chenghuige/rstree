@@ -44,6 +44,7 @@ void test(const string& s)
 
 void run()
 {
+  setlocale(LC_ALL, "zh_CN.GB18030");
   g_filter.init();
   test("十五字十五字十五字十五字十五字，ID:苏三说");
   test("楼楼可以加这个双眼皮交流群288090810问问群里的妹纸们呢");
@@ -61,6 +62,9 @@ void run()
   test("快来人啊！帮我看看够不够十五字啊！");
   test("武 汉 Q Q");
   test("妹妹 我要和你爱爱~~~~~~~~好多水 水");
+  test("爱爱爱爱爱爱爱爱爱爱爱爱爱爱爱");
+  test("见过这样标准的十五");
+  test("。2013年12月1日");
 }
 
 int main(int argc, char *argv[])

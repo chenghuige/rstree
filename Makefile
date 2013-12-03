@@ -4,13 +4,11 @@ ifeq ($(shell uname -m),x86_64)
 CC=gcc
 CXX=g++
 CXXFLAGS=-g \
-  -O \
   -pipe \
   -W \
   -Wall \
   -fPIC
 CFLAGS=-g \
-  -O3 \
   -pipe \
   -W \
   -Wall \
@@ -26,7 +24,11 @@ INCPATH=-I. \
   -I./include/post_process \
   -I./include \
   -I./include/post_process
-DEP_INCPATH=-I../../../../../app/search/sep/anti-spam/rsc-sender \
+DEP_INCPATH=-I../../../../../app/search/ksarch/store/proxy-lib/redis \
+  -I../../../../../app/search/ksarch/store/proxy-lib/redis/include \
+  -I../../../../../app/search/ksarch/store/proxy-lib/redis/output \
+  -I../../../../../app/search/ksarch/store/proxy-lib/redis/output/include \
+  -I../../../../../app/search/sep/anti-spam/rsc-sender \
   -I../../../../../app/search/sep/anti-spam/rsc-sender/include \
   -I../../../../../app/search/sep/anti-spam/rsc-sender/output \
   -I../../../../../app/search/sep/anti-spam/rsc-sender/output/include \
@@ -90,6 +92,10 @@ DEP_INCPATH=-I../../../../../app/search/sep/anti-spam/rsc-sender \
   -I../../../../../op/oped/noah/webfoot/naming-lib/include \
   -I../../../../../op/oped/noah/webfoot/naming-lib/output \
   -I../../../../../op/oped/noah/webfoot/naming-lib/output/include \
+  -I../../../../../ps/se/toolchain \
+  -I../../../../../ps/se/toolchain/include \
+  -I../../../../../ps/se/toolchain/output \
+  -I../../../../../ps/se/toolchain/output/include \
   -I../../../../../public/bslext \
   -I../../../../../public/bslext/include \
   -I../../../../../public/bslext/output \
@@ -154,6 +160,14 @@ DEP_INCPATH=-I../../../../../app/search/sep/anti-spam/rsc-sender \
   -I../../../../../third-64/glog/include \
   -I../../../../../third-64/glog/output \
   -I../../../../../third-64/glog/output/include \
+  -I../../../../../third-64/libcurl \
+  -I../../../../../third-64/libcurl/include \
+  -I../../../../../third-64/libcurl/output \
+  -I../../../../../third-64/libcurl/output/include \
+  -I../../../../../third-64/openssl \
+  -I../../../../../third-64/openssl/include \
+  -I../../../../../third-64/openssl/output \
+  -I../../../../../third-64/openssl/output/include \
   -I../../../../../third-64/pcre \
   -I../../../../../third-64/pcre/include \
   -I../../../../../third-64/pcre/output \
@@ -169,7 +183,11 @@ DEP_INCPATH=-I../../../../../app/search/sep/anti-spam/rsc-sender \
   -I../../../../../third-64/tcmalloc \
   -I../../../../../third-64/tcmalloc/include \
   -I../../../../../third-64/tcmalloc/output \
-  -I../../../../../third-64/tcmalloc/output/include
+  -I../../../../../third-64/tcmalloc/output/include \
+  -I../../../../../third-64/zlib \
+  -I../../../../../third-64/zlib/include \
+  -I../../../../../third-64/zlib/output \
+  -I../../../../../third-64/zlib/output/include
 
 #============ CCP vars ============
 CCHECK=@ccheck.py
@@ -181,11 +199,11 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=77eb2bac000793f32ecdab9222223d21  COMAKE
+COMAKE_MD5=1993a2c49995a1b91d0e833119055c79  COMAKE
 
 
 .PHONY:all
-all:comake2_makefile_check rstree test_filter test_post_processor test_seg test_suffixtree 
+all:comake2_makefile_check rstree.test rstree test_filter test_post_processor test_seg test_suffixtree 
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mall[0m']"
 	@echo "make all done"
 
@@ -205,6 +223,8 @@ ccpclean:
 .PHONY:clean
 clean:ccpclean
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mclean[0m']"
+	rm -rf rstree.test
+	rm -rf ./output/bin/rstree.test
 	rm -rf rstree
 	rm -rf ./output/bin/rstree
 	rm -rf test_filter
@@ -215,6 +235,10 @@ clean:ccpclean
 	rm -rf ./bin/test_seg
 	rm -rf test_suffixtree
 	rm -rf ./bin/test_suffixtree
+	rm -rf rstree.test_rstree.o
+	rm -rf src/rstree.test_conf.o
+	rm -rf src/post_process/rstree.test_PostProcessor.o
+	rm -rf src/post_process/rstree.test_RstreeFilter.o
 	rm -rf rstree_rstree.o
 	rm -rf src/rstree_conf.o
 	rm -rf src/post_process/rstree_PostProcessor.o
@@ -253,15 +277,16 @@ love:
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mlove[0m']"
 	@echo "make love done"
 
-rstree:rstree_rstree.o \
-  src/rstree_conf.o \
-  src/post_process/rstree_PostProcessor.o \
-  src/post_process/rstree_RstreeFilter.o
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree[0m']"
-	$(CXX) rstree_rstree.o \
-  src/rstree_conf.o \
-  src/post_process/rstree_PostProcessor.o \
-  src/post_process/rstree_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+rstree.test:rstree.test_rstree.o \
+  src/rstree.test_conf.o \
+  src/post_process/rstree.test_PostProcessor.o \
+  src/post_process/rstree.test_RstreeFilter.o
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree.test[0m']"
+	$(CXX) rstree.test_rstree.o \
+  src/rstree.test_conf.o \
+  src/post_process/rstree.test_PostProcessor.o \
+  src/post_process/rstree.test_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/ksarch/store/proxy-lib/redis/libredisclient.a \
+  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
   ../../../../../com/btest/gtest/output/lib/libgtest.a \
   ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
@@ -354,6 +379,9 @@ rstree:rstree_rstree.o \
   ../../../../../third-64/gflags/lib/libgflags.a \
   ../../../../../third-64/gflags/lib/libgflags_nothreads.a \
   ../../../../../third-64/glog/lib/libglog.a \
+  ../../../../../third-64/libcurl/lib/libcurl.a \
+  ../../../../../third-64/openssl/lib/libcrypto.a \
+  ../../../../../third-64/openssl/lib/libssl.a \
   ../../../../../third-64/pcre/lib/libpcre.a \
   ../../../../../third-64/pcre/lib/libpcrecpp.a \
   ../../../../../third-64/pcre/lib/libpcreposix.a \
@@ -365,7 +393,131 @@ rstree:rstree_rstree.o \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_and_profiler.a \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_debug.a \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal.a \
-  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a \
+  ../../../../../third-64/zlib/lib/libz.a -lpthread \
+  -lcrypto \
+  -lrt -Xlinker "-)" -o rstree.test
+	mkdir -p ./output/bin
+	cp -f --link rstree.test ./output/bin
+
+rstree:rstree_rstree.o \
+  src/rstree_conf.o \
+  src/post_process/rstree_PostProcessor.o \
+  src/post_process/rstree_RstreeFilter.o
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree[0m']"
+	$(CXX) rstree_rstree.o \
+  src/rstree_conf.o \
+  src/post_process/rstree_PostProcessor.o \
+  src/post_process/rstree_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/ksarch/store/proxy-lib/redis/libredisclient.a \
+  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  ../../../../../com/btest/gtest/output/lib/libgtest.a \
+  ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
+  ../../../../../com/idlcompiler/astyle/libastyle.a \
+  ../../../../../com/idlcompiler/cxx/libskeleton.a \
+  ../../../../../com/idlcompiler/java/libjava_skeleton.a \
+  ../../../../../com/idlcompiler/parser/libparser.a \
+  ../../../../../com/idlcompiler/php/libphp_skeleton.a \
+  ../../../../../inf/computing/zookeeper/output/c_client/lib/libzookeeper_mt.a \
+  ../../../../../inf/computing/zookeeper/output/c_client/lib/libzookeeper_st.a \
+  ../../../../../lib2-64/bsl/lib/libbsl.a \
+  ../../../../../lib2-64/bsl/lib/libbsl_ResourcePool.a \
+  ../../../../../lib2-64/bsl/lib/libbsl_archive.a \
+  ../../../../../lib2-64/bsl/lib/libbsl_buffer.a \
+  ../../../../../lib2-64/bsl/lib/libbsl_check_cast.a \
+  ../../../../../lib2-64/bsl/lib/libbsl_exception.a \
+  ../../../../../lib2-64/bsl/lib/libbsl_pool.a \
+  ../../../../../lib2-64/bsl/lib/libbsl_utils.a \
+  ../../../../../lib2-64/bsl/lib/libbsl_var.a \
+  ../../../../../lib2-64/bsl/lib/libbsl_var_implement.a \
+  ../../../../../lib2-64/bsl/lib/libbsl_var_utils.a \
+  ../../../../../lib2-64/ccode/lib/libulccode.a \
+  ../../../../../lib2-64/dict/lib/libuldict.a \
+  ../../../../../lib2-64/libcrf/lib/libcrf.a \
+  ../../../../../lib2-64/others-ex/lib/libullib_ex.a \
+  ../../../../../lib2-64/postag/lib/libpostag.a \
+  ../../../../../lib2-64/string/lib/libstring.a \
+  ../../../../../lib2-64/ullib/lib/libullib.a \
+  ../../../../../lib2-64/wordseg/libsegment.a \
+  ../../../../../op/oped/noah/webfoot/naming-lib/output/lib/libwebfoot_naming.a \
+  ../../../../../public/bslext/output/lib/libbsl_bml.a \
+  ../../../../../public/bslext/output/lib/libbsl_containers_utils.a \
+  ../../../../../public/bslext/output/lib/libbsl_var_scripting.a \
+  ../../../../../public/bslext/output/lib/libbsl_var_serializer.a \
+  ../../../../../public/bslext/output/lib/libbsl_var_vscript.a \
+  ../../../../../public/bslext/output/lib/libbsl_vs.a \
+  ../../../../../public/bslext/output/lib/libbslext.a \
+  ../../../../../public/comlog-plugin/libcomlog.a \
+  ../../../../../public/comlog-plugin/output/lib/libdfsappender.a \
+  ../../../../../public/configure/libconfig.a \
+  ../../../../../public/connectpool/libconnectpool.a \
+  ../../../../../public/gm/galileo/libgalileo.a \
+  ../../../../../public/gm/galileo/output/lib/libzookeeper_mt.a \
+  ../../../../../public/idlcompiler/output/lib/libmcpack_idl.a \
+  ../../../../../public/mcpack/libmcpack.a \
+  ../../../../../public/nshead/libnshead.a \
+  ../../../../../public/odict/libodict.a \
+  ../../../../../public/spreg/libspreg.a \
+  ../../../../../public/ub/output/lib/libub.a \
+  ../../../../../public/ub/output/lib/libub_aserver.a \
+  ../../../../../public/ub/output/lib/libub_client.a \
+  ../../../../../public/ub/output/lib/libub_conf.a \
+  ../../../../../public/ub/output/lib/libub_galileo.a \
+  ../../../../../public/ub/output/lib/libub_log.a \
+  ../../../../../public/ub/output/lib/libub_misc.a \
+  ../../../../../public/ub/output/lib/libub_monitor.a \
+  ../../../../../public/ub/output/lib/libub_naming.a \
+  ../../../../../public/ub/output/lib/libub_server.a \
+  ../../../../../public/ub/output/lib/libubex.a \
+  ../../../../../public/ub/output/lib/libubfw.a \
+  ../../../../../public/uconv/libuconv.a \
+  ../../../../../quality/autotest/reportlib/cpp/libautotest.a \
+  ../../../../../third-64/boost/lib/libboost_atomic.a \
+  ../../../../../third-64/boost/lib/libboost_chrono.a \
+  ../../../../../third-64/boost/lib/libboost_context.a \
+  ../../../../../third-64/boost/lib/libboost_date_time.a \
+  ../../../../../third-64/boost/lib/libboost_exception.a \
+  ../../../../../third-64/boost/lib/libboost_filesystem.a \
+  ../../../../../third-64/boost/lib/libboost_graph.a \
+  ../../../../../third-64/boost/lib/libboost_locale.a \
+  ../../../../../third-64/boost/lib/libboost_math_c99.a \
+  ../../../../../third-64/boost/lib/libboost_math_c99f.a \
+  ../../../../../third-64/boost/lib/libboost_math_c99l.a \
+  ../../../../../third-64/boost/lib/libboost_math_tr1.a \
+  ../../../../../third-64/boost/lib/libboost_math_tr1f.a \
+  ../../../../../third-64/boost/lib/libboost_math_tr1l.a \
+  ../../../../../third-64/boost/lib/libboost_prg_exec_monitor.a \
+  ../../../../../third-64/boost/lib/libboost_program_options.a \
+  ../../../../../third-64/boost/lib/libboost_python.a \
+  ../../../../../third-64/boost/lib/libboost_random.a \
+  ../../../../../third-64/boost/lib/libboost_regex.a \
+  ../../../../../third-64/boost/lib/libboost_serialization.a \
+  ../../../../../third-64/boost/lib/libboost_signals.a \
+  ../../../../../third-64/boost/lib/libboost_system.a \
+  ../../../../../third-64/boost/lib/libboost_test_exec_monitor.a \
+  ../../../../../third-64/boost/lib/libboost_thread.a \
+  ../../../../../third-64/boost/lib/libboost_timer.a \
+  ../../../../../third-64/boost/lib/libboost_unit_test_framework.a \
+  ../../../../../third-64/boost/lib/libboost_wave.a \
+  ../../../../../third-64/boost/lib/libboost_wserialization.a \
+  ../../../../../third-64/gflags/lib/libgflags.a \
+  ../../../../../third-64/gflags/lib/libgflags_nothreads.a \
+  ../../../../../third-64/glog/lib/libglog.a \
+  ../../../../../third-64/libcurl/lib/libcurl.a \
+  ../../../../../third-64/openssl/lib/libcrypto.a \
+  ../../../../../third-64/openssl/lib/libssl.a \
+  ../../../../../third-64/pcre/lib/libpcre.a \
+  ../../../../../third-64/pcre/lib/libpcrecpp.a \
+  ../../../../../third-64/pcre/lib/libpcreposix.a \
+  ../../../../../third-64/protobuf/lib/libprotobuf-lite.a \
+  ../../../../../third-64/protobuf/lib/libprotobuf.a \
+  ../../../../../third-64/protobuf/lib/libprotoc.a \
+  ../../../../../third-64/tcmalloc/lib/libprofiler.a \
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc.a \
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc_and_profiler.a \
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc_debug.a \
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal.a \
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a \
+  ../../../../../third-64/zlib/lib/libz.a -lpthread \
   -lcrypto \
   -lrt -Xlinker "-)" -o rstree
 	mkdir -p ./output/bin
@@ -379,7 +531,8 @@ test_filter:test/test_filter_test_filter.o \
 	$(CXX) test/test_filter_test_filter.o \
   src/test_filter_conf.o \
   src/post_process/test_filter_PostProcessor.o \
-  src/post_process/test_filter_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  src/post_process/test_filter_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/ksarch/store/proxy-lib/redis/libredisclient.a \
+  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
   ../../../../../com/btest/gtest/output/lib/libgtest.a \
   ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
@@ -472,6 +625,9 @@ test_filter:test/test_filter_test_filter.o \
   ../../../../../third-64/gflags/lib/libgflags.a \
   ../../../../../third-64/gflags/lib/libgflags_nothreads.a \
   ../../../../../third-64/glog/lib/libglog.a \
+  ../../../../../third-64/libcurl/lib/libcurl.a \
+  ../../../../../third-64/openssl/lib/libcrypto.a \
+  ../../../../../third-64/openssl/lib/libssl.a \
   ../../../../../third-64/pcre/lib/libpcre.a \
   ../../../../../third-64/pcre/lib/libpcrecpp.a \
   ../../../../../third-64/pcre/lib/libpcreposix.a \
@@ -483,7 +639,8 @@ test_filter:test/test_filter_test_filter.o \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_and_profiler.a \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_debug.a \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal.a \
-  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a \
+  ../../../../../third-64/zlib/lib/libz.a -lpthread \
   -lcrypto \
   -lrt -Xlinker "-)" -o test_filter
 	mkdir -p ./bin
@@ -497,7 +654,8 @@ test_post_processor:test/test_post_processor_test_post_processor.o \
 	$(CXX) test/test_post_processor_test_post_processor.o \
   src/test_post_processor_conf.o \
   src/post_process/test_post_processor_PostProcessor.o \
-  src/post_process/test_post_processor_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  src/post_process/test_post_processor_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/ksarch/store/proxy-lib/redis/libredisclient.a \
+  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
   ../../../../../com/btest/gtest/output/lib/libgtest.a \
   ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
@@ -590,6 +748,9 @@ test_post_processor:test/test_post_processor_test_post_processor.o \
   ../../../../../third-64/gflags/lib/libgflags.a \
   ../../../../../third-64/gflags/lib/libgflags_nothreads.a \
   ../../../../../third-64/glog/lib/libglog.a \
+  ../../../../../third-64/libcurl/lib/libcurl.a \
+  ../../../../../third-64/openssl/lib/libcrypto.a \
+  ../../../../../third-64/openssl/lib/libssl.a \
   ../../../../../third-64/pcre/lib/libpcre.a \
   ../../../../../third-64/pcre/lib/libpcrecpp.a \
   ../../../../../third-64/pcre/lib/libpcreposix.a \
@@ -601,7 +762,8 @@ test_post_processor:test/test_post_processor_test_post_processor.o \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_and_profiler.a \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_debug.a \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal.a \
-  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a \
+  ../../../../../third-64/zlib/lib/libz.a -lpthread \
   -lcrypto \
   -lrt -Xlinker "-)" -o test_post_processor
 	mkdir -p ./bin
@@ -615,7 +777,8 @@ test_seg:test/test_seg_test_seg.o \
 	$(CXX) test/test_seg_test_seg.o \
   src/test_seg_conf.o \
   src/post_process/test_seg_PostProcessor.o \
-  src/post_process/test_seg_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  src/post_process/test_seg_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/ksarch/store/proxy-lib/redis/libredisclient.a \
+  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
   ../../../../../com/btest/gtest/output/lib/libgtest.a \
   ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
@@ -708,6 +871,9 @@ test_seg:test/test_seg_test_seg.o \
   ../../../../../third-64/gflags/lib/libgflags.a \
   ../../../../../third-64/gflags/lib/libgflags_nothreads.a \
   ../../../../../third-64/glog/lib/libglog.a \
+  ../../../../../third-64/libcurl/lib/libcurl.a \
+  ../../../../../third-64/openssl/lib/libcrypto.a \
+  ../../../../../third-64/openssl/lib/libssl.a \
   ../../../../../third-64/pcre/lib/libpcre.a \
   ../../../../../third-64/pcre/lib/libpcrecpp.a \
   ../../../../../third-64/pcre/lib/libpcreposix.a \
@@ -719,7 +885,8 @@ test_seg:test/test_seg_test_seg.o \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_and_profiler.a \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_debug.a \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal.a \
-  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a \
+  ../../../../../third-64/zlib/lib/libz.a -lpthread \
   -lcrypto \
   -lrt -Xlinker "-)" -o test_seg
 	mkdir -p ./bin
@@ -733,7 +900,8 @@ test_suffixtree:test/test_suffixtree_test_suffixtree.o \
 	$(CXX) test/test_suffixtree_test_suffixtree.o \
   src/test_suffixtree_conf.o \
   src/post_process/test_suffixtree_PostProcessor.o \
-  src/post_process/test_suffixtree_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
+  src/post_process/test_suffixtree_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/ksarch/store/proxy-lib/redis/libredisclient.a \
+  ../../../../../app/search/sep/anti-spam/rsc-sender/libgezi_util.a \
   ../../../../../com/btest/gtest/output/lib/libgtest.a \
   ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
@@ -826,6 +994,9 @@ test_suffixtree:test/test_suffixtree_test_suffixtree.o \
   ../../../../../third-64/gflags/lib/libgflags.a \
   ../../../../../third-64/gflags/lib/libgflags_nothreads.a \
   ../../../../../third-64/glog/lib/libglog.a \
+  ../../../../../third-64/libcurl/lib/libcurl.a \
+  ../../../../../third-64/openssl/lib/libcrypto.a \
+  ../../../../../third-64/openssl/lib/libssl.a \
   ../../../../../third-64/pcre/lib/libpcre.a \
   ../../../../../third-64/pcre/lib/libpcrecpp.a \
   ../../../../../third-64/pcre/lib/libpcreposix.a \
@@ -837,11 +1008,45 @@ test_suffixtree:test/test_suffixtree_test_suffixtree.o \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_and_profiler.a \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_debug.a \
   ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal.a \
-  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
+  ../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a \
+  ../../../../../third-64/zlib/lib/libz.a -lpthread \
   -lcrypto \
   -lrt -Xlinker "-)" -o test_suffixtree
 	mkdir -p ./bin
 	cp -f --link test_suffixtree ./bin
+
+rstree.test_rstree.o:rstree.cc \
+  include/rstree_def.h \
+  include/post_process/RstreeFilter.h \
+  include/rstree_def.h \
+  include/post_process/PostProcessor.h \
+  include/post_process/RstreeFilter.h \
+  include/post_process/PostAdjustor.h \
+  include/RstreeWorker.h \
+  include/Rstree.h \
+  include/SuffixTree.h \
+  include/rstree_def.h \
+  include/post_process/PostProcessor.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree.test_rstree.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o rstree.test_rstree.o rstree.cc
+
+src/rstree.test_conf.o:src/conf.cpp \
+  include/conf.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree.test_conf.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree.test_conf.o src/conf.cpp
+
+src/post_process/rstree.test_PostProcessor.o:src/post_process/PostProcessor.cpp \
+  include/post_process/PostProcessor.h \
+  include/post_process/RstreeFilter.h \
+  include/rstree_def.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/rstree.test_PostProcessor.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/rstree.test_PostProcessor.o src/post_process/PostProcessor.cpp
+
+src/post_process/rstree.test_RstreeFilter.o:src/post_process/RstreeFilter.cpp \
+  include/post_process/RstreeFilter.h \
+  include/rstree_def.h
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/rstree.test_RstreeFilter.o[0m']"
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/rstree.test_RstreeFilter.o src/post_process/RstreeFilter.cpp
 
 rstree_rstree.o:rstree.cc \
   include/rstree_def.h \
@@ -856,25 +1061,45 @@ rstree_rstree.o:rstree.cc \
   include/rstree_def.h \
   include/post_process/PostProcessor.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree_rstree.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o rstree_rstree.o rstree.cc
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
+  -D__STDC_LIMIT_MACROS \
+  -DVERSION=\"1.9.8.7\" \
+  -O3 \
+  -DNDEBUG \
+  -DGOOGLE_STRIP_LOG $(CXXFLAGS)  -o rstree_rstree.o rstree.cc
 
 src/rstree_conf.o:src/conf.cpp \
   include/conf.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_conf.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/rstree_conf.o src/conf.cpp
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
+  -D__STDC_LIMIT_MACROS \
+  -DVERSION=\"1.9.8.7\" \
+  -O3 \
+  -DNDEBUG \
+  -DGOOGLE_STRIP_LOG $(CXXFLAGS)  -o src/rstree_conf.o src/conf.cpp
 
 src/post_process/rstree_PostProcessor.o:src/post_process/PostProcessor.cpp \
   include/post_process/PostProcessor.h \
   include/post_process/RstreeFilter.h \
   include/rstree_def.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/rstree_PostProcessor.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/rstree_PostProcessor.o src/post_process/PostProcessor.cpp
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
+  -D__STDC_LIMIT_MACROS \
+  -DVERSION=\"1.9.8.7\" \
+  -O3 \
+  -DNDEBUG \
+  -DGOOGLE_STRIP_LOG $(CXXFLAGS)  -o src/post_process/rstree_PostProcessor.o src/post_process/PostProcessor.cpp
 
 src/post_process/rstree_RstreeFilter.o:src/post_process/RstreeFilter.cpp \
   include/post_process/RstreeFilter.h \
   include/rstree_def.h
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/rstree_RstreeFilter.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o src/post_process/rstree_RstreeFilter.o src/post_process/RstreeFilter.cpp
+	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
+  -D__STDC_LIMIT_MACROS \
+  -DVERSION=\"1.9.8.7\" \
+  -O3 \
+  -DNDEBUG \
+  -DGOOGLE_STRIP_LOG $(CXXFLAGS)  -o src/post_process/rstree_RstreeFilter.o src/post_process/RstreeFilter.cpp
 
 test/test_filter_test_filter.o:test/test_filter.cc \
   include/post_process/RstreeFilter.h \

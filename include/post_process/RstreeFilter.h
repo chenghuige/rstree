@@ -125,7 +125,7 @@ public:
       DLOG(INFO) << "Contains white phrase: " << input;
       return false;
     }
-    if (contains_white_pattern(input))
+    if (contains_white_pattern(str_to_wstr(input)))
     {
       DLOG(INFO) << "Contains white pattern: " << input;
       return false;
