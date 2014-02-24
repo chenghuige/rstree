@@ -81,11 +81,11 @@ public:
    * @brief: 合并map，将m2中的key-value对合并入m1，当m2中不包含这个key，或者对应的value值比m1中的大时
    *
    */
-  void merge_map(std::tr1::unordered_map<wstring, int> & m1, const std::tr1::unordered_map<wstring, int> & m2)
+  void merge_map(std::unordered_map<wstring, int> & m1, const std::unordered_map<wstring, int> & m2)
   {
-    for (std::tr1::unordered_map<wstring, int>::const_iterator iter = m2.begin(); iter != m2.end(); ++iter)
+    for (std::unordered_map<wstring, int>::const_iterator iter = m2.begin(); iter != m2.end(); ++iter)
     {
-      std::tr1::unordered_map<wstring, int>::iterator iter1 = m1.find(iter->first);
+      std::unordered_map<wstring, int>::iterator iter1 = m1.find(iter->first);
       if (iter1 == m1.end() || iter1->second < iter->second)
       {
         m1[iter->first] = iter->second;
@@ -167,7 +167,7 @@ public:
       return result_vec;
     }
 
-    std::tr1::unordered_map<wstring, int> ret_map;
+    std::unordered_map<wstring, int> ret_map;
     vector<wstring> svec = cut_wstring(wc, _max_text_length, max_len + 1);
 
     //    vector<string> subc_vec;  //黑模式区域识别查询频次用 暂时有bug未用 TODO
@@ -216,7 +216,7 @@ public:
       }
 #endif
       _post_adjustor.filter(rvec, _rstree.min_substr_len());
-      std::tr1::unordered_map<wstring, int> t_ret_map(rvec.begin(), rvec.end());
+      std::unordered_map<wstring, int> t_ret_map(rvec.begin(), rvec.end());
       merge_map(ret_map, t_ret_map);
 
       //      subc_vec.push_back(sub_c);
@@ -225,7 +225,7 @@ public:
 
     //-----------------post deal trim filter
     vector<INode> ivec;
-    for (std::tr1::unordered_map<wstring, int>::iterator iter = ret_map.begin(); iter != ret_map.end(); ++iter)
+    for (std::unordered_map<wstring, int>::iterator iter = ret_map.begin(); iter != ret_map.end(); ++iter)
     {
       string substr = wstr_to_str(iter->first);
       if (!substr.empty())
@@ -340,7 +340,7 @@ public:
     //    }
 
 
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
+#if __GNUC__ > 3
     return std::move(result_vec);
 #else
     return result_vec;

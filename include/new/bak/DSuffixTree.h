@@ -212,7 +212,7 @@ public:
     {
       remove();
     }
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
+#if __GNUC__ > 3
     return std::move(result_vec);
 #else
     return result_vec;
@@ -251,8 +251,8 @@ public:
   void find_substrs_freqfirst(const wstring& text, vector<SubStrFreq>& result_vec)
   {
     Node* leaf_node;
-    std::tr1::unordered_map < Node*, bool> internal_nodes_map;
-    typedef std::tr1::unordered_map < Node*, bool>::iterator Iter;
+    std::unordered_map < Node*, bool> internal_nodes_map;
+    typedef std::unordered_map < Node*, bool>::iterator Iter;
     for (leaf_node = first_leafs_[current_text_id_ - oldest_text_id_]; leaf_node != NULL;
             leaf_node = leaf_node->suffix_link)
     {
@@ -308,8 +308,8 @@ public:
   void find_substrs_lengthfirst(const wstring& text, vector<SubStrFreq>& result_vec)
   {
     Node* leaf_node;
-    std::tr1::unordered_map < Node*, bool> internal_nodes_map;
-    typedef std::tr1::unordered_map < Node*, bool>::iterator Iter;
+    std::unordered_map < Node*, bool> internal_nodes_map;
+    typedef std::unordered_map < Node*, bool>::iterator Iter;
     for (leaf_node = first_leafs_[current_text_id_ - oldest_text_id_]; leaf_node != NULL;
             leaf_node = leaf_node->suffix_link)
     {

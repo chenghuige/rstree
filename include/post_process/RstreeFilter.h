@@ -73,7 +73,7 @@ public:
     double ratio = (double) uniq_size / input.size();
     //    LOG_DEBUG("ratio: %f", ratio);
     //    
-    //    std::tr1::unordered_map<char, int> hashmap;
+    //    std::unordered_map<char, int> hashmap;
     //    for (int i = 0; i < (int)input.size(); i++)
     //    {
     //      hashmap[input[i]] += 1;
@@ -169,7 +169,7 @@ public:
     }
 
 
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
+#if __GNUC__ > 3
     return std::move(ret);
 #else
     return ret;

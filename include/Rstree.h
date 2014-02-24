@@ -161,7 +161,7 @@ public:
     {
       remove();
     }
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
+#if __GNUC__ > 3
     return std::move(result_vec);
 #else
     return result_vec;
@@ -309,8 +309,8 @@ public:
           const vector<int>* pos_types = NULL)
   {
     Node* leaf_node;
-    std::tr1::unordered_map < Node*, bool> internal_nodes;
-    typedef std::tr1::unordered_map < Node*, bool>::iterator Iter;
+    std::unordered_map < Node*, bool> internal_nodes;
+    typedef std::unordered_map < Node*, bool>::iterator Iter;
 
     int idx = _current_text_id - _oldest_text_id;
     for (leaf_node = _first_leafs[idx]; leaf_node != NULL; leaf_node = leaf_node->suffix_link)

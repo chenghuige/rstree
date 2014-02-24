@@ -16,7 +16,7 @@
 #define protected public
 #include <iostream>
 #include <string>
-#include <vector>
+//#include <vector>
 #include <fstream>
 #include <algorithm>
 #include <glog/logging.h>
@@ -81,6 +81,7 @@ void run()
      wstring ws2 = str_to_wstr(s2);
     int freq = st.find_freq(ws2);
     Pval(freq);
+	
   }
 //
 //  st.print();

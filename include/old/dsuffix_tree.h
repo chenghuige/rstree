@@ -209,8 +209,8 @@ public:
 	{
 		Node* leaf_node;
 		int pre_leaf_freq = 0;
-		std::tr1::unordered_map < Node*, bool> internal_nodes_map;
-		typedef std::tr1::unordered_map < Node*, bool>::iterator Iter;
+		std::unordered_map < Node*, bool> internal_nodes_map;
+		typedef std::unordered_map < Node*, bool>::iterator Iter;
 		for (leaf_node = _first_leafs[_current_text_id - _oldest_text_id]; leaf_node != NULL; leaf_node = leaf_node->suffix_link)
 		{
 			if (leaf_node->freq > pre_leaf_freq

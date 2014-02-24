@@ -46,7 +46,7 @@ public:
 
     struct Node;
     //typedef std::map<wchar_t, Node*, less<wchar_t> > Edges; //内存占用近似 测试用map 线上可以用hash map提高速度
-    typedef std::tr1::unordered_map<wchar_t, Node*> Edges;
+    typedef std::unordered_map<wchar_t, Node*> Edges;
     typedef Edges::iterator NIter; //typename? ? TODO
 
     struct Node
