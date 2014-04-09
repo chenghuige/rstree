@@ -36,7 +36,7 @@ DEFINE_string(o, "", "output file");
 
 RstreeFilter g_filter;
 
-void test(const string& s)
+void test(string s)
 {
   Pval(s);
   Pval(g_filter.is_pass(s));

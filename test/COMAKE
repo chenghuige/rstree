@@ -37,7 +37,8 @@ INCPATHS('. ./include ./output ./output/include')
 LDFLAGS('-lpthread -lcrypto -lrt')
 
 #依赖模块
-CONFIGS('lib2-64/ullib@base public/ub@base')
+ImportConfigsFrom('../')
+#CONFIGS('lib2-64/ullib@base public/ub@base')
 
 #为32位/64位指定不同的依赖路径.
 #CONFIGS_32('lib2/ullib')
