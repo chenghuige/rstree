@@ -46,7 +46,7 @@ public:
   }
 
   bool init(const comcfg::Configure& conf,
-          const string& section = "Rstree")
+          string section = "Rstree")
   {
     CONF(_min_substr_len);
     CONF(_max_substr_len);
@@ -57,7 +57,7 @@ public:
   }
 
   bool read_config(const comcfg::Configure& conf,
-          const string& section = "Rstree")
+          string section = "Rstree")
   {
     CONF(_min_substr_len);
     CONF(_max_substr_len);
@@ -66,20 +66,20 @@ public:
     return true;
   }
 
-  bool read_config(const string& path = "./conf", const string& config_file = "Rstree.conf",
-          const string& section = "Rstree")
+  bool read_config(string path = "./conf", string config_file = "Rstree.conf",
+          string section = "Rstree")
   {
     return read_config(path.c_str(), config_file.c_str(), section);
   }
 
-  bool init(const string& path, const string& config_file,
-          const string& section = "Rstree")
+  bool init(string path, string config_file,
+          string section = "Rstree")
   {
     return read_config(path.c_str(), config_file.c_str(), section);
   }
 
   bool read_config(const char* path, const char* config_file,
-          const string& section = "Rstree")
+          string section = "Rstree")
   {
     comcfg::Configure conf;
     if (conf.load(path, config_file) != 0)

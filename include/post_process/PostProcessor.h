@@ -110,7 +110,7 @@ public:
     return true;
   }
 
-  string filter(const string& input)
+  string filter(string input)
   {
     string s = input;
     boost::to_lower(s);
@@ -231,7 +231,7 @@ public:
 
   //获取第一个spam
 
-  string get_spam(const string&input)
+  string get_spam(stringinput)
   {
     int count = _black_dict.search_count(input, _result);
     if (count > 0)
@@ -243,7 +243,7 @@ public:
   }
 
   ////  //获取覆盖最多spam的区间对应的string
-  // string get_spampart(const string& input, int max_length)
+  // string get_spampart(string input, int max_length)
   // {
   //   
   // }

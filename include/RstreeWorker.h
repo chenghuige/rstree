@@ -126,7 +126,7 @@ public:
     }
   }
 
-  bool get_postype(const string& sub_c, int len, vector<int>& splits)
+  bool get_postype(string sub_c, int len, vector<int>& splits)
   {
     bool ret = segment(sub_c, _seg_handle);
     if (!ret)
@@ -152,7 +152,7 @@ public:
     }
   };
 
-  vector<ONode> get_substrs(const string& content_, int min_freq, int min_len, int max_len)
+  vector<ONode> get_substrs(string content_, int min_freq, int min_len, int max_len)
   {
     _rstree.set_min_frequency(min_freq);
     _rstree.set_min_substr_len(min_len);

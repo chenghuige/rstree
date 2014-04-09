@@ -63,7 +63,7 @@ public:
     }
   }
 
-  bool is_white_format(const string& input)
+  bool is_white_format(string input)
   {
     if (input.empty())
     {
@@ -102,7 +102,7 @@ public:
     return false;
   }
 
-  bool contains_white_phrase(const string& input)
+  bool contains_white_phrase(string input)
   {
     return _white_dict.has_word(input);
   }
@@ -113,7 +113,7 @@ public:
     return _white_reg_searcher.has_match(input);
   }
 
-  bool is_pass(const string& input)
+  bool is_pass(string input)
   {
     if (is_white_format(input))
     {

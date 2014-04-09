@@ -638,7 +638,7 @@ protected:
       //循环 remainder 次 (不必考虑[0,end_idx] [1,end_idx] ...[end_idx,end_idx] 
       //只需要考虑[end_idx - remainder + 1, end_idx]..[end_idx,end_idx])
       //remainder >= 1  remainder == 1意味着active_node == root 从头开始插入
-      Node* mid_node; //当前指向新建叶子节点时 in_node 通过边长为1的边指向该叶子节点 即分裂边上的新生节点  a -- mid_node -- b
+      Node* mid_node = NULL; //当前指向新建叶子节点时 in_node 通过边长为1的边指向该叶子节点 即分裂边上的新生节点  a -- mid_node -- b
       Node* old_node = _root; //记录循环中前一次的in_node位置，第一次设置为root_
 
       for (; remainder > 0; remainder--)
