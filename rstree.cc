@@ -19,7 +19,7 @@
 #include "PostProcessor.h"
 #include "PostAdjustor.h"
 //#include "Seg.h"
-#include "word_seg.h"
+//#include "word_seg.h"
 #include "RstreeWorker.h"
 
 
@@ -90,7 +90,7 @@ static int rstree_server_callback()
 	if (ret_no != 0)
 	{
 		LOG_WARNING("request format is wrong log id [%d]", res_head->log_id);
-		LOG(WARNING) << format("request format is wrong log id [%d]") % res_head->log_id;
+		LOG(WARNING) << boost::format("request format is wrong log id [%d]") % res_head->log_id;
 		error_no = 3;
 		min_freq = 15;
 		min_len = 8;
@@ -103,7 +103,7 @@ static int rstree_server_callback()
 	vector<ONode> result_vec;
 	if (error_no == 0)
 	{
-		VLOG(5) << format("logid[%d] get content[%s], min_freq %d, min_len %d, max_len %d")
+		VLOG(5) << boost::format("logid[%d] get content[%s], min_freq %d, min_len %d, max_len %d")
 			% res_head->log_id % content % min_freq % min_len % max_len;
 
 		result_vec = g_worker->get_substrs(content, min_freq, min_len, max_len);
@@ -120,7 +120,7 @@ static int rstree_server_callback()
 		ret_no |= mc_pack_put_str(item_pack, "str", result_vec[i].str.c_str());
 		ret_no |= mc_pack_put_int32(item_pack, "count", result_vec[i].count);
 		ret_no |= mc_pack_put_int32(item_pack, "black_count", result_vec[i].black_count);
-		VLOG(5) << format("result substring[%s] freq[%d] bcount[%d] ret_no[%d]") % result_vec[i].str %
+		VLOG(5) << boost::format("result substring[%s] freq[%d] bcount[%d] ret_no[%d]") % result_vec[i].str %
 			result_vec[i].count % result_vec[i].black_count % ret_no;
 		int pac_size = mc_pack_get_size(ret_pack);
 		PVAL(pac_size);

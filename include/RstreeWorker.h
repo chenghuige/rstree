@@ -16,7 +16,8 @@
 #include "Rstree.h"
 //#include "dsuffix_tree.h"
 #include "post_process/PostProcessor.h"
-#include "word_seg.h"
+//#include "word_seg.h"
+#include "Segmentor.h"
 #include "all_util.h"
 #include "rstree_def.h"
 #include "hashmap_util.h"
@@ -47,7 +48,7 @@ namespace gezi
 
 		Rstree _rstree;
 		PostProcessor _post_processor;
-		SegHandle _seg_handle;
+		//SegHandle _seg_handle;
 		PostAdjustor _post_adjustor;
 
 	public:
@@ -57,17 +58,18 @@ namespace gezi
 			SharedConf::init(RSTREE_CONF_DIR, RSTREE_CONF);
 			PostProcessor::init_static();
 
-			string seg_data_dir = "./data/wordseg";
-			string section = "";
-			SCONF(seg_data_dir);
-			seg_init(seg_data_dir);
+			//string seg_data_dir = "./data/wordseg";
+			//string section = "";
+			//SCONF(seg_data_dir);
+			//seg_init(seg_data_dir);
+			Segmentor::Init();
 		}
 
 		void init()
 		{
 			_rstree.init();
 			_post_processor.init();
-			_seg_handle.init(MAX_SEG_BUFSIZE); //
+			//_seg_handle.init(MAX_SEG_BUFSIZE); //
 
 			string section = "RstreeWorker";
 			SCONF(_min_text_length);
@@ -128,14 +130,14 @@ namespace gezi
 
 		bool get_postype(string sub_c, int len, vector<int>& splits)
 		{
-			bool ret = segment(sub_c, _seg_handle);
+			bool ret = Segmentor::Segment_(sub_c);
 			if (!ret)
 			{
 				LOG_WARNING("seg fail %s", sub_c.c_str());
 				return false;
 			}
 			//    print_seg_result(_seg_handle);
-			ret = get_postype(_seg_handle, len, splits);
+			ret = get_postype(Segmentor::handle(), len, splits);
 			if (!ret)
 			{
 				LOG_WARNING("getpos fail for [%s] %d", sub_c.c_str(), len);
@@ -197,16 +199,16 @@ namespace gezi
 					bool sucess = get_postype(sub_c, sub_wc.size(), splits);
 					if (sucess)
 					{
-						_rstree.add(sub_wc, rvec, &splits);
+						_rstree.add_find(sub_wc, rvec, &splits);
 					}
 					else
 					{
-						_rstree.add(sub_wc, rvec);
+						_rstree.add_find(sub_wc, rvec);
 					}
 				}
 				else
 				{
-					_rstree.add(sub_wc, rvec);
+					_rstree.add_find(sub_wc, rvec);
 				}
 #ifndef NDEBUG
 
@@ -340,11 +342,7 @@ namespace gezi
 			//    }
 
 
-#if __GNUC__ > 3
-			return std::move(result_vec);
-#else
 			return result_vec;
-#endif
 		}
 
 		inline int tree_size()
