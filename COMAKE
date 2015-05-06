@@ -10,17 +10,26 @@ CopyUsingHardLink(True)
 #支持32位/64位平台编译
 #ENABLE_MULTI_LIBS(True)
 
+GCC_BIN = '/opt/compiler/gcc-4.8.2/bin/g++'
+print 'GCC_BIN: %s'%GCC_BIN; os.system('%s -v'%GCC_BIN)
+CC(GCC_BIN)
+CXX(GCC_BIN)
+
 #C预处理器参数.
 #CPPFLAGS('-DNDEBUG -D_GNU_SOURCE -D__STDC_LIMIT_MACROS -DVERSION=\\\"1.9.8.7\\\"')
 CPPFLAGS('-D_GNU_SOURCE -D__STDC_LIMIT_MACROS -DVERSION=\\\"1.9.8.7\\\"')
 #为32位目标编译指定额外的预处理参数
 #CPPFLAGS_32('-D_XOPEN_SOURE=500')
 
+LEVEL = 3
+COMMON_FLAGS = '-g -O%d -pipe -W -Wall -fPIC -DHAVE_NETINET_IN_H -Wno-unused-parameter -Wno-deprecated'%LEVEL
+GCC_FLAGS = '-std=c++11 -fpermissive -Wno-write-strings -Wno-literal-suffix -Wno-unused-local-typedefs'
+
 #C编译参数.
-CFLAGS('-g -pipe -W -Wall -fPIC')
+CFLAGS(COMMON_FLAGS, GCC_FLAGS)
 
 #C++编译参数.
-CXXFLAGS('-g -pipe -W -Wall -fPIC')
+CXXFLAGS(COMMON_FLAGS, GCC_FLAGS)
 
 #IDL编译参数
 IDLFLAGS('--compack')
@@ -72,6 +81,4 @@ Application('test_filter',Sources('test/test_filter.cc',srcs), OutputPath('./bin
 Application('test_post_processor',Sources('test/test_post_processor.cc',srcs), OutputPath('./bin'))
 Application('test_seg',Sources('test/test_seg.cc', srcs), OutputPath('./bin'))
 Application('test_suffixtree',Sources('test/test_suffixtree.cc',srcs), OutputPath('./bin'))
-
-
 

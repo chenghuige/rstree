@@ -10,16 +10,62 @@ CopyUsingHardLink(True)
 #支持32位/64位平台编译
 #ENABLE_MULTI_LIBS(True)
 
+TOOLCHAIN_ROOT='../../../../../../ps/se/toolchain'
+
+LEVEL = 3
+#2 means gcc4.8.2 default,0 means gcc3 using toolchain, 1 means really local
+GCC_LOCAL=0
+print 'GCC_LOCAL: %d'%GCC_LOCAL 
+#是否使用高版本gcc 可以直接使用生成的bin文件 如./main 
+GCC_HIGH=1
+print 'GCC_HIGH: %d'%GCC_HIGH
+#是否使用高版本动态链接库，即是否使用高版本libc 如果启用 可以使用openmp 但是需要设置确保ld-linux....so在当前路径
+GCC_DYNAMIC=0
+print 'GCC_DYNAMIC: %d'%GCC_DYNAMIC
+GCC_VERSION='3.4.5'
+if  GCC_HIGH == 1: 
+	if GCC_DYNAMIC == 1:
+		GCC_VERSION='4.8.1'
+	else:
+		GCC_VERSION='4.8.2'
+print 'GCC_VERSION: %s'%GCC_VERSION
+GLIBC_VERSION='2.9'
+BINUTILS_VERSION='2.20'
+KERNAL_VERSION='2.6.32'
+
+#使用硬链接copy.
+CopyUsingHardLink(True)
+
+GCC_BIN='g++'
+GCC_FLAGS = '' 
+TOOLCHAIN=TOOLCHAIN_ROOT
+if GCC_HIGH  == 1:
+	if GCC_DYNAMIC == 1:	
+		TOOLCHAIN += '/x86_64-unknown-linux-gnu-%s-%s-%s-%s'%(GCC_VERSION,GLIBC_VERSION,BINUTILS_VERSION,KERNAL_VERSION)
+		GCC_BIN=TOOLCHAIN + '/bin/x86_64-unknown-linux-gnu-g++'
+	else:
+		TOOLCHAIN += '/gcc_only_%s'%(GCC_VERSION)
+		GCC_BIN=TOOLCHAIN + '/bin/g++'
+
+if GCC_LOCAL == 1:
+	GCC_BIN = 'g++'
+elif GCC_LOCAL == 2:
+	GCC_BIN = '/opt/compiler/gcc-4.8.2/bin/g++'
+print 'GCC_BIN: %s'%GCC_BIN; os.system('%s -v'%GCC_BIN)
+CC(GCC_BIN)
+CXX(GCC_BIN)
+
 #C预处理器参数.
 CPPFLAGS('-D_GNU_SOURCE -D__STDC_LIMIT_MACROS -DVERSION=\\\"1.9.8.7\\\"')
-#为32位目标编译指定额外的预处理参数
-#CPPFLAGS_32('-D_XOPEN_SOURE=500')
+
+COMMON_FLAGS = '-g -O%d -pipe -W -Wall -fPIC -DHAVE_NETINET_IN_H -Wno-unused-parameter -Wno-deprecated'%LEVEL
+GCC_FLAGS = '-std=c++11 -fpermissive -Wno-write-strings -Wno-literal-suffix -Wno-unused-local-typedefs'
 
 #C编译参数.
-CFLAGS('-g -pipe -W -Wall -fPIC')
+CFLAGS(COMMON_FLAGS, GCC_FLAGS)
 
 #C++编译参数.
-CXXFLAGS('-g -pipe -W -Wall -fPIC')
+CXXFLAGS(COMMON_FLAGS, GCC_FLAGS)
 
 #IDL编译参数
 IDLFLAGS('--compack')
@@ -28,31 +74,55 @@ IDLFLAGS('--compack')
 UBRPCFLAGS('--compack')
 
 #头文件路径.
-INCPATHS('. ./include ./output ./output/include')
+INCPATHS('../include ../include/post_process')
 
 #使用库
-#LIBS('./libtest.a')
+#LIBS('./librstree.a')
 
 #链接参数.
-LDFLAGS('-lpthread -lcrypto -lrt')
+GCC_LDFLAGS=''
+if GCC_HIGH  == 1: 
+	if GCC_DYNAMIC  == 1:
+		GCC_LDFLAGS += ' -lgomp'
+	else: 
+		GCC_LDFLAGS  += ' -static-libgcc -static-libstdc++'
+
+#链接参数.
+LDFLAGS('-lpthread -rdynamic -lrt -lldap -ldl', GCC_LDFLAGS)
 
 #依赖模块
-ImportConfigsFrom('../')
-#CONFIGS('lib2-64/ullib@base public/ub@base')
+#CONFIGS('lib2-64/ullib public/ub public/mcpack third-64/boost public/gm/galileo lib2-64/ccode lib2-64/string third-64/tcmalloc')
 
-#为32位/64位指定不同的依赖路径.
-#CONFIGS_32('lib2/ullib')
-#CONFIGS_64('lib2-64/ullib')
+#依赖模块
+CONFIGS('third-64/boost@base')
+CONFIGS('third-64/gflags@base')
+CONFIGS('third-64/glog@base')
+CONFIGS('com/btest/gtest@base')
+CONFIGS('third-64/tcmalloc@base')
+CONFIGS('public/comlog-plugin@base')
+CONFIGS('public/configure@base')
+CONFIGS('public/ub@1.2.36.0')
+#CONFIGS('public/gm/galileo@base')
+#CONFIGS('lib2-64/others-ex@base')
+CONFIGS('lib2-64/wordseg@3.0.12.2')
+CONFIGS('lib2-64/ullib@3.1.40.0')
+CONFIGS('lib2-64/ccode@3.2.3.2')
+CONFIGS('lib2-64/dict@3.1.12.0')
+CONFIGS('lib2-64/others-ex@3.1.14.2')
+CONFIGS('lib2-64/libcrf@2.1.3.0')
+CONFIGS('public/odict@1.1.2.1')
+CONFIGS('lib2-64/postag@2.0.2.0')
+CONFIGS('app/search/sep/anti-spam/gezi@base')
 
-user_sources='client.cpp'
-user_headers=''
+srcs=GLOB('../src/*.cpp','../src/post_process/*.cpp')
 
 #可执行文件
-Application('client',Sources(user_sources))
-#静态库
-#StaticLibrary('test',Sources(user_sources),HeaderFiles(user_headers))
-#共享库
-#SharedLibrary('test',Sources(user_sources),HeaderFiles(user_headers))
-#子目录
-#Directory('demo')
+#Application('rstree.test',Sources('rstree.cc',srcs))
+#Application('rstree',Sources('rstree.cc',srcs,ENV.CppFlags()+CppFlags('-O3 -DNDEBUG -DGOOGLE_STRIP_LOG')))
+Application('test_filter',Sources('test_filter.cc',srcs))
+Application('test_post_processor',Sources('test_post_processor.cc',srcs))
+Application('test_seg',Sources('test_seg.cc', srcs))
+Application('test_suffixtree',Sources('test_suffixtree.cc'))
 
+#Application('test_rstree',Sources('test_rstree.cc',srcs, ENV.CppFlags()+CppFlags('-O3 -DNDEBUG')))
+Application('test_rstree',Sources('test_rstree.cc',srcs))

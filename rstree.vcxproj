@@ -91,6 +91,7 @@
     <ClCompile Include="test\client.cpp" />
     <ClCompile Include="test\test_filter.cc" />
     <ClCompile Include="test\test_post_processor.cc" />
+    <ClCompile Include="test\test_rstree.cc" />
     <ClCompile Include="test\test_seg.cc" />
     <ClCompile Include="test\test_suffixtree.cc" />
   </ItemGroup>

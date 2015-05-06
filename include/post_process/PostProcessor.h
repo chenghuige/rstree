@@ -49,7 +49,7 @@
 #include "MatchDict.h"
 #include "RegexSearcher.h"
 #include <functional>
-#include <boost/bind.hpp>
+//#include <boost/bind.hpp>
 #include "rstree_def.h"
 
 class PostProcessor
@@ -231,7 +231,7 @@ public:
 
   //获取第一个spam
 
-  string get_spam(stringinput)
+  string get_spam(string input)
   {
     int count = _black_dict.search_count(input, _result);
     if (count > 0)
