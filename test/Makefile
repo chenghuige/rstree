@@ -1,8 +1,8 @@
 #COMAKE2 edit-mode: -*- Makefile -*-
 ####################64Bit Mode####################
 ifeq ($(shell uname -m),x86_64)
-CC=../../../../../../ps/se/toolchain/gcc_only_4.8.2/bin/g++
-CXX=../../../../../../ps/se/toolchain/gcc_only_4.8.2/bin/g++
+CC=g++
+CXX=g++
 CXXFLAGS=-g \
   -O3 \
   -pipe \
@@ -195,11 +195,11 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=49ddfd063e928e2652280a06464ee7f9  COMAKE
+COMAKE_MD5=e3453fdd2f10412478802dcc6f4f0c7b  COMAKE
 
 
 .PHONY:all
-all:comake2_makefile_check test_filter test_post_processor test_seg test_suffixtree test_rstree 
+all:comake2_makefile_check test_rstree 
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mall[0m']"
 	@echo "make all done"
 
@@ -219,29 +219,8 @@ ccpclean:
 .PHONY:clean
 clean:ccpclean
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mclean[0m']"
-	rm -rf test_filter
-	rm -rf ./output/bin/test_filter
-	rm -rf test_post_processor
-	rm -rf ./output/bin/test_post_processor
-	rm -rf test_seg
-	rm -rf ./output/bin/test_seg
-	rm -rf test_suffixtree
-	rm -rf ./output/bin/test_suffixtree
 	rm -rf test_rstree
 	rm -rf ./output/bin/test_rstree
-	rm -rf test_filter_test_filter.o
-	rm -rf ../src/test_filter_conf.o
-	rm -rf ../src/post_process/test_filter_PostProcessor.o
-	rm -rf ../src/post_process/test_filter_RstreeFilter.o
-	rm -rf test_post_processor_test_post_processor.o
-	rm -rf ../src/test_post_processor_conf.o
-	rm -rf ../src/post_process/test_post_processor_PostProcessor.o
-	rm -rf ../src/post_process/test_post_processor_RstreeFilter.o
-	rm -rf test_seg_test_seg.o
-	rm -rf ../src/test_seg_conf.o
-	rm -rf ../src/post_process/test_seg_PostProcessor.o
-	rm -rf ../src/post_process/test_seg_RstreeFilter.o
-	rm -rf test_suffixtree_test_suffixtree.o
 	rm -rf test_rstree_test_rstree.o
 	rm -rf ../src/test_rstree_conf.o
 	rm -rf ../src/post_process/test_rstree_PostProcessor.o
@@ -263,504 +242,6 @@ distclean:clean
 love:
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mlove[0m']"
 	@echo "make love done"
-
-test_filter:test_filter_test_filter.o \
-  ../src/test_filter_conf.o \
-  ../src/post_process/test_filter_PostProcessor.o \
-  ../src/post_process/test_filter_RstreeFilter.o
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest_filter[0m']"
-	$(CXX) test_filter_test_filter.o \
-  ../src/test_filter_conf.o \
-  ../src/post_process/test_filter_PostProcessor.o \
-  ../src/post_process/test_filter_RstreeFilter.o -Xlinker "-("  ../../../../../../app/search/sep/anti-spam/gezi/libgezi_common.a \
-  ../../../../../../app/search/sep/anti-spam/gezi/libgezi_cppformat.a \
-  ../../../../../../app/search/sep/anti-spam/gezi/libgezi_json.a \
-  ../../../../../../app/search/sep/anti-spam/gezi/output/lib/libPYNotation.a \
-  ../../../../../../com/btest/gtest/output/lib/libgtest.a \
-  ../../../../../../com/btest/gtest/output/lib/libgtest_main.a \
-  ../../../../../../com/idlcompiler/astyle/libastyle.a \
-  ../../../../../../com/idlcompiler/cxx/libskeleton.a \
-  ../../../../../../com/idlcompiler/java/libjava_skeleton.a \
-  ../../../../../../com/idlcompiler/parser/libparser.a \
-  ../../../../../../com/idlcompiler/php/libphp_skeleton.a \
-  ../../../../../../inf/computing/zookeeper/output/c_client/lib/libzookeeper_mt.a \
-  ../../../../../../inf/computing/zookeeper/output/c_client/lib/libzookeeper_st.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_ResourcePool.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_archive.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_buffer.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_check_cast.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_exception.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_pool.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_utils.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_var.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_var_implement.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_var_utils.a \
-  ../../../../../../lib2-64/ccode/lib/libulccode.a \
-  ../../../../../../lib2-64/dict/lib/libuldict.a \
-  ../../../../../../lib2-64/libcrf/lib/libcrf.a \
-  ../../../../../../lib2-64/others-ex/lib/libullib_ex.a \
-  ../../../../../../lib2-64/postag/lib/libpostag.a \
-  ../../../../../../lib2-64/string/lib/libstring.a \
-  ../../../../../../lib2-64/ullib/lib/libullib.a \
-  ../../../../../../lib2-64/wordseg/libsegment.a \
-  ../../../../../../op/oped/noah/webfoot/naming-lib/output/lib/libwebfoot_naming.a \
-  ../../../../../../public/bslext/output/lib/libbsl_bml.a \
-  ../../../../../../public/bslext/output/lib/libbsl_containers_utils.a \
-  ../../../../../../public/bslext/output/lib/libbsl_var_scripting.a \
-  ../../../../../../public/bslext/output/lib/libbsl_var_serializer.a \
-  ../../../../../../public/bslext/output/lib/libbsl_var_vscript.a \
-  ../../../../../../public/bslext/output/lib/libbsl_vs.a \
-  ../../../../../../public/bslext/output/lib/libbslext.a \
-  ../../../../../../public/comlog-plugin/libcomlog.a \
-  ../../../../../../public/comlog-plugin/output/lib/libdfsappender.a \
-  ../../../../../../public/configure/libconfig.a \
-  ../../../../../../public/connectpool/libconnectpool.a \
-  ../../../../../../public/gm/galileo/libgalileo.a \
-  ../../../../../../public/gm/galileo/output/lib/libzookeeper_mt.a \
-  ../../../../../../public/idlcompiler/output/lib/libmcpack_idl.a \
-  ../../../../../../public/mcpack/libmcpack.a \
-  ../../../../../../public/nshead/libnshead.a \
-  ../../../../../../public/odict/libodict.a \
-  ../../../../../../public/spreg/libspreg.a \
-  ../../../../../../public/ub/output/lib/libub.a \
-  ../../../../../../public/ub/output/lib/libub_aserver.a \
-  ../../../../../../public/ub/output/lib/libub_client.a \
-  ../../../../../../public/ub/output/lib/libub_conf.a \
-  ../../../../../../public/ub/output/lib/libub_galileo.a \
-  ../../../../../../public/ub/output/lib/libub_log.a \
-  ../../../../../../public/ub/output/lib/libub_misc.a \
-  ../../../../../../public/ub/output/lib/libub_monitor.a \
-  ../../../../../../public/ub/output/lib/libub_naming.a \
-  ../../../../../../public/ub/output/lib/libub_server.a \
-  ../../../../../../public/ub/output/lib/libubex.a \
-  ../../../../../../public/ub/output/lib/libubfw.a \
-  ../../../../../../public/uconv/libuconv.a \
-  ../../../../../../quality/autotest/reportlib/cpp/libautotest.a \
-  ../../../../../../third-64/boost/lib/libboost_atomic.a \
-  ../../../../../../third-64/boost/lib/libboost_chrono.a \
-  ../../../../../../third-64/boost/lib/libboost_context.a \
-  ../../../../../../third-64/boost/lib/libboost_date_time.a \
-  ../../../../../../third-64/boost/lib/libboost_exception.a \
-  ../../../../../../third-64/boost/lib/libboost_filesystem.a \
-  ../../../../../../third-64/boost/lib/libboost_graph.a \
-  ../../../../../../third-64/boost/lib/libboost_locale.a \
-  ../../../../../../third-64/boost/lib/libboost_math_c99.a \
-  ../../../../../../third-64/boost/lib/libboost_math_c99f.a \
-  ../../../../../../third-64/boost/lib/libboost_math_c99l.a \
-  ../../../../../../third-64/boost/lib/libboost_math_tr1.a \
-  ../../../../../../third-64/boost/lib/libboost_math_tr1f.a \
-  ../../../../../../third-64/boost/lib/libboost_math_tr1l.a \
-  ../../../../../../third-64/boost/lib/libboost_prg_exec_monitor.a \
-  ../../../../../../third-64/boost/lib/libboost_program_options.a \
-  ../../../../../../third-64/boost/lib/libboost_python.a \
-  ../../../../../../third-64/boost/lib/libboost_random.a \
-  ../../../../../../third-64/boost/lib/libboost_regex.a \
-  ../../../../../../third-64/boost/lib/libboost_serialization.a \
-  ../../../../../../third-64/boost/lib/libboost_signals.a \
-  ../../../../../../third-64/boost/lib/libboost_system.a \
-  ../../../../../../third-64/boost/lib/libboost_test_exec_monitor.a \
-  ../../../../../../third-64/boost/lib/libboost_thread.a \
-  ../../../../../../third-64/boost/lib/libboost_timer.a \
-  ../../../../../../third-64/boost/lib/libboost_unit_test_framework.a \
-  ../../../../../../third-64/boost/lib/libboost_wave.a \
-  ../../../../../../third-64/boost/lib/libboost_wserialization.a \
-  ../../../../../../third-64/gflags/lib/libgflags.a \
-  ../../../../../../third-64/gflags/lib/libgflags_nothreads.a \
-  ../../../../../../third-64/glog/lib/libglog.a \
-  ../../../../../../third-64/libcurl/lib/libcurl.a \
-  ../../../../../../third-64/pcre/lib/libpcre.a \
-  ../../../../../../third-64/pcre/lib/libpcrecpp.a \
-  ../../../../../../third-64/pcre/lib/libpcreposix.a \
-  ../../../../../../third-64/protobuf/lib/libprotobuf-lite.a \
-  ../../../../../../third-64/protobuf/lib/libprotobuf.a \
-  ../../../../../../third-64/protobuf/lib/libprotoc.a \
-  ../../../../../../third-64/tcmalloc/lib/libprofiler.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_and_profiler.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_debug.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
-  -rdynamic \
-  -lrt \
-  -lldap \
-  -ldl \
-  -static-libgcc \
-  -static-libstdc++ -Xlinker "-)" -o test_filter
-	mkdir -p ./output/bin
-	cp -f --link test_filter ./output/bin
-
-test_post_processor:test_post_processor_test_post_processor.o \
-  ../src/test_post_processor_conf.o \
-  ../src/post_process/test_post_processor_PostProcessor.o \
-  ../src/post_process/test_post_processor_RstreeFilter.o
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest_post_processor[0m']"
-	$(CXX) test_post_processor_test_post_processor.o \
-  ../src/test_post_processor_conf.o \
-  ../src/post_process/test_post_processor_PostProcessor.o \
-  ../src/post_process/test_post_processor_RstreeFilter.o -Xlinker "-("  ../../../../../../app/search/sep/anti-spam/gezi/libgezi_common.a \
-  ../../../../../../app/search/sep/anti-spam/gezi/libgezi_cppformat.a \
-  ../../../../../../app/search/sep/anti-spam/gezi/libgezi_json.a \
-  ../../../../../../app/search/sep/anti-spam/gezi/output/lib/libPYNotation.a \
-  ../../../../../../com/btest/gtest/output/lib/libgtest.a \
-  ../../../../../../com/btest/gtest/output/lib/libgtest_main.a \
-  ../../../../../../com/idlcompiler/astyle/libastyle.a \
-  ../../../../../../com/idlcompiler/cxx/libskeleton.a \
-  ../../../../../../com/idlcompiler/java/libjava_skeleton.a \
-  ../../../../../../com/idlcompiler/parser/libparser.a \
-  ../../../../../../com/idlcompiler/php/libphp_skeleton.a \
-  ../../../../../../inf/computing/zookeeper/output/c_client/lib/libzookeeper_mt.a \
-  ../../../../../../inf/computing/zookeeper/output/c_client/lib/libzookeeper_st.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_ResourcePool.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_archive.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_buffer.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_check_cast.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_exception.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_pool.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_utils.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_var.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_var_implement.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_var_utils.a \
-  ../../../../../../lib2-64/ccode/lib/libulccode.a \
-  ../../../../../../lib2-64/dict/lib/libuldict.a \
-  ../../../../../../lib2-64/libcrf/lib/libcrf.a \
-  ../../../../../../lib2-64/others-ex/lib/libullib_ex.a \
-  ../../../../../../lib2-64/postag/lib/libpostag.a \
-  ../../../../../../lib2-64/string/lib/libstring.a \
-  ../../../../../../lib2-64/ullib/lib/libullib.a \
-  ../../../../../../lib2-64/wordseg/libsegment.a \
-  ../../../../../../op/oped/noah/webfoot/naming-lib/output/lib/libwebfoot_naming.a \
-  ../../../../../../public/bslext/output/lib/libbsl_bml.a \
-  ../../../../../../public/bslext/output/lib/libbsl_containers_utils.a \
-  ../../../../../../public/bslext/output/lib/libbsl_var_scripting.a \
-  ../../../../../../public/bslext/output/lib/libbsl_var_serializer.a \
-  ../../../../../../public/bslext/output/lib/libbsl_var_vscript.a \
-  ../../../../../../public/bslext/output/lib/libbsl_vs.a \
-  ../../../../../../public/bslext/output/lib/libbslext.a \
-  ../../../../../../public/comlog-plugin/libcomlog.a \
-  ../../../../../../public/comlog-plugin/output/lib/libdfsappender.a \
-  ../../../../../../public/configure/libconfig.a \
-  ../../../../../../public/connectpool/libconnectpool.a \
-  ../../../../../../public/gm/galileo/libgalileo.a \
-  ../../../../../../public/gm/galileo/output/lib/libzookeeper_mt.a \
-  ../../../../../../public/idlcompiler/output/lib/libmcpack_idl.a \
-  ../../../../../../public/mcpack/libmcpack.a \
-  ../../../../../../public/nshead/libnshead.a \
-  ../../../../../../public/odict/libodict.a \
-  ../../../../../../public/spreg/libspreg.a \
-  ../../../../../../public/ub/output/lib/libub.a \
-  ../../../../../../public/ub/output/lib/libub_aserver.a \
-  ../../../../../../public/ub/output/lib/libub_client.a \
-  ../../../../../../public/ub/output/lib/libub_conf.a \
-  ../../../../../../public/ub/output/lib/libub_galileo.a \
-  ../../../../../../public/ub/output/lib/libub_log.a \
-  ../../../../../../public/ub/output/lib/libub_misc.a \
-  ../../../../../../public/ub/output/lib/libub_monitor.a \
-  ../../../../../../public/ub/output/lib/libub_naming.a \
-  ../../../../../../public/ub/output/lib/libub_server.a \
-  ../../../../../../public/ub/output/lib/libubex.a \
-  ../../../../../../public/ub/output/lib/libubfw.a \
-  ../../../../../../public/uconv/libuconv.a \
-  ../../../../../../quality/autotest/reportlib/cpp/libautotest.a \
-  ../../../../../../third-64/boost/lib/libboost_atomic.a \
-  ../../../../../../third-64/boost/lib/libboost_chrono.a \
-  ../../../../../../third-64/boost/lib/libboost_context.a \
-  ../../../../../../third-64/boost/lib/libboost_date_time.a \
-  ../../../../../../third-64/boost/lib/libboost_exception.a \
-  ../../../../../../third-64/boost/lib/libboost_filesystem.a \
-  ../../../../../../third-64/boost/lib/libboost_graph.a \
-  ../../../../../../third-64/boost/lib/libboost_locale.a \
-  ../../../../../../third-64/boost/lib/libboost_math_c99.a \
-  ../../../../../../third-64/boost/lib/libboost_math_c99f.a \
-  ../../../../../../third-64/boost/lib/libboost_math_c99l.a \
-  ../../../../../../third-64/boost/lib/libboost_math_tr1.a \
-  ../../../../../../third-64/boost/lib/libboost_math_tr1f.a \
-  ../../../../../../third-64/boost/lib/libboost_math_tr1l.a \
-  ../../../../../../third-64/boost/lib/libboost_prg_exec_monitor.a \
-  ../../../../../../third-64/boost/lib/libboost_program_options.a \
-  ../../../../../../third-64/boost/lib/libboost_python.a \
-  ../../../../../../third-64/boost/lib/libboost_random.a \
-  ../../../../../../third-64/boost/lib/libboost_regex.a \
-  ../../../../../../third-64/boost/lib/libboost_serialization.a \
-  ../../../../../../third-64/boost/lib/libboost_signals.a \
-  ../../../../../../third-64/boost/lib/libboost_system.a \
-  ../../../../../../third-64/boost/lib/libboost_test_exec_monitor.a \
-  ../../../../../../third-64/boost/lib/libboost_thread.a \
-  ../../../../../../third-64/boost/lib/libboost_timer.a \
-  ../../../../../../third-64/boost/lib/libboost_unit_test_framework.a \
-  ../../../../../../third-64/boost/lib/libboost_wave.a \
-  ../../../../../../third-64/boost/lib/libboost_wserialization.a \
-  ../../../../../../third-64/gflags/lib/libgflags.a \
-  ../../../../../../third-64/gflags/lib/libgflags_nothreads.a \
-  ../../../../../../third-64/glog/lib/libglog.a \
-  ../../../../../../third-64/libcurl/lib/libcurl.a \
-  ../../../../../../third-64/pcre/lib/libpcre.a \
-  ../../../../../../third-64/pcre/lib/libpcrecpp.a \
-  ../../../../../../third-64/pcre/lib/libpcreposix.a \
-  ../../../../../../third-64/protobuf/lib/libprotobuf-lite.a \
-  ../../../../../../third-64/protobuf/lib/libprotobuf.a \
-  ../../../../../../third-64/protobuf/lib/libprotoc.a \
-  ../../../../../../third-64/tcmalloc/lib/libprofiler.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_and_profiler.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_debug.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
-  -rdynamic \
-  -lrt \
-  -lldap \
-  -ldl \
-  -static-libgcc \
-  -static-libstdc++ -Xlinker "-)" -o test_post_processor
-	mkdir -p ./output/bin
-	cp -f --link test_post_processor ./output/bin
-
-test_seg:test_seg_test_seg.o \
-  ../src/test_seg_conf.o \
-  ../src/post_process/test_seg_PostProcessor.o \
-  ../src/post_process/test_seg_RstreeFilter.o
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest_seg[0m']"
-	$(CXX) test_seg_test_seg.o \
-  ../src/test_seg_conf.o \
-  ../src/post_process/test_seg_PostProcessor.o \
-  ../src/post_process/test_seg_RstreeFilter.o -Xlinker "-("  ../../../../../../app/search/sep/anti-spam/gezi/libgezi_common.a \
-  ../../../../../../app/search/sep/anti-spam/gezi/libgezi_cppformat.a \
-  ../../../../../../app/search/sep/anti-spam/gezi/libgezi_json.a \
-  ../../../../../../app/search/sep/anti-spam/gezi/output/lib/libPYNotation.a \
-  ../../../../../../com/btest/gtest/output/lib/libgtest.a \
-  ../../../../../../com/btest/gtest/output/lib/libgtest_main.a \
-  ../../../../../../com/idlcompiler/astyle/libastyle.a \
-  ../../../../../../com/idlcompiler/cxx/libskeleton.a \
-  ../../../../../../com/idlcompiler/java/libjava_skeleton.a \
-  ../../../../../../com/idlcompiler/parser/libparser.a \
-  ../../../../../../com/idlcompiler/php/libphp_skeleton.a \
-  ../../../../../../inf/computing/zookeeper/output/c_client/lib/libzookeeper_mt.a \
-  ../../../../../../inf/computing/zookeeper/output/c_client/lib/libzookeeper_st.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_ResourcePool.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_archive.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_buffer.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_check_cast.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_exception.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_pool.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_utils.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_var.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_var_implement.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_var_utils.a \
-  ../../../../../../lib2-64/ccode/lib/libulccode.a \
-  ../../../../../../lib2-64/dict/lib/libuldict.a \
-  ../../../../../../lib2-64/libcrf/lib/libcrf.a \
-  ../../../../../../lib2-64/others-ex/lib/libullib_ex.a \
-  ../../../../../../lib2-64/postag/lib/libpostag.a \
-  ../../../../../../lib2-64/string/lib/libstring.a \
-  ../../../../../../lib2-64/ullib/lib/libullib.a \
-  ../../../../../../lib2-64/wordseg/libsegment.a \
-  ../../../../../../op/oped/noah/webfoot/naming-lib/output/lib/libwebfoot_naming.a \
-  ../../../../../../public/bslext/output/lib/libbsl_bml.a \
-  ../../../../../../public/bslext/output/lib/libbsl_containers_utils.a \
-  ../../../../../../public/bslext/output/lib/libbsl_var_scripting.a \
-  ../../../../../../public/bslext/output/lib/libbsl_var_serializer.a \
-  ../../../../../../public/bslext/output/lib/libbsl_var_vscript.a \
-  ../../../../../../public/bslext/output/lib/libbsl_vs.a \
-  ../../../../../../public/bslext/output/lib/libbslext.a \
-  ../../../../../../public/comlog-plugin/libcomlog.a \
-  ../../../../../../public/comlog-plugin/output/lib/libdfsappender.a \
-  ../../../../../../public/configure/libconfig.a \
-  ../../../../../../public/connectpool/libconnectpool.a \
-  ../../../../../../public/gm/galileo/libgalileo.a \
-  ../../../../../../public/gm/galileo/output/lib/libzookeeper_mt.a \
-  ../../../../../../public/idlcompiler/output/lib/libmcpack_idl.a \
-  ../../../../../../public/mcpack/libmcpack.a \
-  ../../../../../../public/nshead/libnshead.a \
-  ../../../../../../public/odict/libodict.a \
-  ../../../../../../public/spreg/libspreg.a \
-  ../../../../../../public/ub/output/lib/libub.a \
-  ../../../../../../public/ub/output/lib/libub_aserver.a \
-  ../../../../../../public/ub/output/lib/libub_client.a \
-  ../../../../../../public/ub/output/lib/libub_conf.a \
-  ../../../../../../public/ub/output/lib/libub_galileo.a \
-  ../../../../../../public/ub/output/lib/libub_log.a \
-  ../../../../../../public/ub/output/lib/libub_misc.a \
-  ../../../../../../public/ub/output/lib/libub_monitor.a \
-  ../../../../../../public/ub/output/lib/libub_naming.a \
-  ../../../../../../public/ub/output/lib/libub_server.a \
-  ../../../../../../public/ub/output/lib/libubex.a \
-  ../../../../../../public/ub/output/lib/libubfw.a \
-  ../../../../../../public/uconv/libuconv.a \
-  ../../../../../../quality/autotest/reportlib/cpp/libautotest.a \
-  ../../../../../../third-64/boost/lib/libboost_atomic.a \
-  ../../../../../../third-64/boost/lib/libboost_chrono.a \
-  ../../../../../../third-64/boost/lib/libboost_context.a \
-  ../../../../../../third-64/boost/lib/libboost_date_time.a \
-  ../../../../../../third-64/boost/lib/libboost_exception.a \
-  ../../../../../../third-64/boost/lib/libboost_filesystem.a \
-  ../../../../../../third-64/boost/lib/libboost_graph.a \
-  ../../../../../../third-64/boost/lib/libboost_locale.a \
-  ../../../../../../third-64/boost/lib/libboost_math_c99.a \
-  ../../../../../../third-64/boost/lib/libboost_math_c99f.a \
-  ../../../../../../third-64/boost/lib/libboost_math_c99l.a \
-  ../../../../../../third-64/boost/lib/libboost_math_tr1.a \
-  ../../../../../../third-64/boost/lib/libboost_math_tr1f.a \
-  ../../../../../../third-64/boost/lib/libboost_math_tr1l.a \
-  ../../../../../../third-64/boost/lib/libboost_prg_exec_monitor.a \
-  ../../../../../../third-64/boost/lib/libboost_program_options.a \
-  ../../../../../../third-64/boost/lib/libboost_python.a \
-  ../../../../../../third-64/boost/lib/libboost_random.a \
-  ../../../../../../third-64/boost/lib/libboost_regex.a \
-  ../../../../../../third-64/boost/lib/libboost_serialization.a \
-  ../../../../../../third-64/boost/lib/libboost_signals.a \
-  ../../../../../../third-64/boost/lib/libboost_system.a \
-  ../../../../../../third-64/boost/lib/libboost_test_exec_monitor.a \
-  ../../../../../../third-64/boost/lib/libboost_thread.a \
-  ../../../../../../third-64/boost/lib/libboost_timer.a \
-  ../../../../../../third-64/boost/lib/libboost_unit_test_framework.a \
-  ../../../../../../third-64/boost/lib/libboost_wave.a \
-  ../../../../../../third-64/boost/lib/libboost_wserialization.a \
-  ../../../../../../third-64/gflags/lib/libgflags.a \
-  ../../../../../../third-64/gflags/lib/libgflags_nothreads.a \
-  ../../../../../../third-64/glog/lib/libglog.a \
-  ../../../../../../third-64/libcurl/lib/libcurl.a \
-  ../../../../../../third-64/pcre/lib/libpcre.a \
-  ../../../../../../third-64/pcre/lib/libpcrecpp.a \
-  ../../../../../../third-64/pcre/lib/libpcreposix.a \
-  ../../../../../../third-64/protobuf/lib/libprotobuf-lite.a \
-  ../../../../../../third-64/protobuf/lib/libprotobuf.a \
-  ../../../../../../third-64/protobuf/lib/libprotoc.a \
-  ../../../../../../third-64/tcmalloc/lib/libprofiler.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_and_profiler.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_debug.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
-  -rdynamic \
-  -lrt \
-  -lldap \
-  -ldl \
-  -static-libgcc \
-  -static-libstdc++ -Xlinker "-)" -o test_seg
-	mkdir -p ./output/bin
-	cp -f --link test_seg ./output/bin
-
-test_suffixtree:test_suffixtree_test_suffixtree.o
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest_suffixtree[0m']"
-	$(CXX) test_suffixtree_test_suffixtree.o -Xlinker "-("  ../../../../../../app/search/sep/anti-spam/gezi/libgezi_common.a \
-  ../../../../../../app/search/sep/anti-spam/gezi/libgezi_cppformat.a \
-  ../../../../../../app/search/sep/anti-spam/gezi/libgezi_json.a \
-  ../../../../../../app/search/sep/anti-spam/gezi/output/lib/libPYNotation.a \
-  ../../../../../../com/btest/gtest/output/lib/libgtest.a \
-  ../../../../../../com/btest/gtest/output/lib/libgtest_main.a \
-  ../../../../../../com/idlcompiler/astyle/libastyle.a \
-  ../../../../../../com/idlcompiler/cxx/libskeleton.a \
-  ../../../../../../com/idlcompiler/java/libjava_skeleton.a \
-  ../../../../../../com/idlcompiler/parser/libparser.a \
-  ../../../../../../com/idlcompiler/php/libphp_skeleton.a \
-  ../../../../../../inf/computing/zookeeper/output/c_client/lib/libzookeeper_mt.a \
-  ../../../../../../inf/computing/zookeeper/output/c_client/lib/libzookeeper_st.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_ResourcePool.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_archive.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_buffer.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_check_cast.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_exception.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_pool.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_utils.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_var.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_var_implement.a \
-  ../../../../../../lib2-64/bsl/lib/libbsl_var_utils.a \
-  ../../../../../../lib2-64/ccode/lib/libulccode.a \
-  ../../../../../../lib2-64/dict/lib/libuldict.a \
-  ../../../../../../lib2-64/libcrf/lib/libcrf.a \
-  ../../../../../../lib2-64/others-ex/lib/libullib_ex.a \
-  ../../../../../../lib2-64/postag/lib/libpostag.a \
-  ../../../../../../lib2-64/string/lib/libstring.a \
-  ../../../../../../lib2-64/ullib/lib/libullib.a \
-  ../../../../../../lib2-64/wordseg/libsegment.a \
-  ../../../../../../op/oped/noah/webfoot/naming-lib/output/lib/libwebfoot_naming.a \
-  ../../../../../../public/bslext/output/lib/libbsl_bml.a \
-  ../../../../../../public/bslext/output/lib/libbsl_containers_utils.a \
-  ../../../../../../public/bslext/output/lib/libbsl_var_scripting.a \
-  ../../../../../../public/bslext/output/lib/libbsl_var_serializer.a \
-  ../../../../../../public/bslext/output/lib/libbsl_var_vscript.a \
-  ../../../../../../public/bslext/output/lib/libbsl_vs.a \
-  ../../../../../../public/bslext/output/lib/libbslext.a \
-  ../../../../../../public/comlog-plugin/libcomlog.a \
-  ../../../../../../public/comlog-plugin/output/lib/libdfsappender.a \
-  ../../../../../../public/configure/libconfig.a \
-  ../../../../../../public/connectpool/libconnectpool.a \
-  ../../../../../../public/gm/galileo/libgalileo.a \
-  ../../../../../../public/gm/galileo/output/lib/libzookeeper_mt.a \
-  ../../../../../../public/idlcompiler/output/lib/libmcpack_idl.a \
-  ../../../../../../public/mcpack/libmcpack.a \
-  ../../../../../../public/nshead/libnshead.a \
-  ../../../../../../public/odict/libodict.a \
-  ../../../../../../public/spreg/libspreg.a \
-  ../../../../../../public/ub/output/lib/libub.a \
-  ../../../../../../public/ub/output/lib/libub_aserver.a \
-  ../../../../../../public/ub/output/lib/libub_client.a \
-  ../../../../../../public/ub/output/lib/libub_conf.a \
-  ../../../../../../public/ub/output/lib/libub_galileo.a \
-  ../../../../../../public/ub/output/lib/libub_log.a \
-  ../../../../../../public/ub/output/lib/libub_misc.a \
-  ../../../../../../public/ub/output/lib/libub_monitor.a \
-  ../../../../../../public/ub/output/lib/libub_naming.a \
-  ../../../../../../public/ub/output/lib/libub_server.a \
-  ../../../../../../public/ub/output/lib/libubex.a \
-  ../../../../../../public/ub/output/lib/libubfw.a \
-  ../../../../../../public/uconv/libuconv.a \
-  ../../../../../../quality/autotest/reportlib/cpp/libautotest.a \
-  ../../../../../../third-64/boost/lib/libboost_atomic.a \
-  ../../../../../../third-64/boost/lib/libboost_chrono.a \
-  ../../../../../../third-64/boost/lib/libboost_context.a \
-  ../../../../../../third-64/boost/lib/libboost_date_time.a \
-  ../../../../../../third-64/boost/lib/libboost_exception.a \
-  ../../../../../../third-64/boost/lib/libboost_filesystem.a \
-  ../../../../../../third-64/boost/lib/libboost_graph.a \
-  ../../../../../../third-64/boost/lib/libboost_locale.a \
-  ../../../../../../third-64/boost/lib/libboost_math_c99.a \
-  ../../../../../../third-64/boost/lib/libboost_math_c99f.a \
-  ../../../../../../third-64/boost/lib/libboost_math_c99l.a \
-  ../../../../../../third-64/boost/lib/libboost_math_tr1.a \
-  ../../../../../../third-64/boost/lib/libboost_math_tr1f.a \
-  ../../../../../../third-64/boost/lib/libboost_math_tr1l.a \
-  ../../../../../../third-64/boost/lib/libboost_prg_exec_monitor.a \
-  ../../../../../../third-64/boost/lib/libboost_program_options.a \
-  ../../../../../../third-64/boost/lib/libboost_python.a \
-  ../../../../../../third-64/boost/lib/libboost_random.a \
-  ../../../../../../third-64/boost/lib/libboost_regex.a \
-  ../../../../../../third-64/boost/lib/libboost_serialization.a \
-  ../../../../../../third-64/boost/lib/libboost_signals.a \
-  ../../../../../../third-64/boost/lib/libboost_system.a \
-  ../../../../../../third-64/boost/lib/libboost_test_exec_monitor.a \
-  ../../../../../../third-64/boost/lib/libboost_thread.a \
-  ../../../../../../third-64/boost/lib/libboost_timer.a \
-  ../../../../../../third-64/boost/lib/libboost_unit_test_framework.a \
-  ../../../../../../third-64/boost/lib/libboost_wave.a \
-  ../../../../../../third-64/boost/lib/libboost_wserialization.a \
-  ../../../../../../third-64/gflags/lib/libgflags.a \
-  ../../../../../../third-64/gflags/lib/libgflags_nothreads.a \
-  ../../../../../../third-64/glog/lib/libglog.a \
-  ../../../../../../third-64/libcurl/lib/libcurl.a \
-  ../../../../../../third-64/pcre/lib/libpcre.a \
-  ../../../../../../third-64/pcre/lib/libpcrecpp.a \
-  ../../../../../../third-64/pcre/lib/libpcreposix.a \
-  ../../../../../../third-64/protobuf/lib/libprotobuf-lite.a \
-  ../../../../../../third-64/protobuf/lib/libprotobuf.a \
-  ../../../../../../third-64/protobuf/lib/libprotoc.a \
-  ../../../../../../third-64/tcmalloc/lib/libprofiler.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_and_profiler.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_debug.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal.a \
-  ../../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
-  -rdynamic \
-  -lrt \
-  -lldap \
-  -ldl \
-  -static-libgcc \
-  -static-libstdc++ -Xlinker "-)" -o test_suffixtree
-	mkdir -p ./output/bin
-	cp -f --link test_suffixtree ./output/bin
 
 test_rstree:test_rstree_test_rstree.o \
   ../src/test_rstree_conf.o \
@@ -802,7 +283,7 @@ test_rstree:test_rstree_test_rstree.o \
   ../../../../../../lib2-64/string/lib/libstring.a \
   ../../../../../../lib2-64/ullib/lib/libullib.a \
   ../../../../../../lib2-64/wordseg/libsegment.a \
-  ../../../../../../op/oped/noah/webfoot/naming-lib/output/lib/libwebfoot_naming.a \
+  ../../../../../../op/oped/noah/webfoot/naming-lib/output/libwebfoot_naming.a \
   ../../../../../../public/bslext/output/lib/libbsl_bml.a \
   ../../../../../../public/bslext/output/lib/libbsl_containers_utils.a \
   ../../../../../../public/bslext/output/lib/libbsl_var_scripting.a \
@@ -837,7 +318,9 @@ test_rstree:test_rstree_test_rstree.o \
   ../../../../../../quality/autotest/reportlib/cpp/libautotest.a \
   ../../../../../../third-64/boost/lib/libboost_atomic.a \
   ../../../../../../third-64/boost/lib/libboost_chrono.a \
+  ../../../../../../third-64/boost/lib/libboost_container.a \
   ../../../../../../third-64/boost/lib/libboost_context.a \
+  ../../../../../../third-64/boost/lib/libboost_coroutine.a \
   ../../../../../../third-64/boost/lib/libboost_date_time.a \
   ../../../../../../third-64/boost/lib/libboost_exception.a \
   ../../../../../../third-64/boost/lib/libboost_filesystem.a \
@@ -849,6 +332,8 @@ test_rstree:test_rstree_test_rstree.o \
   ../../../../../../third-64/boost/lib/libboost_math_tr1.a \
   ../../../../../../third-64/boost/lib/libboost_math_tr1f.a \
   ../../../../../../third-64/boost/lib/libboost_math_tr1l.a \
+  ../../../../../../third-64/boost/lib/libboost_mpi.a \
+  ../../../../../../third-64/boost/lib/libboost_mpi_python.a \
   ../../../../../../third-64/boost/lib/libboost_prg_exec_monitor.a \
   ../../../../../../third-64/boost/lib/libboost_program_options.a \
   ../../../../../../third-64/boost/lib/libboost_python.a \
@@ -881,64 +366,9 @@ test_rstree:test_rstree_test_rstree.o \
   ../../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
   -rdynamic \
   -lrt \
-  -lldap \
-  -ldl \
-  -static-libgcc \
-  -static-libstdc++ -Xlinker "-)" -o test_rstree
+  -ldl -Xlinker "-)" -o test_rstree
 	mkdir -p ./output/bin
 	cp -f --link test_rstree ./output/bin
-
-test_filter_test_filter.o:test_filter.cc
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest_filter_test_filter.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o test_filter_test_filter.o test_filter.cc
-
-../src/test_filter_conf.o:../src/conf.cpp
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40m../src/test_filter_conf.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o ../src/test_filter_conf.o ../src/conf.cpp
-
-../src/post_process/test_filter_PostProcessor.o:../src/post_process/PostProcessor.cpp
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40m../src/post_process/test_filter_PostProcessor.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o ../src/post_process/test_filter_PostProcessor.o ../src/post_process/PostProcessor.cpp
-
-../src/post_process/test_filter_RstreeFilter.o:../src/post_process/RstreeFilter.cpp
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40m../src/post_process/test_filter_RstreeFilter.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o ../src/post_process/test_filter_RstreeFilter.o ../src/post_process/RstreeFilter.cpp
-
-test_post_processor_test_post_processor.o:test_post_processor.cc
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest_post_processor_test_post_processor.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o test_post_processor_test_post_processor.o test_post_processor.cc
-
-../src/test_post_processor_conf.o:../src/conf.cpp
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40m../src/test_post_processor_conf.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o ../src/test_post_processor_conf.o ../src/conf.cpp
-
-../src/post_process/test_post_processor_PostProcessor.o:../src/post_process/PostProcessor.cpp
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40m../src/post_process/test_post_processor_PostProcessor.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o ../src/post_process/test_post_processor_PostProcessor.o ../src/post_process/PostProcessor.cpp
-
-../src/post_process/test_post_processor_RstreeFilter.o:../src/post_process/RstreeFilter.cpp
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40m../src/post_process/test_post_processor_RstreeFilter.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o ../src/post_process/test_post_processor_RstreeFilter.o ../src/post_process/RstreeFilter.cpp
-
-test_seg_test_seg.o:test_seg.cc
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest_seg_test_seg.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o test_seg_test_seg.o test_seg.cc
-
-../src/test_seg_conf.o:../src/conf.cpp
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40m../src/test_seg_conf.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o ../src/test_seg_conf.o ../src/conf.cpp
-
-../src/post_process/test_seg_PostProcessor.o:../src/post_process/PostProcessor.cpp
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40m../src/post_process/test_seg_PostProcessor.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o ../src/post_process/test_seg_PostProcessor.o ../src/post_process/PostProcessor.cpp
-
-../src/post_process/test_seg_RstreeFilter.o:../src/post_process/RstreeFilter.cpp
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40m../src/post_process/test_seg_RstreeFilter.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o ../src/post_process/test_seg_RstreeFilter.o ../src/post_process/RstreeFilter.cpp
-
-test_suffixtree_test_suffixtree.o:test_suffixtree.cc
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest_suffixtree_test_suffixtree.o[0m']"
-	$(CXX) -c $(INCPATH) $(DEP_INCPATH) $(CPPFLAGS) $(CXXFLAGS)  -o test_suffixtree_test_suffixtree.o test_suffixtree.cc
 
 test_rstree_test_rstree.o:test_rstree.cc
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mtest_rstree_test_rstree.o[0m']"
