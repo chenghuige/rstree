@@ -75,6 +75,7 @@ CONFIGS('lib2-64/libcrf@2.1.3.0')
 CONFIGS('public/odict@1.1.2.1')
 CONFIGS('lib2-64/postag@2.0.2.0')
 CONFIGS('app/search/sep/anti-spam/gezi@base')
+CONFIGS('third-64/pcre@pcre_7-7-2-0_PD_BL')
 
 srcs=GLOB('../src/*.cpp','../src/post_process/*.cpp')
 
@@ -82,7 +83,7 @@ srcs=GLOB('../src/*.cpp','../src/post_process/*.cpp')
 #Application('rstree.test',Sources('rstree.cc',srcs))
 #Application('rstree',Sources('rstree.cc',srcs,ENV.CppFlags()+CppFlags('-O3 -DNDEBUG -DGOOGLE_STRIP_LOG')))
 #Application('test_filter',Sources('test_filter.cc',srcs))
-#Application('test_post_processor',Sources('test_post_processor.cc',srcs))
+Application('test_post_processor',Sources('test_post_processor.cc',srcs))
 #Application('test_seg',Sources('test_seg.cc', srcs))
 #Application('test_suffixtree',Sources('test_suffixtree.cc'))
 

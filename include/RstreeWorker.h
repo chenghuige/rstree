@@ -130,6 +130,7 @@ namespace gezi
 
 		bool get_postype(string sub_c, int len, vector<int>& splits)
 		{
+            Segmentor::Init();
 			bool ret = Segmentor::Segment_(sub_c);
 			if (!ret)
 			{

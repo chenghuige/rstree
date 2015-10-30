@@ -199,7 +199,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=f977e289c9087c0431d91b0d9f3c98aa  COMAKE
+COMAKE_MD5=c323ddbb63d0592b5c813ddfe2b4b3fd  COMAKE
 
 
 .PHONY:all
@@ -391,7 +391,6 @@ rstree_rstree.o:rstree.cc \
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
   -D__STDC_LIMIT_MACROS \
   -DVERSION=\"1.9.8.7\" \
-  -O3 \
   -DNDEBUG \
   -DGOOGLE_STRIP_LOG \
   -DGEZI_NO_FOLLY \
@@ -403,7 +402,6 @@ src/rstree_conf.o:src/conf.cpp \
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
   -D__STDC_LIMIT_MACROS \
   -DVERSION=\"1.9.8.7\" \
-  -O3 \
   -DNDEBUG \
   -DGOOGLE_STRIP_LOG \
   -DGEZI_NO_FOLLY \
@@ -417,7 +415,6 @@ src/post_process/rstree_PostProcessor.o:src/post_process/PostProcessor.cpp \
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
   -D__STDC_LIMIT_MACROS \
   -DVERSION=\"1.9.8.7\" \
-  -O3 \
   -DNDEBUG \
   -DGOOGLE_STRIP_LOG \
   -DGEZI_NO_FOLLY \
@@ -430,7 +427,6 @@ src/post_process/rstree_RstreeFilter.o:src/post_process/RstreeFilter.cpp \
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
   -D__STDC_LIMIT_MACROS \
   -DVERSION=\"1.9.8.7\" \
-  -O3 \
   -DNDEBUG \
   -DGOOGLE_STRIP_LOG \
   -DGEZI_NO_FOLLY \
