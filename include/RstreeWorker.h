@@ -21,6 +21,7 @@
 #include "all_util.h"
 #include "rstree_def.h"
 #include "hashmap_util.h"
+#include "ub_log.h"
 namespace gezi
 {
 
@@ -261,6 +262,33 @@ namespace gezi
 				}
 			}
 			PrintVec4(result_vec, str, filtered_str, count, black_count);
+            if (result_vec.size() == 0 || result_vec[0].black_count == 0)
+            {
+                string spam = _post_processor.get_spam_weixin_qq(content);
+                if (spam.empty())
+                {
+                    spam = _post_processor.get_seem_black(content);
+                    
+                }
+                wstring wspam =  str_to_wstr(spam);
+                if (!spam.empty() && !wspam.empty())
+                {
+                    int freq = _rstree.find_freq(wspam);
+                    if (freq > min_freq)
+                    {
+                        ONode node;
+                        node.count = freq;
+                        node.str = string("black___") + spam;
+                        node.wstr = wstring(L"black__") + wspam;
+                        UB_LOG_NOTICE("extra add candidate:[%s] for input [%s]",spam.c_str(), content.c_str());
+                        node.black_count = 1;
+                        DLOG(INFO) << "Add extra spam candiate " << node.str;
+                        //Pval(content);
+                        result_vec.push_back(node);
+                    }
+                }
+
+            }
 
 			//    //当前采用最简单补充策略 尝试补充一个黑载体匹配的串
 			//    //当返回结果为空 或者不为空 但是第一个black_count == 0的时候 

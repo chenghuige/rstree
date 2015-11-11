@@ -58,12 +58,28 @@ const std::string weixin_qq = "(((微|薇|徵|威|溦|徽|v|wei)(亻言|信|xin))|"
                            "(((\\+|加)(微|薇|徵|威|溦|徽|v(?!ip|pn)))(亻言|信|xin|x)?)|"
                            "(((\\+|加)(我|他|她)?(v(?!ip|pn)|微|薇|徵|威|溦|徽))(亻言|信|xin|x)?)|"
                            "((vx|wx)(\\:|：|号))|((薇|溦|徽|嶶|徵|v|wei)(我|他|她|号))|"
-                           "([扣扣|球球|秋秋|囚囚|蔻蔻|抠抠|叩叩|扣|σσ|óó|θθ|φφ|qq|QQ|企鹅|Q|q]))"
+                           "([扣扣|球球|秋秋|囚囚|蔻蔻|抠抠|叩叩|扣|σσ|óó|θθ|φφ|qq|QQ|企鹅|q:|Q:|q：|q:]))"
                            "[号码|号|:|：|\\s]*"
                            "([\\w]{5,15})";
-const std::string seem_black = "(【(.{6,})】)|(<B>(.{6,})<B>)|(<em>(.{6,})<\\\\em>)|"
-                                 "(\\{(.{6,})\\})|(\\((.{6,})\\))";
+const std::string seem_black = "(【(.{6,20})】)|(（(.{6,20})）)|(“(.{6,20})”)|(《(.{6,20})》)|(\"(.{6,20})\")|"
+                "(<B>(.{6,20})<B>)|(<em>(.{6,20})<\\\\em>)|(\\{(.{6,20})\\})|(\\((.{6,20})\\))";
 //std::string ReProcesser::m_weixin = "((徽|薇|溦|嶶|v|wei)(亻言|信|xin))|((\\+|加)(徽|薇|溦|嶶|徵|v(?!ip|pn)))|((\\+|加)(我|他|她)?(v(?!ip|pn)|微|薇|徵|威|溦|徽))|(wx(\\:|：|号))|((薇|溦|徽|嶶|徵|v|wei)(我|他|她|号))";
+static has_two_cn(const std::string & input)
+{
+    int has_cn_count = 0;
+    size_t len = input.size();
+    for (size_t i = 0; i < len; i += 1)
+    {
+        unsigned char c = input[i];
+        if (c >= 0xaa || (c >= 0x81 && c <= 0xa0))
+        {
+            has_cn_count ++;
+            i ++;
+        }
+    }
+    return has_cn_count >= 2;
+}
+
 class PostProcessor
 {
 public:
@@ -268,18 +284,10 @@ public:
         std::string ret = "";
         int ovector[OVECCOUNT] = {0};
         int rc = pcre_exec(_weixin_qq, NULL, input.c_str(), input.size(), 0, 0, ovector, OVECCOUNT);
-        cout << rc << endl;
         if (rc > 0)
         {
-            cout << input << " " << input.size() << endl;
-            for (int i = 0; i < rc; i++)
-            {
-                cout << "pair:" << ovector[i*2] << "->" << ovector[i*2+1] << endl;
-            }
             int begin_pos = ovector[(rc-1) * 2];
             int end_pos   = ovector[(rc-1) * 2 + 1];
-            cout << "begin_pos" << begin_pos << endl;
-            cout << "end_pos" << end_pos << endl;
             ret = input.substr(begin_pos, end_pos - begin_pos);
         }
         return ret;
@@ -290,10 +298,8 @@ public:
         std::string ret = "";
         int ovector[OVECCOUNT] = {0};
         int rc = pcre_exec(_seem_black, NULL, input.c_str(), input.size(), 0, 0, ovector, OVECCOUNT);
-        cout << rc << endl;
         if (rc > 0)
         {
-            cout << input << " " << input.size() << endl;
             bool sub_match = false;
             for (int i = 1; i < rc; i++)
             {
@@ -306,7 +312,6 @@ public:
                 else if (sub_match)
                 {
                     ret = input.substr(begin_pos, end_pos - begin_pos);
-                    std::cout << "ret:" << ret << std::endl;
                 }
                 else
                 {
@@ -314,7 +319,15 @@ public:
                 }
             }
         }
-        return ret;
+        bool has_cn = has_two_cn(ret);
+        if (has_cn)
+        {
+            return ret;
+        }
+        else
+        {
+            return string("");
+        }
     }
 
     ////  //获取覆盖最多spam的区间对应的string
