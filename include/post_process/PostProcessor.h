@@ -68,13 +68,21 @@ static has_two_cn(const std::string & input)
 {
     int has_cn_count = 0;
     size_t len = input.size();
-    for (size_t i = 0; i < len; i += 1)
+    for (size_t i = 0; i < len; )
     {
         unsigned char c = input[i];
-        if (c >= 0xaa || (c >= 0x81 && c <= 0xa0))
+        if (c < 0x80)
+        {
+            i ++;
+        }
+        else if (c >= 0xaa || (c >= 0x81 && c <= 0xa0))
         {
             has_cn_count ++;
-            i ++;
+            i += 2;
+        }
+        else
+        {
+            i += 2;
         }
     }
     return has_cn_count >= 2;
