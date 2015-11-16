@@ -195,7 +195,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=7380c7985b09e092673ba4ab28ecb231  COMAKE
+COMAKE_MD5=75d3babd640bbbb5fed392917d80d76d  COMAKE
 
 
 .PHONY:all
@@ -373,9 +373,8 @@ test_post_processor:test_post_processor_test_post_processor.o \
   ../../../../../../third-64/tcmalloc/lib/libtcmalloc_debug.a \
   ../../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal.a \
   ../../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
-  -rdynamic \
-  -lrt \
-  -ldl -Xlinker "-)" -o test_post_processor
+  -lcrypto \
+  -lrt -Xlinker "-)" -o test_post_processor
 	mkdir -p ./output/bin
 	cp -f --link test_post_processor ./output/bin
 
@@ -503,9 +502,8 @@ test_rstree:test_rstree_test_rstree.o \
   ../../../../../../third-64/tcmalloc/lib/libtcmalloc_debug.a \
   ../../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal.a \
   ../../../../../../third-64/tcmalloc/lib/libtcmalloc_minimal_debug.a -lpthread \
-  -rdynamic \
-  -lrt \
-  -ldl -Xlinker "-)" -o test_rstree
+  -lcrypto \
+  -lrt -Xlinker "-)" -o test_rstree
 	mkdir -p ./output/bin
 	cp -f --link test_rstree ./output/bin
 

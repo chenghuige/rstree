@@ -268,7 +268,6 @@ namespace gezi
                 if (spam.empty())
                 {
                     spam = _post_processor.get_seem_black(content);
-                    
                 }
                 wstring wspam =  str_to_wstr(spam);
                 if (!spam.empty() && !wspam.empty())
@@ -280,7 +279,8 @@ namespace gezi
                         node.count = freq;
                         node.str = string("black___") + spam;
                         node.wstr = wstring(L"black__") + wspam;
-                        UB_LOG_NOTICE("extra add candidate:[%s] for input [%s]",spam.c_str(), content.c_str());
+                        UB_LOG_NOTICE("extra add candidate:[%s] [freq:%d min_freq:%d] for input\
+                                      [%s]",spam.c_str(), freq, min_freq, content.c_str());
                         node.black_count = 1;
                         DLOG(INFO) << "Add extra spam candiate " << node.str;
                         //Pval(content);

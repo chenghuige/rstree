@@ -53,6 +53,9 @@
 #include "rstree_def.h"
 #include "pcre.h"
 
+#include "ul_sign.h"
+#include "odict.h"
+
 const int OVECCOUNT = 100;
 const std::string weixin_qq = "(((微|薇|徵|威|溦|徽|v|wei)(亻言|信|xin))|"
                            "(((\\+|加)(微|薇|徵|威|溦|徽|v(?!ip|pn)))(亻言|信|xin|x)?)|"
@@ -64,7 +67,7 @@ const std::string weixin_qq = "(((微|薇|徵|威|溦|徽|v|wei)(亻言|信|xin))|"
 const std::string seem_black = "(【(.{6,20})】)|(（(.{6,20})）)|(“(.{6,20})”)|(《(.{6,20})》)|(\"(.{6,20})\")|"
                 "(<B>(.{6,20})<B>)|(<em>(.{6,20})<\\\\em>)|(\\{(.{6,20})\\})|(\\((.{6,20})\\))";
 //std::string ReProcesser::m_weixin = "((徽|薇|溦|嶶|v|wei)(亻言|信|xin))|((\\+|加)(徽|薇|溦|嶶|徵|v(?!ip|pn)))|((\\+|加)(我|他|她)?(v(?!ip|pn)|微|薇|徵|威|溦|徽))|(wx(\\:|：|号))|((薇|溦|徽|嶶|徵|v|wei)(我|他|她|号))";
-static has_two_cn(const std::string & input)
+static bool has_two_cn(const std::string & input)
 {
     int has_cn_count = 0;
     size_t len = input.size();
@@ -85,7 +88,7 @@ static has_two_cn(const std::string & input)
             i += 2;
         }
     }
-    return has_cn_count >= 2;
+    return has_cn_count >= 3;
 }
 
 class PostProcessor
@@ -125,6 +128,12 @@ public:
         string black_file = "./data/black.dm";
         CONF(black_file);
         _black_dict.init(black_file);
+
+        _phrase_db = odb_load("./data/","phrase",0);
+        if (NULL == _phrase_db || _phrase_db == (sodict_build_t*)ODB_LOAD_NOT_EXISTS)
+        {
+            return false;
+        }
     }
 
     bool init(comcfg::Configure& conf, string section = "PostProcessor")
@@ -289,14 +298,47 @@ public:
     }
     string get_spam_weixin_qq(const string& input)
     {
+        //检查边界是否合法
+        std::map<size_t,int> legal_boundary;
+        size_t input_len = input.size();
+        for (size_t i = 0; i < input_len; )
+        {
+            unsigned char c = input[i];
+            if (c < 0x80)
+            {
+                legal_boundary[i] = 1;
+                i++;
+            }
+            else
+            {
+                legal_boundary[i] = 2;
+                i += 2;
+            }
+        }
+
         std::string ret = "";
         int ovector[OVECCOUNT] = {0};
         int rc = pcre_exec(_weixin_qq, NULL, input.c_str(), input.size(), 0, 0, ovector, OVECCOUNT);
         if (rc > 0)
         {
-            int begin_pos = ovector[(rc-1) * 2];
-            int end_pos   = ovector[(rc-1) * 2 + 1];
-            ret = input.substr(begin_pos, end_pos - begin_pos);
+            bool legal_match = false;
+            for (int i = 0; i < rc -1; i++)
+            {
+                //cout << ovector[i*2] << "->" << ovector[i*2 +1] << endl;
+                int begin_pos = ovector[i * 2];
+                if (legal_boundary.find(begin_pos) != legal_boundary.end())
+                {
+                    legal_match = true;
+                    break;
+                }
+            }
+            //cout << ovector[(rc-1)*2] << "->" << ovector[(rc-1)*2 +1] << endl;
+            if (legal_match)
+            {
+                int begin_pos = ovector[(rc-1) * 2];
+                int end_pos   = ovector[(rc-1) * 2 + 1];
+                ret = input.substr(begin_pos, end_pos - begin_pos);
+            }
         }
         return ret;
     }
@@ -327,8 +369,23 @@ public:
                 }
             }
         }
+
+        boost::trim(ret);
+
+        sodict_snode_t snode;
+        unsigned int sign1 = 0;
+        unsigned int sign2 = 0;
+        creat_sign_f64((char*)ret.c_str(),ret.size(),&sign1,&sign2);
+        snode.sign1 = sign1;
+        snode.sign2 = sign2;
+        int _ret = odb_seek(_phrase_db,&snode);
+        if (ODB_SEEK_OK == _ret)
+        {
+            return string("");
+        }
+
         bool has_cn = has_two_cn(ret);
-        if (has_cn)
+        if (has_cn && ret.size() > 6)
         {
             return ret;
         }
@@ -367,6 +424,8 @@ private:
     pcre * _weixin_qq;
     //疑似黑载体 目前主要是【】中的
     pcre * _seem_black;
+
+    static sodict_build_t * _phrase_db;
 };
 
 

@@ -50,7 +50,8 @@ INCPATHS('../include ../include/post_process')
 GCC_LDFLAGS=''
 #链接参数.
 #LDFLAGS('-lpthread -rdynamic -lrt  -ldl', GCC_LDFLAGS)
-LDFLAGS('-lpthread -rdynamic -lrt  -ldl', GCC_LDFLAGS)
+#LDFLAGS('-lpthread -rdynamic -lrt  -ldl', GCC_LDFLAGS)
+LDFLAGS('-lpthread -lcrypto -lrt')
 
 #依赖模块
 #CONFIGS('lib2-64/ullib public/ub public/mcpack third-64/boost public/gm/galileo lib2-64/ccode lib2-64/string third-64/tcmalloc')
@@ -83,7 +84,7 @@ srcs=GLOB('../src/*.cpp','../src/post_process/*.cpp')
 #Application('rstree.test',Sources('rstree.cc',srcs))
 #Application('rstree',Sources('rstree.cc',srcs,ENV.CppFlags()+CppFlags('-O3 -DNDEBUG -DGOOGLE_STRIP_LOG')))
 #Application('test_filter',Sources('test_filter.cc',srcs))
-Application('test_post_processor',Sources('test_post_processor.cc',srcs))
+Application('test_post_processor',Sources('test_post_processor.cc',srcs),CppFlags('_DNDEBUG -DGOOLE_STRIP_LOG -DGEZI_NO_FOLLY -DGEZI_USE_CONF'))
 #Application('test_seg',Sources('test_seg.cc', srcs))
 #Application('test_suffixtree',Sources('test_suffixtree.cc'))
 
