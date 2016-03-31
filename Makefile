@@ -199,7 +199,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=d790d93d370122ff0823abe9b54e749e  COMAKE
+COMAKE_MD5=1dca3de3065a40d6a8d0a85662d82fd7  COMAKE
 
 
 .PHONY:all
@@ -260,8 +260,6 @@ rstree:rstree_rstree.o \
   ../../../../../app/search/sep/anti-spam/gezi/libgezi_cppformat.a \
   ../../../../../app/search/sep/anti-spam/gezi/libgezi_json.a \
   ../../../../../app/search/sep/anti-spam/gezi/output/lib/libPYNotation.a \
-  ../../../../../com/btest/gtest/output/lib/libgtest.a \
-  ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
@@ -316,7 +314,6 @@ rstree:rstree_rstree.o \
   ../../../../../public/ub/output/lib/libubex.a \
   ../../../../../public/ub/output/lib/libubfw.a \
   ../../../../../public/uconv/libuconv.a \
-  ../../../../../quality/autotest/reportlib/cpp/libautotest.a \
   ../../../../../third-64/boost/lib/libboost_atomic.a \
   ../../../../../third-64/boost/lib/libboost_chrono.a \
   ../../../../../third-64/boost/lib/libboost_container.a \

@@ -27,6 +27,7 @@ then
   fi
   cd -
 fi
+comake2 -UB
 
 if [ ! -d "../../../ksarch/store/proxy-lib/redis/output/lib/libredisclient.a" ]
 then
@@ -34,6 +35,14 @@ then
     make clean 
     make    
     cd -    
+fi
+
+if [ ! -d "../gezi/output/" ]
+then
+    cd ../gezi/output/
+    make clean
+    make 
+    cd -
 fi
 
 comake2
