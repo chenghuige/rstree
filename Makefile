@@ -40,7 +40,11 @@ INCPATH=-I. \
   -I./output/include \
   -I./include \
   -I./include/post_process
-DEP_INCPATH=-I../../../../../app/search/sep/anti-spam/gezi \
+DEP_INCPATH=-I../../../../../app/search/ksarch/store/proxy-lib/redis \
+  -I../../../../../app/search/ksarch/store/proxy-lib/redis/include \
+  -I../../../../../app/search/ksarch/store/proxy-lib/redis/output \
+  -I../../../../../app/search/ksarch/store/proxy-lib/redis/output/include \
+  -I../../../../../app/search/sep/anti-spam/gezi \
   -I../../../../../app/search/sep/anti-spam/gezi/include \
   -I../../../../../app/search/sep/anti-spam/gezi/output \
   -I../../../../../app/search/sep/anti-spam/gezi/output/include \
@@ -52,6 +56,18 @@ DEP_INCPATH=-I../../../../../app/search/sep/anti-spam/gezi \
   -I../../../../../com/idlcompiler/include \
   -I../../../../../com/idlcompiler/output \
   -I../../../../../com/idlcompiler/output/include \
+  -I../../../../../inf/computing/ant \
+  -I../../../../../inf/computing/ant/include \
+  -I../../../../../inf/computing/ant/output \
+  -I../../../../../inf/computing/ant/output/include \
+  -I../../../../../inf/computing/java6 \
+  -I../../../../../inf/computing/java6/include \
+  -I../../../../../inf/computing/java6/output \
+  -I../../../../../inf/computing/java6/output/include \
+  -I../../../../../inf/computing/zookeeper \
+  -I../../../../../inf/computing/zookeeper/include \
+  -I../../../../../inf/computing/zookeeper/output \
+  -I../../../../../inf/computing/zookeeper/output/include \
   -I../../../../../lib2-64/bsl \
   -I../../../../../lib2-64/bsl/include \
   -I../../../../../lib2-64/bsl/output \
@@ -76,6 +92,10 @@ DEP_INCPATH=-I../../../../../app/search/sep/anti-spam/gezi \
   -I../../../../../lib2-64/postag/include \
   -I../../../../../lib2-64/postag/output \
   -I../../../../../lib2-64/postag/output/include \
+  -I../../../../../lib2-64/string \
+  -I../../../../../lib2-64/string/include \
+  -I../../../../../lib2-64/string/output \
+  -I../../../../../lib2-64/string/output/include \
   -I../../../../../lib2-64/ullib \
   -I../../../../../lib2-64/ullib/include \
   -I../../../../../lib2-64/ullib/output \
@@ -104,6 +124,10 @@ DEP_INCPATH=-I../../../../../app/search/sep/anti-spam/gezi \
   -I../../../../../public/connectpool/include \
   -I../../../../../public/connectpool/output \
   -I../../../../../public/connectpool/output/include \
+  -I../../../../../public/gm/galileo \
+  -I../../../../../public/gm/galileo/include \
+  -I../../../../../public/gm/galileo/output \
+  -I../../../../../public/gm/galileo/output/include \
   -I../../../../../public/idlcompiler \
   -I../../../../../public/idlcompiler/include \
   -I../../../../../public/idlcompiler/output \
@@ -156,6 +180,10 @@ DEP_INCPATH=-I../../../../../app/search/sep/anti-spam/gezi \
   -I../../../../../third-64/protobuf/include \
   -I../../../../../third-64/protobuf/output \
   -I../../../../../third-64/protobuf/output/include \
+  -I../../../../../third-64/stlport \
+  -I../../../../../third-64/stlport/include \
+  -I../../../../../third-64/stlport/output \
+  -I../../../../../third-64/stlport/output/include \
   -I../../../../../third-64/tcmalloc \
   -I../../../../../third-64/tcmalloc/include \
   -I../../../../../third-64/tcmalloc/output \
@@ -171,7 +199,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=cd809bfbcf5a86738be9b5e85ba5261b  COMAKE
+COMAKE_MD5=d790d93d370122ff0823abe9b54e749e  COMAKE
 
 
 .PHONY:all
@@ -227,7 +255,8 @@ rstree:rstree_rstree.o \
 	$(CXX) rstree_rstree.o \
   src/rstree_conf.o \
   src/post_process/rstree_PostProcessor.o \
-  src/post_process/rstree_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/sep/anti-spam/gezi/libgezi_common.a \
+  src/post_process/rstree_RstreeFilter.o -Xlinker "-("  ../../../../../app/search/ksarch/store/proxy-lib/redis/libredisclient.a \
+  ../../../../../app/search/sep/anti-spam/gezi/libgezi_common.a \
   ../../../../../app/search/sep/anti-spam/gezi/libgezi_cppformat.a \
   ../../../../../app/search/sep/anti-spam/gezi/libgezi_json.a \
   ../../../../../app/search/sep/anti-spam/gezi/output/lib/libPYNotation.a \
@@ -254,6 +283,7 @@ rstree:rstree_rstree.o \
   ../../../../../lib2-64/libcrf/lib/libcrf.a \
   ../../../../../lib2-64/others-ex/lib/libullib_ex.a \
   ../../../../../lib2-64/postag/lib/libpostag.a \
+  ../../../../../lib2-64/string/lib/libstring.a \
   ../../../../../lib2-64/ullib/lib/libullib.a \
   ../../../../../lib2-64/wordseg/libsegment.a \
   ../../../../../op/oped/noah/webfoot/naming-lib/output/libwebfoot_naming.a \
@@ -306,8 +336,6 @@ rstree:rstree_rstree.o \
   ../../../../../third-64/boost/lib/libboost_math_tr1.a \
   ../../../../../third-64/boost/lib/libboost_math_tr1f.a \
   ../../../../../third-64/boost/lib/libboost_math_tr1l.a \
-  ../../../../../third-64/boost/lib/libboost_mpi.a \
-  ../../../../../third-64/boost/lib/libboost_mpi_python.a \
   ../../../../../third-64/boost/lib/libboost_prg_exec_monitor.a \
   ../../../../../third-64/boost/lib/libboost_program_options.a \
   ../../../../../third-64/boost/lib/libboost_python.a \
