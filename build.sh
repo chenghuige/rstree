@@ -39,7 +39,7 @@ fi
 
 if [ ! -d "../gezi/output/" ]
 then
-    cd ../gezi/output/
+    cd ../gezi/
     make clean
     make 
     cd -

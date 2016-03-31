@@ -199,17 +199,17 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=1dca3de3065a40d6a8d0a85662d82fd7  COMAKE
+COMAKE_MD5=851b9ffc053b3f20b23fdba489a1f9c4  COMAKE
 
 
 .PHONY:all
 all:comake2_makefile_check rstree 
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mall[0m']"
+	@echo "[COMAKE:BUILD][Target:'all']"
 	@echo "make all done"
 
 .PHONY:comake2_makefile_check
 comake2_makefile_check:
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mcomake2_makefile_check[0m']"
+	@echo "[COMAKE:BUILD][Target:'comake2_makefile_check']"
 	#in case of error, update 'Makefile' by 'comake2'
 	@echo "$(COMAKE_MD5)">comake2.md5
 	@md5sum -c --status comake2.md5
@@ -217,12 +217,12 @@ comake2_makefile_check:
 
 .PHONY:ccpclean
 ccpclean:
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mccpclean[0m']"
+	@echo "[COMAKE:BUILD][Target:'ccpclean']"
 	@echo "make ccpclean done"
 
 .PHONY:clean
 clean:ccpclean
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mclean[0m']"
+	@echo "[COMAKE:BUILD][Target:'clean']"
 	rm -rf rstree
 	rm -rf ./output/bin/rstree
 	rm -rf rstree_rstree.o
@@ -232,26 +232,26 @@ clean:ccpclean
 
 .PHONY:dist
 dist:
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mdist[0m']"
+	@echo "[COMAKE:BUILD][Target:'dist']"
 	tar czvf output.tar.gz output
 	@echo "make dist done"
 
 .PHONY:distclean
 distclean:clean
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mdistclean[0m']"
+	@echo "[COMAKE:BUILD][Target:'distclean']"
 	rm -f output.tar.gz
 	@echo "make distclean done"
 
 .PHONY:love
 love:
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mlove[0m']"
+	@echo "[COMAKE:BUILD][Target:'love']"
 	@echo "make love done"
 
 rstree:rstree_rstree.o \
   src/rstree_conf.o \
   src/post_process/rstree_PostProcessor.o \
   src/post_process/rstree_RstreeFilter.o
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree[0m']"
+	@echo "[COMAKE:BUILD][Target:'rstree']"
 	$(CXX) rstree_rstree.o \
   src/rstree_conf.o \
   src/post_process/rstree_PostProcessor.o \
@@ -301,7 +301,7 @@ rstree:rstree_rstree.o \
   ../../../../../public/nshead/libnshead.a \
   ../../../../../public/odict/libodict.a \
   ../../../../../public/spreg/libspreg.a \
-  ../../../../../public/ub/output/lib/libub.a \
+  ../../../../../public/ub/lib/libub.a \
   ../../../../../public/ub/output/lib/libub_aserver.a \
   ../../../../../public/ub/output/lib/libub_client.a \
   ../../../../../public/ub/output/lib/libub_conf.a \
@@ -378,7 +378,7 @@ rstree_rstree.o:rstree.cc \
   include/SuffixTree.h \
   include/post_process/PostProcessor.h \
   include/rstree_def.h
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree_rstree.o[0m']"
+	@echo "[COMAKE:BUILD][Target:'rstree_rstree.o']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
   -D__STDC_LIMIT_MACROS \
   -DVERSION=\"1.9.8.7\" \
@@ -389,7 +389,7 @@ rstree_rstree.o:rstree.cc \
 
 src/rstree_conf.o:src/conf.cpp \
   include/conf.h
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_conf.o[0m']"
+	@echo "[COMAKE:BUILD][Target:'src/rstree_conf.o']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
   -D__STDC_LIMIT_MACROS \
   -DVERSION=\"1.9.8.7\" \
@@ -402,7 +402,7 @@ src/post_process/rstree_PostProcessor.o:src/post_process/PostProcessor.cpp \
   include/post_process/PostProcessor.h \
   include/post_process/RstreeFilter.h \
   include/rstree_def.h
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/rstree_PostProcessor.o[0m']"
+	@echo "[COMAKE:BUILD][Target:'src/post_process/rstree_PostProcessor.o']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
   -D__STDC_LIMIT_MACROS \
   -DVERSION=\"1.9.8.7\" \
@@ -414,7 +414,7 @@ src/post_process/rstree_PostProcessor.o:src/post_process/PostProcessor.cpp \
 src/post_process/rstree_RstreeFilter.o:src/post_process/RstreeFilter.cpp \
   include/post_process/RstreeFilter.h \
   include/rstree_def.h
-	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/rstree_RstreeFilter.o[0m']"
+	@echo "[COMAKE:BUILD][Target:'src/post_process/rstree_RstreeFilter.o']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
   -D__STDC_LIMIT_MACROS \
   -DVERSION=\"1.9.8.7\" \
