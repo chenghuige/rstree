@@ -48,18 +48,6 @@ DEP_INCPATH=-I../../../../../../app/search/sep/anti-spam/gezi \
   -I../../../../../../com/idlcompiler/include \
   -I../../../../../../com/idlcompiler/output \
   -I../../../../../../com/idlcompiler/output/include \
-  -I../../../../../../inf/computing/ant \
-  -I../../../../../../inf/computing/ant/include \
-  -I../../../../../../inf/computing/ant/output \
-  -I../../../../../../inf/computing/ant/output/include \
-  -I../../../../../../inf/computing/java6 \
-  -I../../../../../../inf/computing/java6/include \
-  -I../../../../../../inf/computing/java6/output \
-  -I../../../../../../inf/computing/java6/output/include \
-  -I../../../../../../inf/computing/zookeeper \
-  -I../../../../../../inf/computing/zookeeper/include \
-  -I../../../../../../inf/computing/zookeeper/output \
-  -I../../../../../../inf/computing/zookeeper/output/include \
   -I../../../../../../lib2-64/bsl \
   -I../../../../../../lib2-64/bsl/include \
   -I../../../../../../lib2-64/bsl/output \
@@ -84,10 +72,6 @@ DEP_INCPATH=-I../../../../../../app/search/sep/anti-spam/gezi \
   -I../../../../../../lib2-64/postag/include \
   -I../../../../../../lib2-64/postag/output \
   -I../../../../../../lib2-64/postag/output/include \
-  -I../../../../../../lib2-64/string \
-  -I../../../../../../lib2-64/string/include \
-  -I../../../../../../lib2-64/string/output \
-  -I../../../../../../lib2-64/string/output/include \
   -I../../../../../../lib2-64/ullib \
   -I../../../../../../lib2-64/ullib/include \
   -I../../../../../../lib2-64/ullib/output \
@@ -116,10 +100,6 @@ DEP_INCPATH=-I../../../../../../app/search/sep/anti-spam/gezi \
   -I../../../../../../public/connectpool/include \
   -I../../../../../../public/connectpool/output \
   -I../../../../../../public/connectpool/output/include \
-  -I../../../../../../public/gm/galileo \
-  -I../../../../../../public/gm/galileo/include \
-  -I../../../../../../public/gm/galileo/output \
-  -I../../../../../../public/gm/galileo/output/include \
   -I../../../../../../public/idlcompiler \
   -I../../../../../../public/idlcompiler/include \
   -I../../../../../../public/idlcompiler/output \
@@ -164,10 +144,6 @@ DEP_INCPATH=-I../../../../../../app/search/sep/anti-spam/gezi \
   -I../../../../../../third-64/glog/include \
   -I../../../../../../third-64/glog/output \
   -I../../../../../../third-64/glog/output/include \
-  -I../../../../../../third-64/libcurl \
-  -I../../../../../../third-64/libcurl/include \
-  -I../../../../../../third-64/libcurl/output \
-  -I../../../../../../third-64/libcurl/output/include \
   -I../../../../../../third-64/pcre \
   -I../../../../../../third-64/pcre/include \
   -I../../../../../../third-64/pcre/output \
@@ -176,10 +152,6 @@ DEP_INCPATH=-I../../../../../../app/search/sep/anti-spam/gezi \
   -I../../../../../../third-64/protobuf/include \
   -I../../../../../../third-64/protobuf/output \
   -I../../../../../../third-64/protobuf/output/include \
-  -I../../../../../../third-64/stlport \
-  -I../../../../../../third-64/stlport/include \
-  -I../../../../../../third-64/stlport/output \
-  -I../../../../../../third-64/stlport/output/include \
   -I../../../../../../third-64/tcmalloc \
   -I../../../../../../third-64/tcmalloc/include \
   -I../../../../../../third-64/tcmalloc/output \
@@ -195,7 +167,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=75d3babd640bbbb5fed392917d80d76d  COMAKE
+COMAKE_MD5=5d111dca1af5bd654b45281be60b7998  COMAKE
 
 
 .PHONY:all
@@ -268,8 +240,6 @@ test_post_processor:test_post_processor_test_post_processor.o \
   ../../../../../../com/idlcompiler/java/libjava_skeleton.a \
   ../../../../../../com/idlcompiler/parser/libparser.a \
   ../../../../../../com/idlcompiler/php/libphp_skeleton.a \
-  ../../../../../../inf/computing/zookeeper/output/c_client/lib/libzookeeper_mt.a \
-  ../../../../../../inf/computing/zookeeper/output/c_client/lib/libzookeeper_st.a \
   ../../../../../../lib2-64/bsl/lib/libbsl.a \
   ../../../../../../lib2-64/bsl/lib/libbsl_ResourcePool.a \
   ../../../../../../lib2-64/bsl/lib/libbsl_archive.a \
@@ -286,7 +256,6 @@ test_post_processor:test_post_processor_test_post_processor.o \
   ../../../../../../lib2-64/libcrf/lib/libcrf.a \
   ../../../../../../lib2-64/others-ex/lib/libullib_ex.a \
   ../../../../../../lib2-64/postag/lib/libpostag.a \
-  ../../../../../../lib2-64/string/lib/libstring.a \
   ../../../../../../lib2-64/ullib/lib/libullib.a \
   ../../../../../../lib2-64/wordseg/libsegment.a \
   ../../../../../../op/oped/noah/webfoot/naming-lib/output/libwebfoot_naming.a \
@@ -301,8 +270,6 @@ test_post_processor:test_post_processor_test_post_processor.o \
   ../../../../../../public/comlog-plugin/output/lib/libdfsappender.a \
   ../../../../../../public/configure/libconfig.a \
   ../../../../../../public/connectpool/libconnectpool.a \
-  ../../../../../../public/gm/galileo/libgalileo.a \
-  ../../../../../../public/gm/galileo/output/lib/libzookeeper_mt.a \
   ../../../../../../public/idlcompiler/output/lib/libmcpack_idl.a \
   ../../../../../../public/mcpack/libmcpack.a \
   ../../../../../../public/nshead/libnshead.a \
@@ -341,8 +308,6 @@ test_post_processor:test_post_processor_test_post_processor.o \
   ../../../../../../third-64/boost/lib/libboost_math_tr1.a \
   ../../../../../../third-64/boost/lib/libboost_math_tr1f.a \
   ../../../../../../third-64/boost/lib/libboost_math_tr1l.a \
-  ../../../../../../third-64/boost/lib/libboost_mpi.a \
-  ../../../../../../third-64/boost/lib/libboost_mpi_python.a \
   ../../../../../../third-64/boost/lib/libboost_prg_exec_monitor.a \
   ../../../../../../third-64/boost/lib/libboost_program_options.a \
   ../../../../../../third-64/boost/lib/libboost_python.a \
@@ -360,7 +325,6 @@ test_post_processor:test_post_processor_test_post_processor.o \
   ../../../../../../third-64/gflags/lib/libgflags.a \
   ../../../../../../third-64/gflags/lib/libgflags_nothreads.a \
   ../../../../../../third-64/glog/lib/libglog.a \
-  ../../../../../../third-64/libcurl/lib/libcurl.a \
   ../../../../../../third-64/pcre/lib/libpcre.a \
   ../../../../../../third-64/pcre/lib/libpcrecpp.a \
   ../../../../../../third-64/pcre/lib/libpcreposix.a \
@@ -397,8 +361,6 @@ test_rstree:test_rstree_test_rstree.o \
   ../../../../../../com/idlcompiler/java/libjava_skeleton.a \
   ../../../../../../com/idlcompiler/parser/libparser.a \
   ../../../../../../com/idlcompiler/php/libphp_skeleton.a \
-  ../../../../../../inf/computing/zookeeper/output/c_client/lib/libzookeeper_mt.a \
-  ../../../../../../inf/computing/zookeeper/output/c_client/lib/libzookeeper_st.a \
   ../../../../../../lib2-64/bsl/lib/libbsl.a \
   ../../../../../../lib2-64/bsl/lib/libbsl_ResourcePool.a \
   ../../../../../../lib2-64/bsl/lib/libbsl_archive.a \
@@ -415,7 +377,6 @@ test_rstree:test_rstree_test_rstree.o \
   ../../../../../../lib2-64/libcrf/lib/libcrf.a \
   ../../../../../../lib2-64/others-ex/lib/libullib_ex.a \
   ../../../../../../lib2-64/postag/lib/libpostag.a \
-  ../../../../../../lib2-64/string/lib/libstring.a \
   ../../../../../../lib2-64/ullib/lib/libullib.a \
   ../../../../../../lib2-64/wordseg/libsegment.a \
   ../../../../../../op/oped/noah/webfoot/naming-lib/output/libwebfoot_naming.a \
@@ -430,8 +391,6 @@ test_rstree:test_rstree_test_rstree.o \
   ../../../../../../public/comlog-plugin/output/lib/libdfsappender.a \
   ../../../../../../public/configure/libconfig.a \
   ../../../../../../public/connectpool/libconnectpool.a \
-  ../../../../../../public/gm/galileo/libgalileo.a \
-  ../../../../../../public/gm/galileo/output/lib/libzookeeper_mt.a \
   ../../../../../../public/idlcompiler/output/lib/libmcpack_idl.a \
   ../../../../../../public/mcpack/libmcpack.a \
   ../../../../../../public/nshead/libnshead.a \
@@ -470,8 +429,6 @@ test_rstree:test_rstree_test_rstree.o \
   ../../../../../../third-64/boost/lib/libboost_math_tr1.a \
   ../../../../../../third-64/boost/lib/libboost_math_tr1f.a \
   ../../../../../../third-64/boost/lib/libboost_math_tr1l.a \
-  ../../../../../../third-64/boost/lib/libboost_mpi.a \
-  ../../../../../../third-64/boost/lib/libboost_mpi_python.a \
   ../../../../../../third-64/boost/lib/libboost_prg_exec_monitor.a \
   ../../../../../../third-64/boost/lib/libboost_program_options.a \
   ../../../../../../third-64/boost/lib/libboost_python.a \
@@ -489,7 +446,6 @@ test_rstree:test_rstree_test_rstree.o \
   ../../../../../../third-64/gflags/lib/libgflags.a \
   ../../../../../../third-64/gflags/lib/libgflags_nothreads.a \
   ../../../../../../third-64/glog/lib/libglog.a \
-  ../../../../../../third-64/libcurl/lib/libcurl.a \
   ../../../../../../third-64/pcre/lib/libpcre.a \
   ../../../../../../third-64/pcre/lib/libpcrecpp.a \
   ../../../../../../third-64/pcre/lib/libpcreposix.a \
