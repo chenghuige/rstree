@@ -1,0 +1,228 @@
+#! /bin/bash
+
+script_dir=$(cd $(dirname $0) && pwd)
+mod_dir=$(dirname $script_dir)
+script_name=$(basename $0)
+conf_file=$mod_dir/conf/${script_name}.conf
+mod_name=${script_name%%_control}
+
+chmod +x ${script_dir}"/"${mod_name}
+
+status_dir=$mod_dir/status/$mod_name
+status_file=$status_dir/status
+lock_file=$status_dir/lock
+svcontrol_file=$status_dir/control
+
+fuser_bin=/sbin/fuser
+
+timeout=10
+
+mkdir -p $status_dir
+
+source $conf_file
+
+supervise_bin=$mod_dir/$supervise
+supervise_pid=0
+mod_pid=0
+
+function check_env() {
+    if [[ ! -x "$supervise_bin" ]]; then
+        echo "supervise file specified by \`$supervise_bin' is not executable."
+        exit 1
+    fi
+}
+
+function get_supervise_pid() {
+    $fuser_bin $lock_file &> /dev/null
+    if [[ "$?" -eq "0" ]]; then
+        supervise_pid=$($fuser_bin $lock_file 2> /dev/null|awk '{print $2}')
+        return 0
+    else
+        supervise_pid=0
+        return 1
+    fi
+}
+
+function get_service_pid() {
+    if [[ -f "$status_file" ]]; then
+        mod_pid=$(od -An -j16 -N2 -tu2 $status_file|tr -d ' ')
+        return 0
+    else
+        mod_pid=0
+        return 1
+    fi
+}
+
+function wait_start() {
+    local pid=0
+    local last_pid=-1
+    local normal_count=0
+    local loop_count=0
+    while true; do
+        get_service_pid
+        if [[ "$?" -eq "0" ]]; then
+            if [[ "$mod_pid" -eq "$last_pid" ]]; then
+                normal_count=$(($normal_count+1))
+            else
+                last_pid=$mod_pid
+                normal_count=0
+            fi
+        fi
+        if [[ "$normal_count" -ge "3" ]]; then
+            return 0
+        else
+            echo -ne "."
+        fi
+        loop_count=$(($loop_count+1))
+        if [[ "$normal_count" -eq 0 && "$loop_count" -ge "$timeout" ]]; then
+            return 1
+        fi
+        sleep 1
+    done
+    
+}
+
+function wait_stop() {
+    local loop_count=0
+    while true; do
+        get_supervise_pid
+        if [[ "$?" -eq "0" ]]; then
+            loop_count=$(($loop_count+1))
+            echo -ne "."
+        else
+            return 0
+        fi
+        if [[ "$loop_count" -ge "$timeout" ]]; then
+            return 1
+        fi
+        sleep 1    
+    done
+}
+
+function start_service() {
+    get_supervise_pid
+    if [[ "$?" -eq "0" ]]; then
+        echo "service is running."
+        return 1
+    fi
+
+    echo -ne "starting up $mod_name ..."
+
+    if [[ -n "pre_cmd" ]]; then
+        $pre_cmd
+    fi
+   
+    cd $mod_dir ; $supervise_bin -p $status_dir -f "$cmd"
+    retv=$?
+    if [[ "$retv" -ne "0" ]]; then
+        echo "[failed]"
+        return 1
+    fi
+    
+    wait_start
+    if [[ "$?" -eq "0" ]]; then
+        echo "[ok]"
+        if [[ -n "post_cmd" ]]; then
+            $post_cmd
+        fi
+        return 0
+    else
+        echo "[failed]"
+        stop_service
+        return 1
+    fi
+}
+
+function stop_service() {
+    get_supervise_pid
+    if [[ "$?" -ne "0" ]]; then
+        echo "service is not running"
+        return 0
+    fi
+    
+    echo -ne "shuting down $mod_name ..."
+    
+    echo "dx" > $svcontrol_file
+    wait_stop
+    if [[ "$?" -eq "0" ]]; then
+        echo "[ok]"
+        return 0
+    else
+        echo "[failed]"
+        return 1
+    fi
+}
+
+function restart_service() {
+    get_supervise_pid
+    if [[ "$?" -eq "0" ]]; then
+        echo -ne "restarting $mod_name ..."
+        echo "k" > $svcontrol_file
+        wait_start
+        if [[ "$?" -eq "0" ]]; then
+            echo "[ok]"
+            return 0
+        else
+            echo "[failed]"
+            return 1
+        fi
+    else
+        echo "service is not running."
+        return 1
+        get_service_pid
+        if [[ "$?" -eq "0" ]]; then
+            kill -9 $mod_pid
+        fi
+        echo "it seems $mod_name is not running, start $mod_name instead."
+        start_service
+        return $?
+    fi
+}
+
+function show() {
+    get_supervise_pid
+    if [[ "$?" -ne "0" ]]; then
+        echo "service is not running"
+        exit 0
+    fi
+    echo "supervise:"
+    ps -p $supervise_pid -o pid,cmd --no-headers
+    
+    get_service_pid
+    ps -p $mod_pid &> /dev/null
+    if [[ "$?" -ne "0" ]]; then
+        echo "service module is not running, maybe some guy put a \`d' in $svcontrol_file"
+        exit 0
+    fi
+    echo "service module:"
+    ps -p $mod_pid -o pid,cmd --no-headers
+}
+
+function usage() {
+    echo "usage:"
+    echo "cd $mod_dir && $0 {start|stop|restart|show}"
+}
+
+if [[ "$#" -ne "1" ]]; then
+    usage
+    exit 1
+fi
+
+check_env
+case X"$1" in
+    Xstart)
+        start_service
+        ;;
+    Xstop)
+        stop_service
+        ;;
+    Xrestart)
+        restart_service
+        ;;
+    Xshow)
+        show
+        ;;
+    X*)
+        usage
+        ;;
+esac

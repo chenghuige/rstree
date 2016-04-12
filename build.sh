@@ -54,7 +54,11 @@ make clean && make -j 8
 if [ "$?" -ne 0 ]
 then
     echo "make rstree  failed!"
+    exit -1
 fi
+cp ./bin/rstree_control ./output/bin
+cp supervise.rstree ./output/
+mkdir -p output/status/rstree
 
 
 #find ./ -type d -name .svn |xargs -i rm -rf {}
