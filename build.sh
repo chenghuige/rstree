@@ -50,7 +50,7 @@ if [ "$?" -ne 0 ]
 then
     echo "comake2 2 failed!"
 fi
-make -j 8
+make
 if [ "$?" -ne 0 ]
 then
     echo "make rstree  failed!"
