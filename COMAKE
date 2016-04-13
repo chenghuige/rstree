@@ -93,4 +93,4 @@ Application('rstree',Sources('rstree.cc',srcs,ENV.CppFlags()+CppFlags('-DNDEBUG 
 #Application('test_seg',Sources('test/test_seg.cc', srcs), OutputPath('./bin'))
 #Application('test_suffixtree',Sources('test/test_suffixtree.cc',srcs), OutputPath('./bin'))
 
-TARGET('control_script', ShellCommands('mkdir -p status/rstree', 'cp ./bin/rstree_control ./output/bin/', 'cp supervise.rstree ./output/'), CleanCommands('rm -rf ./output/status/rstree', 'rm ./output/bin/rstree_control', 'rm output/supervise.rstree'))
+TARGET('control_script', ShellCommands('mkdir -p ./output/status/rstree', 'cp ./bin/rstree_control ./output/bin/', 'cp supervise.rstree ./output/'), CleanCommands('rm -rf ./output/status/rstree', 'rm ./output/bin/rstree_control', 'rm output/supervise.rstree'))
