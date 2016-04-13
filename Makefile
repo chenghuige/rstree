@@ -199,17 +199,17 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=851b9ffc053b3f20b23fdba489a1f9c4  COMAKE
+COMAKE_MD5=dd8f4b91b7818988106fb3480a42d137  COMAKE
 
 
 .PHONY:all
-all:comake2_makefile_check rstree 
-	@echo "[COMAKE:BUILD][Target:'all']"
+all:comake2_makefile_check rstree control_script 
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mall[0m']"
 	@echo "make all done"
 
 .PHONY:comake2_makefile_check
 comake2_makefile_check:
-	@echo "[COMAKE:BUILD][Target:'comake2_makefile_check']"
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mcomake2_makefile_check[0m']"
 	#in case of error, update 'Makefile' by 'comake2'
 	@echo "$(COMAKE_MD5)">comake2.md5
 	@md5sum -c --status comake2.md5
@@ -217,14 +217,18 @@ comake2_makefile_check:
 
 .PHONY:ccpclean
 ccpclean:
-	@echo "[COMAKE:BUILD][Target:'ccpclean']"
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mccpclean[0m']"
 	@echo "make ccpclean done"
 
 .PHONY:clean
 clean:ccpclean
-	@echo "[COMAKE:BUILD][Target:'clean']"
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mclean[0m']"
 	rm -rf rstree
 	rm -rf ./output/bin/rstree
+	rm -rf control_script
+	rm -rf ./output/status/rstree
+	rm ./output/bin/rstree_control
+	rm output/supervise.rstree
 	rm -rf rstree_rstree.o
 	rm -rf src/rstree_conf.o
 	rm -rf src/post_process/rstree_PostProcessor.o
@@ -232,26 +236,26 @@ clean:ccpclean
 
 .PHONY:dist
 dist:
-	@echo "[COMAKE:BUILD][Target:'dist']"
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mdist[0m']"
 	tar czvf output.tar.gz output
 	@echo "make dist done"
 
 .PHONY:distclean
 distclean:clean
-	@echo "[COMAKE:BUILD][Target:'distclean']"
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mdistclean[0m']"
 	rm -f output.tar.gz
 	@echo "make distclean done"
 
 .PHONY:love
 love:
-	@echo "[COMAKE:BUILD][Target:'love']"
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mlove[0m']"
 	@echo "make love done"
 
 rstree:rstree_rstree.o \
   src/rstree_conf.o \
   src/post_process/rstree_PostProcessor.o \
   src/post_process/rstree_RstreeFilter.o
-	@echo "[COMAKE:BUILD][Target:'rstree']"
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree[0m']"
 	$(CXX) rstree_rstree.o \
   src/rstree_conf.o \
   src/post_process/rstree_PostProcessor.o \
@@ -260,6 +264,8 @@ rstree:rstree_rstree.o \
   ../../../../../app/search/sep/anti-spam/gezi/libgezi_cppformat.a \
   ../../../../../app/search/sep/anti-spam/gezi/libgezi_json.a \
   ../../../../../app/search/sep/anti-spam/gezi/output/lib/libPYNotation.a \
+  ../../../../../com/btest/gtest/output/lib/libgtest.a \
+  ../../../../../com/btest/gtest/output/lib/libgtest_main.a \
   ../../../../../com/idlcompiler/astyle/libastyle.a \
   ../../../../../com/idlcompiler/cxx/libskeleton.a \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
@@ -314,6 +320,7 @@ rstree:rstree_rstree.o \
   ../../../../../public/ub/output/lib/libubex.a \
   ../../../../../public/ub/output/lib/libubfw.a \
   ../../../../../public/uconv/libuconv.a \
+  ../../../../../quality/autotest/reportlib/cpp/libautotest.a \
   ../../../../../third-64/boost/lib/libboost_atomic.a \
   ../../../../../third-64/boost/lib/libboost_chrono.a \
   ../../../../../third-64/boost/lib/libboost_container.a \
@@ -367,6 +374,12 @@ rstree:rstree_rstree.o \
 	mkdir -p ./output/bin
 	cp -f --link rstree ./output/bin
 
+control_script:
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mcontrol_script[0m']"
+	mkdir -p status/rstree
+	cp ./bin/rstree_control ./output/bin/
+	cp supervise.rstree ./output/
+
 rstree_rstree.o:rstree.cc \
   include/rstree_def.h \
   include/post_process/RstreeFilter.h \
@@ -378,7 +391,7 @@ rstree_rstree.o:rstree.cc \
   include/SuffixTree.h \
   include/post_process/PostProcessor.h \
   include/rstree_def.h
-	@echo "[COMAKE:BUILD][Target:'rstree_rstree.o']"
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mrstree_rstree.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
   -D__STDC_LIMIT_MACROS \
   -DVERSION=\"1.9.8.7\" \
@@ -389,7 +402,7 @@ rstree_rstree.o:rstree.cc \
 
 src/rstree_conf.o:src/conf.cpp \
   include/conf.h
-	@echo "[COMAKE:BUILD][Target:'src/rstree_conf.o']"
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/rstree_conf.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
   -D__STDC_LIMIT_MACROS \
   -DVERSION=\"1.9.8.7\" \
@@ -402,7 +415,7 @@ src/post_process/rstree_PostProcessor.o:src/post_process/PostProcessor.cpp \
   include/post_process/PostProcessor.h \
   include/post_process/RstreeFilter.h \
   include/rstree_def.h
-	@echo "[COMAKE:BUILD][Target:'src/post_process/rstree_PostProcessor.o']"
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/rstree_PostProcessor.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
   -D__STDC_LIMIT_MACROS \
   -DVERSION=\"1.9.8.7\" \
@@ -414,7 +427,7 @@ src/post_process/rstree_PostProcessor.o:src/post_process/PostProcessor.cpp \
 src/post_process/rstree_RstreeFilter.o:src/post_process/RstreeFilter.cpp \
   include/post_process/RstreeFilter.h \
   include/rstree_def.h
-	@echo "[COMAKE:BUILD][Target:'src/post_process/rstree_RstreeFilter.o']"
+	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40msrc/post_process/rstree_RstreeFilter.o[0m']"
 	$(CXX) -c $(INCPATH) $(DEP_INCPATH) -D_GNU_SOURCE \
   -D__STDC_LIMIT_MACROS \
   -DVERSION=\"1.9.8.7\" \
