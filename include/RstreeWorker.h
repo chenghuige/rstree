@@ -56,7 +56,8 @@ namespace gezi
 
 		static void init_static()
 		{
-			SharedConf::init(RSTREE_CONF_DIR, RSTREE_CONF);
+            SharedConf::init(RSTREE_CONF, RSTREE_CONF_DIR);
+            //SharedConf::init(RSTREE_CONF_DIR, RSTREE_CONF);
 			PostProcessor::init_static();
 
 			//string seg_data_dir = "./data/wordseg";

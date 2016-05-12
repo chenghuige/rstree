@@ -104,6 +104,10 @@ DEP_INCPATH=-I../../../../../app/search/ksarch/store/proxy-lib/redis \
   -I../../../../../lib2-64/wordseg/include \
   -I../../../../../lib2-64/wordseg/output \
   -I../../../../../lib2-64/wordseg/output/include \
+  -I../../../../../lib2-arm32/bsl \
+  -I../../../../../lib2-arm32/bsl/include \
+  -I../../../../../lib2-arm32/bsl/output \
+  -I../../../../../lib2-arm32/bsl/output/include \
   -I../../../../../op/oped/noah/webfoot/naming-lib \
   -I../../../../../op/oped/noah/webfoot/naming-lib/include \
   -I../../../../../op/oped/noah/webfoot/naming-lib/output \
@@ -199,7 +203,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=dd8f4b91b7818988106fb3480a42d137  COMAKE
+COMAKE_MD5=664af490a34ee6a1de8d8a6d2353eee2  COMAKE
 
 
 .PHONY:all
@@ -290,6 +294,17 @@ rstree:rstree_rstree.o \
   ../../../../../lib2-64/string/lib/libstring.a \
   ../../../../../lib2-64/ullib/lib/libullib.a \
   ../../../../../lib2-64/wordseg/libsegment.a \
+  ../../../../../lib2-arm32/bsl/lib/libbsl.a \
+  ../../../../../lib2-arm32/bsl/lib/libbsl_ResourcePool.a \
+  ../../../../../lib2-arm32/bsl/lib/libbsl_archive.a \
+  ../../../../../lib2-arm32/bsl/lib/libbsl_buffer.a \
+  ../../../../../lib2-arm32/bsl/lib/libbsl_check_cast.a \
+  ../../../../../lib2-arm32/bsl/lib/libbsl_exception.a \
+  ../../../../../lib2-arm32/bsl/lib/libbsl_pool.a \
+  ../../../../../lib2-arm32/bsl/lib/libbsl_utils.a \
+  ../../../../../lib2-arm32/bsl/lib/libbsl_var.a \
+  ../../../../../lib2-arm32/bsl/lib/libbsl_var_implement.a \
+  ../../../../../lib2-arm32/bsl/lib/libbsl_var_utils.a \
   ../../../../../op/oped/noah/webfoot/naming-lib/output/libwebfoot_naming.a \
   ../../../../../public/bslext/output/lib/libbsl_bml.a \
   ../../../../../public/bslext/output/lib/libbsl_containers_utils.a \
@@ -376,7 +391,7 @@ rstree:rstree_rstree.o \
 
 control_script:
 	@echo "[[1;32;40mCOMAKE:BUILD[0m][Target:'[1;32;40mcontrol_script[0m']"
-	mkdir -p status/rstree
+	mkdir -p ./output/status/rstree
 	cp ./bin/rstree_control ./output/bin/
 	cp supervise.rstree ./output/
 

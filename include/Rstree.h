@@ -15,6 +15,7 @@
 #define RSTREE_H_
 #include "SuffixTree.h"
 #include "debug_util.h"
+#define GEZI_USE_CONF
 #ifdef GEZI_USE_CONF
 #include "conf_util.h"
 #endif
@@ -57,11 +58,11 @@ namespace gezi
         bool init(const comcfg::Configure& conf,
             string section = "Rstree")
         {
-            CONF(_min_substr_len);
-            CONF(_max_substr_len);
-            CONF(_min_frequency);
+            //CONF(_min_substr_len);
+            //CONF(_max_substr_len);
+            //CONF(_min_frequency);
             CONF(_max_tree_size);
-            CONF(_max_jump);
+            //CONF(_max_jump);
             return true;
         }
 
