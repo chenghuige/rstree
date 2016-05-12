@@ -275,7 +275,7 @@ test_post_processor:test_post_processor_test_post_processor.o \
   ../../../../../../public/nshead/libnshead.a \
   ../../../../../../public/odict/libodict.a \
   ../../../../../../public/spreg/libspreg.a \
-  ../../../../../../public/ub/output/lib/libub.a \
+  ../../../../../../public/ub/lib/libub.a \
   ../../../../../../public/ub/output/lib/libub_aserver.a \
   ../../../../../../public/ub/output/lib/libub_client.a \
   ../../../../../../public/ub/output/lib/libub_conf.a \
@@ -396,7 +396,7 @@ test_rstree:test_rstree_test_rstree.o \
   ../../../../../../public/nshead/libnshead.a \
   ../../../../../../public/odict/libodict.a \
   ../../../../../../public/spreg/libspreg.a \
-  ../../../../../../public/ub/output/lib/libub.a \
+  ../../../../../../public/ub/lib/libub.a \
   ../../../../../../public/ub/output/lib/libub_aserver.a \
   ../../../../../../public/ub/output/lib/libub_client.a \
   ../../../../../../public/ub/output/lib/libub_conf.a \
