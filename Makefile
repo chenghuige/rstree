@@ -56,6 +56,10 @@ DEP_INCPATH=-I../../../../../app/search/ksarch/store/proxy-lib/redis \
   -I../../../../../com/idlcompiler/include \
   -I../../../../../com/idlcompiler/output \
   -I../../../../../com/idlcompiler/output/include \
+  -I../../../../../inf/common/share \
+  -I../../../../../inf/common/share/include \
+  -I../../../../../inf/common/share/output \
+  -I../../../../../inf/common/share/output/include \
   -I../../../../../inf/computing/ant \
   -I../../../../../inf/computing/ant/include \
   -I../../../../../inf/computing/ant/output \
@@ -203,7 +207,7 @@ CCP_FLAGS=
 
 
 #COMAKE UUID
-COMAKE_MD5=664af490a34ee6a1de8d8a6d2353eee2  COMAKE
+COMAKE_MD5=a066066ed36f9d11f225ab708bae3039  COMAKE
 
 
 .PHONY:all
@@ -275,6 +279,7 @@ rstree:rstree_rstree.o \
   ../../../../../com/idlcompiler/java/libjava_skeleton.a \
   ../../../../../com/idlcompiler/parser/libparser.a \
   ../../../../../com/idlcompiler/php/libphp_skeleton.a \
+  ../../../../../inf/common/share/libshare.a \
   ../../../../../lib2-64/bsl/lib/libbsl.a \
   ../../../../../lib2-64/bsl/lib/libbsl_ResourcePool.a \
   ../../../../../lib2-64/bsl/lib/libbsl_archive.a \

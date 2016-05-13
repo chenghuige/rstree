@@ -78,7 +78,8 @@ CONFIGS('public/nshead@nshead_1-0-11-0_PD_BL')
 CONFIGS('lib2-64/string@string_2-0-9-0_PD_BL', DisBuild())
 CONFIGS('public/gm/galileo@galileo_1-0-39-0_PD_BL',DisBuild())
 CONFIGS('third-64/boost@boost_1-63-0-101_PD_BL')
-CONFIGS('public/ub@ub_1-2-80-0_PD_BL')
+#CONFIGS('public/ub@ub_1-2-80-0_PD_BL')
+CONFIGS('public/ub@ub_1-2-88-31748_PD_BL')
 
 INCPATHS('./include ./include/post_process')
 
