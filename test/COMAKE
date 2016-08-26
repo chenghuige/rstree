@@ -10,15 +10,48 @@ CopyUsingHardLink(True)
 #支持32位/64位平台编译
 #ENABLE_MULTI_LIBS(True)
 
+TOOLCHAIN_ROOT='../../../../../../ps/se/toolchain'
 
 LEVEL = 3
 #2 means gcc4.8.2 default,0 means gcc3 using toolchain, 1 means really local
+GCC_LOCAL=1
+print 'GCC_LOCAL: %d'%GCC_LOCAL 
+#是否使用高版本gcc 可以直接使用生成的bin文件 如./main 
+GCC_HIGH=1
+print 'GCC_HIGH: %d'%GCC_HIGH
+#是否使用高版本动态链接库，即是否使用高版本libc 如果启用 可以使用openmp 但是需要设置确保ld-linux....so在当前路径
+GCC_DYNAMIC=0
+print 'GCC_DYNAMIC: %d'%GCC_DYNAMIC
+GCC_VERSION='3.4.5'
+if  GCC_HIGH == 1: 
+	if GCC_DYNAMIC == 1:
+		GCC_VERSION='4.8.1'
+	else:
+		GCC_VERSION='4.8.2'
+print 'GCC_VERSION: %s'%GCC_VERSION
+GLIBC_VERSION='2.9'
+BINUTILS_VERSION='2.20'
+KERNAL_VERSION='2.6.32'
 
 #使用硬链接copy.
 CopyUsingHardLink(True)
 
 GCC_BIN='g++'
 GCC_FLAGS = '' 
+TOOLCHAIN=TOOLCHAIN_ROOT
+if GCC_HIGH  == 1:
+	if GCC_DYNAMIC == 1:	
+		TOOLCHAIN += '/x86_64-unknown-linux-gnu-%s-%s-%s-%s'%(GCC_VERSION,GLIBC_VERSION,BINUTILS_VERSION,KERNAL_VERSION)
+		GCC_BIN=TOOLCHAIN + '/bin/x86_64-unknown-linux-gnu-g++'
+	else:
+		TOOLCHAIN += '/gcc_only_%s'%(GCC_VERSION)
+		GCC_BIN=TOOLCHAIN + '/bin/g++'
+
+if GCC_LOCAL == 1:
+	GCC_BIN = 'g++'
+elif GCC_LOCAL == 2:
+	GCC_BIN = '/opt/compiler/gcc-4.8.2/bin/g++'
+print 'GCC_BIN: %s'%GCC_BIN; os.system('%s -v'%GCC_BIN)
 CC(GCC_BIN)
 CXX(GCC_BIN)
 
@@ -48,43 +81,48 @@ INCPATHS('../include ../include/post_process')
 
 #链接参数.
 GCC_LDFLAGS=''
+if GCC_HIGH  == 1: 
+	if GCC_DYNAMIC  == 1:
+		GCC_LDFLAGS += ' -lgomp'
+	else: 
+		GCC_LDFLAGS  += ' -static-libgcc -static-libstdc++'
+
 #链接参数.
-#LDFLAGS('-lpthread -rdynamic -lrt  -ldl', GCC_LDFLAGS)
-#LDFLAGS('-lpthread -rdynamic -lrt  -ldl', GCC_LDFLAGS)
-LDFLAGS('-lpthread -lcrypto -lrt')
+LDFLAGS('-lpthread -rdynamic -lrt -lldap -ldl', GCC_LDFLAGS)
 
 #依赖模块
 #CONFIGS('lib2-64/ullib public/ub public/mcpack third-64/boost public/gm/galileo lib2-64/ccode lib2-64/string third-64/tcmalloc')
 
 #依赖模块
-CONFIGS('app/search/sep/anti-spam/gezi@gezi_1-0-3-15595_PD_BL')
-CONFIGS('third-64/boost@boost_1-63-0-101_PD_BL')
-CONFIGS('third-64/gflags@gflags_2-0-0-100_PD_BL')
-CONFIGS('third-64/glog@glog_0-3-3-100_PD_BL')
-CONFIGS('com/btest/gtest@gtest_1-1-3-0_PD_BL')
-CONFIGS('third-64/tcmalloc@tcmalloc_2-1-0-100_PD_BL')
-CONFIGS('public/comlog-plugin@comlog-plugin_1-0-14-0_PD_BL')
-CONFIGS('public/configure@configure_1-2-18-0_PD_BL')
-CONFIGS('lib2-64/wordseg@wordseg_3-0-12-2_PD_BL')
-CONFIGS('lib2-64/ullib@ullib_3-1-77-0_PD_BL')
-CONFIGS('lib2-64/ccode@ccode_3-5-18-1_PD_BL')
-CONFIGS('lib2-64/dict@dict_3-1-23-0_PD_BL')
-CONFIGS('lib2-64/others-ex@others-ex_3-1-25-0_PD_BL')
-CONFIGS('lib2-64/libcrf@libcrf_2-1-3-0_PD_BL', DisBuild())
-CONFIGS('public/odict@odict_1-1-7-0_PD_BL')
-CONFIGS('lib2-64/postag@postag_2-0-2-0_PD_BL', DisBuild())
-CONFIGS('third-64/pcre@pcre_7-7-2-0_PD_BL')
-CONFIGS('public/ub@ub_1-2-80-0_PD_BL')
+CONFIGS('third-64/boost@base')
+CONFIGS('third-64/gflags@base')
+CONFIGS('third-64/glog@base')
+CONFIGS('com/btest/gtest@base')
+CONFIGS('third-64/tcmalloc@base')
+CONFIGS('public/comlog-plugin@base')
+CONFIGS('public/configure@base')
+CONFIGS('public/ub@1.2.36.0')
+#CONFIGS('public/gm/galileo@base')
+#CONFIGS('lib2-64/others-ex@base')
+CONFIGS('lib2-64/wordseg@3.0.12.2')
+CONFIGS('lib2-64/ullib@3.1.40.0')
+CONFIGS('lib2-64/ccode@3.2.3.2')
+CONFIGS('lib2-64/dict@3.1.12.0')
+CONFIGS('lib2-64/others-ex@3.1.14.2')
+CONFIGS('lib2-64/libcrf@2.1.3.0')
+CONFIGS('public/odict@1.1.2.1')
+CONFIGS('lib2-64/postag@2.0.2.0')
+CONFIGS('app/search/sep/anti-spam/gezi@base')
 
 srcs=GLOB('../src/*.cpp','../src/post_process/*.cpp')
 
 #可执行文件
 #Application('rstree.test',Sources('rstree.cc',srcs))
 #Application('rstree',Sources('rstree.cc',srcs,ENV.CppFlags()+CppFlags('-O3 -DNDEBUG -DGOOGLE_STRIP_LOG')))
-#Application('test_filter',Sources('test_filter.cc',srcs))
-Application('test_post_processor',Sources('test_post_processor.cc',srcs),CppFlags('_DNDEBUG -DGOOLE_STRIP_LOG -DGEZI_NO_FOLLY -DGEZI_USE_CONF'))
-#Application('test_seg',Sources('test_seg.cc', srcs))
-#Application('test_suffixtree',Sources('test_suffixtree.cc'))
+Application('test_filter',Sources('test_filter.cc',srcs))
+Application('test_post_processor',Sources('test_post_processor.cc',srcs))
+Application('test_seg',Sources('test_seg.cc', srcs))
+Application('test_suffixtree',Sources('test_suffixtree.cc'))
 
 #Application('test_rstree',Sources('test_rstree.cc',srcs, ENV.CppFlags()+CppFlags('-O3 -DNDEBUG')))
 Application('test_rstree',Sources('test_rstree.cc',srcs))
